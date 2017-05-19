@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "BaseType.h"
+#include "base_type.h"
 #include "NetHead.h"
 
 namespace LW
@@ -12,9 +12,10 @@ namespace LW
 	{
 	public:
 		ProtocolData();
+		~ProtocolData();
 
 	public:
-		lw_int32 createPackage(lw_int32 cmd, lw_int32 checkcode, void* object = nullptr, lw_int32 objectSize = 0);
+		lw_int32 createPackage(lw_int32 cmd, void* object = nullptr, lw_int32 objectSize = 0);
 	
 	public:
 		lw_char8* getContent();
@@ -23,13 +24,10 @@ namespace LW
 	public:
 		void debug();
 
-	public:
-		const static lw_uint32 CACHE_BUFFER_SIZE = 1024*10;
-
 	private:
 		NetHead		_messageHead;
-		lw_char8		_object[CACHE_BUFFER_SIZE];
-		lw_int32		_objectSize;
+		lw_char8	*_buffer;
+		lw_int32	_bufferSize;
 	};
 }
 

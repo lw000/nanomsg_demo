@@ -16,10 +16,10 @@ namespace LW
 		SAFE_DELETE(message);
 	}
 
-	NetMessage::NetMessage() : objectSize(0), Status(SocketStatus_UNKNOW)
+	NetMessage::NetMessage() : messageSize(0), Status(SocketStatus_UNKNOW)
 	{
-		::memset(object, 0x0, sizeof(object));
-		::memset(&messageHead, 0x0, sizeof(object));
+		::memset(message, 0x0, sizeof(message));
+		::memset(&messageHead, 0x0, sizeof(message));
 	}
 
 	NetMessage::~NetMessage()
@@ -37,7 +37,7 @@ namespace LW
 // 		gMemPool.release(ptrObject);
 // 	}
 
-	void NetMessage::setContent(const NetHead* head, lw_char8* obj, lw_int32 Size)
+	void NetMessage::setContent(const NetHead* head, lw_char8* msg, lw_int32 msgsize, emSocketStatus Status)
 	{
 		time_t t;
 		t = (time_t)ntohl(head->create_time);
@@ -46,8 +46,12 @@ namespace LW
 
 		messageHead.create_time = t;
 
-		objectSize = Size;
-		memcpy(object, obj, objectSize);
+		messageSize = msgsize;
+		
+		memcpy(message, msg, messageSize);
+
 		ullKey = messageHead.cmd;
+
+		this->Status = Status;
 	}
 }

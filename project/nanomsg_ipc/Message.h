@@ -1,7 +1,7 @@
 ﻿#ifndef __Message_H_
 #define __Message_H_
 
-#include "BaseType.h"
+#include "base_type.h"
 
 namespace LW 
 {

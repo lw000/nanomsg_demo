@@ -13,17 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="业务层">
+    <Filter Include="通讯协议1">
       <UniqueIdentifier>{737587c5-78a9-4e68-9c2b-eb9e8bb77dbe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="网络层模块">
-      <UniqueIdentifier>{0e323275-94fd-40c4-87bd-4347e28d7c97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="公共库">
-      <UniqueIdentifier>{96ba710a-463f-4690-9035-56a44531c953}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="通讯协议">
-      <UniqueIdentifier>{87ed5533-d1ff-48a8-8995-03248b0d63cd}</UniqueIdentifier>
+    <Filter Include="通讯协议0">
+      <UniqueIdentifier>{629b8e9c-d73c-4c78-9601-8e0e7a186e93}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,54 +27,33 @@
     <ClCompile Include="nanomsg_ipc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ProtocolData.cpp">
-      <Filter>网络层模块</Filter>
+    <ClCompile Include="protocol\game.pb.cc">
+      <Filter>通讯协议1</Filter>
     </ClCompile>
-    <ClCompile Include="NetMessage.cpp">
-      <Filter>网络层模块</Filter>
-    </ClCompile>
-    <ClCompile Include="protocol\lm.pb.cc">
-      <Filter>通讯协议</Filter>
-    </ClCompile>
-    <ClCompile Include="protocol\msg.pb.cc">
-      <Filter>通讯协议</Filter>
+    <ClCompile Include="protocol\platform.pb.cc">
+      <Filter>通讯协议1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ProtocolData.h">
-      <Filter>网络层模块</Filter>
+    <ClInclude Include="protocol\game.pb.h">
+      <Filter>通讯协议1</Filter>
     </ClInclude>
-    <ClInclude Include="BaseType.h">
-      <Filter>公共库</Filter>
-    </ClInclude>
-    <ClInclude Include="common_marco.h">
-      <Filter>公共库</Filter>
-    </ClInclude>
-    <ClInclude Include="NetHead.h">
-      <Filter>网络层模块</Filter>
+    <ClInclude Include="protocol\platform.pb.h">
+      <Filter>通讯协议1</Filter>
     </ClInclude>
     <ClInclude Include="Message.h">
-      <Filter>业务层</Filter>
+      <Filter>通讯协议0</Filter>
     </ClInclude>
     <ClInclude Include="NetCmd.h">
-      <Filter>业务层</Filter>
-    </ClInclude>
-    <ClInclude Include="NetMessage.h">
-      <Filter>网络层模块</Filter>
-    </ClInclude>
-    <ClInclude Include="protocol\lm.pb.h">
-      <Filter>通讯协议</Filter>
-    </ClInclude>
-    <ClInclude Include="protocol\msg.pb.h">
-      <Filter>通讯协议</Filter>
+      <Filter>通讯协议0</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="protocol\lm.proto">
-      <Filter>通讯协议</Filter>
+    <None Include="protocol\game.proto">
+      <Filter>通讯协议1</Filter>
     </None>
-    <None Include="protocol\msg.proto">
-      <Filter>通讯协议</Filter>
+    <None Include="protocol\platform.proto">
+      <Filter>通讯协议1</Filter>
     </None>
   </ItemGroup>
 </Project>

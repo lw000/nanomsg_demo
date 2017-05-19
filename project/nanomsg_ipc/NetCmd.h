@@ -12,7 +12,6 @@ namespace LW
 		/*
 		*/
 		
-		
 		CMD_GAME_CONNECTED		= 2000000,
 		
 		/*

@@ -1,2 +1,2 @@
-protoc.exe ./lm.proto .//msg.proto --cpp_out=.
+protoc.exe ./platform.proto ./game.proto --cpp_out=.
                                                   

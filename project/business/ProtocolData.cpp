@@ -3,56 +3,59 @@
 
 namespace LW 
 {
-	ProtocolData::ProtocolData() : _objectSize(0)
+	ProtocolData::ProtocolData() : _bufferSize(0), _buffer(NULL)
 	{
-		::memset(_object, 0x0, sizeof(_object));
+		//::memset(_object, 0x0, sizeof(_object));
 		::memset(&_messageHead, 0x0, sizeof(NetHead));
 	}
 
-	lw_int32 ProtocolData::createPackage(lw_int32 cmd, lw_int32 checkcode, void* object, lw_int32 objectSize)
+	ProtocolData::~ProtocolData()
+	{
+		free(_buffer);
+	}
+
+	lw_int32 ProtocolData::createPackage(lw_int32 cmd, void* object, lw_int32 objectSize)
 	{
 		lw_int32 ret = 0;
 
-		_objectSize = sizeof(NetHead) + objectSize;
-
-		assert(_objectSize < CACHE_BUFFER_SIZE, "data size > cache size.");
-
-		if (_objectSize <= CACHE_BUFFER_SIZE)
+		do
 		{
-			_messageHead.size = _objectSize;
-			_messageHead.cmd = cmd;
-			_messageHead.checkcode = checkcode;
+			if (objectSize <= 0)
+			{
+				ret = -1;
+				break;
+			}
 
+			_bufferSize = sizeof(NetHead) + objectSize;
+
+			_messageHead.size = _bufferSize;
+			_messageHead.cmd = cmd;
 			lw_uint32 create_time = (lw_int32)time(NULL);
 			_messageHead.create_time = htonl(create_time);
 
-			::memcpy(_object, &_messageHead, sizeof(NetHead));
-			
+			_buffer = (lw_char8 *)malloc(_bufferSize * sizeof(lw_char8));
+
+			::memcpy(_buffer, &_messageHead, sizeof(NetHead));
+
 			if (nullptr != object)
 			{
-				::memcpy(_object + sizeof(NetHead), (void*)object, _objectSize);
+				::memcpy(_buffer + sizeof(NetHead), (void*)object, objectSize);
 			}
 
 			debug();
-
-			ret = 0;
-		}
-		else
-		{
-			ret = -2;
-		}
+		} while (0);
 
 		return ret;
 	}
 
 	lw_char8* ProtocolData::getContent()
 	{
-		return _object;
+		return _buffer;
 	}
 
 	lw_int32 ProtocolData::getContentSize() const
 	{
-		return _objectSize;
+		return _bufferSize;
 	}
 
 	void ProtocolData::debug()
@@ -63,8 +66,8 @@ namespace LW
 			_messageHead.size,
 			_messageHead.cmd,
 			_messageHead.reserve,
-			_object,
-			_objectSize);
+			_buffer,
+			_bufferSize);
 #endif	//_DEBUG || DEBUG
 	}
 }

@@ -4,7 +4,7 @@
 #include <functional>
 #include <string>
 
-#include "BaseType.h"
+#include "base_type.h"
 #include "NetHead.h"
 #include "common_marco.h"
 
@@ -24,7 +24,7 @@ namespace LW
 			static void releaseMessage(NetMessage* message);
 
 		public:
-			void setContent(const NetHead* head, lw_char8* obj, lw_int32 Size);
+			void setContent(const NetHead* head, lw_char8* msg, lw_int32 msgsize, emSocketStatus Status);
 
 		private:
 			NetMessage();
@@ -36,16 +36,18 @@ namespace LW
 
 		public:
 			NetHead messageHead;
-			lw_uint32 objectSize;			// message size
-			lw_char8 object[4096];
-			emSocketStatus Status;
+			lw_uint32 messageSize;			// message size
+			lw_char8 message[1024*8];
 			lw_ullong64 ullKey;
+
+	private:
+		emSocketStatus Status;
 	};
 
-	class SocketSelectorItem
+	class NetMessageSelectorItem
 	{
 	public:
-		SocketSelectorItem(SEL_NetMessage selector) : _selector(selector)
+		NetMessageSelectorItem(SEL_NetMessage selector) : _selector(selector)
 		{
 		}
 

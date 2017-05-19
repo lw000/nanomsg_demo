@@ -1,7 +1,7 @@
 ﻿#ifndef __NetHead_H_
 #define __NetHead_H_
 
-#include "BaseType.h"
+#include "base_type.h"
 #include <winsock.h>
 #include <time.h>
 
@@ -13,7 +13,6 @@ namespace LW
 	{		
 		lw_int32						size;				// 数据包大小
 		lw_int32						cmd;				// 指令
-		lw_int32						checkcode;			// 校验码
 		lw_uint32						create_time;		// 发送时间
 		lw_int32						reserve;			// 保留字段
 
@@ -26,10 +25,9 @@ namespace LW
 			time_t t;
 			t = (time_t)ntohl(create_time);
 			strftime(hhmmss, sizeof(hhmmss), "%T", localtime(&t));
-			printf("u_size = %u, u_cmd = %ull, u_checkcode = %u, u_reserve = %u, u_send_time = %s \n",
+			printf("size = %d, cmd = %d, u_reserve = %d, create_time = %s \n",
 				size,
 				cmd,
-				checkcode,
 				reserve,
 				hhmmss);
 # endif 
