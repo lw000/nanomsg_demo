@@ -22,6 +22,9 @@
     <Filter Include="公共库">
       <UniqueIdentifier>{96ba710a-463f-4690-9035-56a44531c953}</UniqueIdentifier>
     </Filter>
+    <Filter Include="通讯协议">
+      <UniqueIdentifier>{87ed5533-d1ff-48a8-8995-03248b0d63cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -35,6 +38,12 @@
     </ClCompile>
     <ClCompile Include="NetMessage.cpp">
       <Filter>网络层模块</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol\lm.pb.cc">
+      <Filter>通讯协议</Filter>
+    </ClCompile>
+    <ClCompile Include="protocol\msg.pb.cc">
+      <Filter>通讯协议</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,5 +68,19 @@
     <ClInclude Include="NetMessage.h">
       <Filter>网络层模块</Filter>
     </ClInclude>
+    <ClInclude Include="protocol\lm.pb.h">
+      <Filter>通讯协议</Filter>
+    </ClInclude>
+    <ClInclude Include="protocol\msg.pb.h">
+      <Filter>通讯协议</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="protocol\lm.proto">
+      <Filter>通讯协议</Filter>
+    </None>
+    <None Include="protocol\msg.proto">
+      <Filter>通讯协议</Filter>
+    </None>
   </ItemGroup>
 </Project>

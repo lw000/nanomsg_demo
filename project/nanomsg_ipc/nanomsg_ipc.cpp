@@ -7,6 +7,8 @@
 #include <deque>
 #include <mutex>
 
+#include <iostream>
+
 #include <nn.h>
 #include <pair.h>
 
@@ -19,6 +21,9 @@
 #include "Message.h"
 #include "NetMessage.h"
 #include "ProtocolData.h"
+
+#include "lm.pb.h"
+#include "msg.pb.h"
 
 using namespace LW;
 
@@ -128,7 +133,7 @@ void on_read(const lw_char8 * buffer, lw_int32 recvSize)
 		do
 		{
 			pHead = (NetHead*)__g_data_queue.front();
-			if (nullptr != pHead && msgSize >= pHead->u_size)
+			if (nullptr != pHead && msgSize >= pHead->size)
 			{
 				pHead->debug();
 				lw_char8* pData = (__g_data_queue.front() + NeMsgHeadSize);
@@ -136,9 +141,9 @@ void on_read(const lw_char8 * buffer, lw_int32 recvSize)
 				NetMessage* smsg = NetMessage::createMessage();
 				if (smsg)
 				{
-					smsg->setContent(pHead, pData, pHead->u_size - NeMsgHeadSize);
+					smsg->setContent(pHead, pData, pHead->size - NeMsgHeadSize);
 					smsg->Status = SocketStatus_RECV;
-					__g_data_queue.pop(pHead->u_size);
+					__g_data_queue.pop(pHead->size);
 					
 					//分发数据
 					__g_msg_queue.push_back(smsg);
@@ -160,9 +165,19 @@ void on_read(const lw_char8 * buffer, lw_int32 recvSize)
 							if (nullptr != smsg)
 							{
 								// 处理数据
+// 								{
+// 									UserInfo * pl = (UserInfo*)smsg->object;
+// 									pl->debug();
+// 								}
+
 								{
-									UserInfo * pl = (UserInfo*)smsg->object;
-									pl->debug();
+									lm::UserInfo_msg msg1;
+									msg1.ParseFromArray(smsg->object, smsg->objectSize);
+
+									std::cout << msg1.u_age() << std::endl;
+									std::cout << msg1.u_sex() << std::endl;
+									std::cout << msg1.u_name() << std::endl;
+									std::cout << msg1.u_address() << std::endl;
 								}
 								NetMessage::releaseMessage(smsg);
 							}
@@ -173,12 +188,12 @@ void on_read(const lw_char8 * buffer, lw_int32 recvSize)
 				else
 				{
 					printf("%s >> not a complete data packet [messageSize = %lu, pMessageHead->uMessageSize = %lu]",
-						"1111111", msgSize, pHead->u_size);
+						"1111111", msgSize, pHead->size);
 				}
 				msgSize = (lw_uint32)__g_data_queue.size();
 				//HNLOG_INFO("%s >> messageSize ---> end = [%lu]", _tag.c_str(), messageSize);
 			}
-		} while (msgSize >= pHead->u_size);
+		} while (msgSize >= pHead->size);
 	}
 }
 
@@ -240,15 +255,28 @@ int pair_on_data(int sock, const char *name)
 			recv_data(sock, name);
 		}
 		
-		//SLEEP(1);
+/*		SLEEP(1);*/
+
+// 		{
+// 			UserInfo pl;
+// 			pl.age = 30;
+// 			pl.sex = 1;
+// 			strcpy(pl.name, name);
+// 			strcpy(pl.address, "大冲国际中心·5#1202");
+// 			send_data(sock, name, 1, 10000, &pl, sizeof(pl));
+// 		}
 
 		{
-			UserInfo pl;
-			pl.age = 30;
-			pl.sex = 1;
-			strcpy(pl.name, name);
-			strcpy(pl.address, "大冲国际中心·5#1202");
-			send_data(sock, name, 1, 10000, &pl, sizeof(pl));
+			lm::UserInfo_msg msg;
+			msg.set_u_age(30);
+			msg.set_u_sex(1);
+			msg.set_u_name("liwei");
+			msg.set_u_address("guangdong shenzhen nanshan guangdong shenzhen nanshan guangdong shenzhen nanshan");
+
+			char s[256] = { 0 };
+			bool ret = msg.SerializePartialToArray(s, 256);
+
+			send_data(sock, name, 1, 10000, s, strlen(s));
 		}
 	}
 }
@@ -277,6 +305,28 @@ int client_node(const char *url)
 
 int main(int argc, char **argv)
 {
+	{
+		lm::UserInfo_msg msg;
+		msg.set_u_age(30);
+		msg.set_u_sex(1);
+		msg.set_u_name("liwei");
+		msg.set_u_address("guangdong shenzhen nanshan");
+
+		char s[256] = { 0 };
+		bool ret = msg.SerializePartialToArray(s, 256);
+
+		if (ret)
+		{
+			lm::UserInfo_msg msg1;
+			msg1.ParseFromArray(s, 256);
+
+			std::cout << msg1.u_age() << std::endl;
+			std::cout << msg1.u_sex() << std::endl;
+			std::cout << msg1.u_name() << std::endl;
+			std::cout << msg1.u_address() << std::endl;
+		}
+	}
+
 	if (argc == 2 && strncmp(NODE0, argv[1], strlen(NODE0)) == 0) {
 		return server_node(SOCKET_ADDR);
 	}

@@ -14,7 +14,7 @@ namespace LW
 		ProtocolData();
 
 	public:
-		lw_int32 createPackage(lw_ullong64 ull_cmd, lw_uint32 checkcode, void* object = nullptr, lw_int32 objectSize = 0);
+		lw_int32 createPackage(lw_int32 cmd, lw_int32 checkcode, void* object = nullptr, lw_int32 objectSize = 0);
 	
 	public:
 		lw_char8* getContent();

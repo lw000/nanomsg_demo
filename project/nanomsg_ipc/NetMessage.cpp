@@ -40,14 +40,14 @@ namespace LW
 	void NetMessage::setContent(const NetHead* head, lw_char8* obj, lw_int32 Size)
 	{
 		time_t t;
-		t = (time_t)ntohl(head->u_send_time);
+		t = (time_t)ntohl(head->create_time);
 
 		messageHead = *head;
 
-		messageHead.u_send_time = t;
+		messageHead.create_time = t;
 
 		objectSize = Size;
 		memcpy(object, obj, objectSize);
-		ullKey = messageHead.ull_cmd;
+		ullKey = messageHead.cmd;
 	}
 }

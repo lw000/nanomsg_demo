@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package msg;
+
+message net_msg
+{
+	required int32    v = 1;  		// version
+	required int32    m_id = 2;		// m_id
+	required int32    s_id = 3;  	// s_id
+	required int32    opt = 4;  	
+	optional string   data = 5;		//optional field
+}

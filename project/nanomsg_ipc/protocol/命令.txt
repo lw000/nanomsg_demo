@@ -1,0 +1,10 @@
+Please use 'syntax = "proto2";' or 'syntax = "proto3";' to specify a syntax
+在.proto 文件开始加上 
+
+
+syntax = "proto2";  或 syntax = "proto3";  来指明 使用版本
+
+
+
+
+protoc.exe ./lm/lm.proto --cpp_out=.                                                  

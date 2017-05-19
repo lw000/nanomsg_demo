@@ -9,12 +9,9 @@ namespace LW
 		::memset(&_messageHead, 0x0, sizeof(NetHead));
 	}
 
-	lw_int32 ProtocolData::createPackage(lw_ullong64 ull_cmd, lw_uint32 checkcode, void* object, lw_int32 objectSize)
+	lw_int32 ProtocolData::createPackage(lw_int32 cmd, lw_int32 checkcode, void* object, lw_int32 objectSize)
 	{
 		lw_int32 ret = 0;
-
-		assert(INVALID_VALUE != checkcode);
-		if (INVALID_VALUE == checkcode) return -1;
 
 		_objectSize = sizeof(NetHead) + objectSize;
 
@@ -22,12 +19,12 @@ namespace LW
 
 		if (_objectSize <= CACHE_BUFFER_SIZE)
 		{
-			_messageHead.u_size = _objectSize;
-			_messageHead.ull_cmd = ull_cmd;
-			_messageHead.u_checkcode = checkcode;
+			_messageHead.size = _objectSize;
+			_messageHead.cmd = cmd;
+			_messageHead.checkcode = checkcode;
 
-			lw_uint32 secs = (lw_int32)time(NULL);
-			_messageHead.u_send_time = htonl(secs);
+			lw_uint32 create_time = (lw_int32)time(NULL);
+			_messageHead.create_time = htonl(create_time);
 
 			::memcpy(_object, &_messageHead, sizeof(NetHead));
 			
@@ -61,11 +58,11 @@ namespace LW
 	void ProtocolData::debug()
 	{
 # if defined(_DEBUG) || defined(DEBUG)
-		lw_char8 buf[512] = { 0 };
-		sprintf(buf, "NetMessageHead = {uMessageSize = %ud u_cmd = %d bReserve = %ud object = %s objectSize = %d}",
-			_messageHead.u_size,
-			_messageHead.ull_cmd,
-			_messageHead.u_reserve,
+		lw_char8 buf[256] = { 0 };
+		sprintf(buf, "NetHead = {size = %d cmd = %d reserve = %d object = %s objectSize = %d}",
+			_messageHead.size,
+			_messageHead.cmd,
+			_messageHead.reserve,
 			_object,
 			_objectSize);
 #endif	//_DEBUG || DEBUG

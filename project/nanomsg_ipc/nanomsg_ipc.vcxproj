@@ -89,13 +89,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\nanomsg\src;...\..\..\cppnanomsg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\protocol;..\..\..\nanomsg\src;..\..\..\cppnanomsg;..\..\..\..\pcLib\protobuf\protobuf-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\nanomsg\builds\vs2015\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>nanomsg.lib;ws2_32.lib;mswsock.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\nanomsg\builds\vs2015\Debug;..\..\..\..\pcLib\protobuf\protobuf-vs2015\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>nanomsg.lib;ws2_32.lib;mswsock.lib;libprotocd.lib;libprotobufd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -105,6 +105,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\nanomsg\src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,6 +153,8 @@
     <ClCompile Include="nanomsg_ipc.cpp" />
     <ClCompile Include="ProtocolData.cpp" />
     <ClCompile Include="NetMessage.cpp" />
+    <ClCompile Include="protocol\lm.pb.cc" />
+    <ClCompile Include="protocol\msg.pb.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseType.h" />
@@ -161,6 +164,12 @@
     <ClInclude Include="NetHead.h" />
     <ClInclude Include="ProtocolData.h" />
     <ClInclude Include="NetMessage.h" />
+    <ClInclude Include="protocol\lm.pb.h" />
+    <ClInclude Include="protocol\msg.pb.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="protocol\lm.proto" />
+    <None Include="protocol\msg.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
