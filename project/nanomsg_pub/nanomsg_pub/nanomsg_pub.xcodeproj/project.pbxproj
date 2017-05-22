@@ -1,0 +1,403 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2A3DD9571ED039670085B75F /* libbusiness.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3DD9501ED038470085B75F /* libbusiness.a */; };
+		2A3DD9581ED039670085B75F /* libnanomsg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3DD9561ED038C70085B75F /* libnanomsg.a */; };
+		2A3DD9601ED082CE0085B75F /* libprotocd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3DD95E1ED082CE0085B75F /* libprotocd.a */; };
+		2A3DD9611ED082CE0085B75F /* libprotobufd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A3DD95F1ED082CE0085B75F /* libprotobufd.a */; };
+		2A3DD98D1ED18BD70085B75F /* nanomsg_pub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A3DD98C1ED18BD70085B75F /* nanomsg_pub.cpp */; };
+		2A3DD9C41ED19B390085B75F /* platform.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2A3DD9901ED18C160085B75F /* platform.pb.cc */; };
+		2A3DD9C81ED19DED0085B75F /* nanomsg_reqrep.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A3DD9C71ED19DED0085B75F /* nanomsg_reqrep.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2A3DD94F1ED038470085B75F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A3DD94B1ED038470085B75F /* business.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2A3DD8F41ED031A00085B75F;
+			remoteInfo = business;
+		};
+		2A3DD9551ED038C70085B75F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A3DD9511ED038C60085B75F /* nanomsg.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2A3DD6CE1ED02DC10085B75F;
+			remoteInfo = nanomsg;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2A3DD93B1ED037F00085B75F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2A3DD93D1ED037F00085B75F /* nanomsg_pub */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nanomsg_pub; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A3DD94B1ED038470085B75F /* business.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = business.xcodeproj; path = ../../business/business/business.xcodeproj; sourceTree = "<group>"; };
+		2A3DD9511ED038C60085B75F /* nanomsg.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = nanomsg.xcodeproj; path = ../../../../nanomsg.ios/builds/xcode/libnanomsg/nanomsg.xcodeproj; sourceTree = "<group>"; };
+		2A3DD95E1ED082CE0085B75F /* libprotocd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotocd.a; path = ../../../../lib/debug/libprotocd.a; sourceTree = "<group>"; };
+		2A3DD95F1ED082CE0085B75F /* libprotobufd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libprotobufd.a; path = ../../../../lib/debug/libprotobufd.a; sourceTree = "<group>"; };
+		2A3DD98C1ED18BD70085B75F /* nanomsg_pub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nanomsg_pub.cpp; path = ../nanomsg_pub.cpp; sourceTree = "<group>"; };
+		2A3DD9901ED18C160085B75F /* platform.pb.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = platform.pb.cc; sourceTree = "<group>"; };
+		2A3DD9911ED18C160085B75F /* platform.pb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform.pb.h; sourceTree = "<group>"; };
+		2A3DD9921ED18C160085B75F /* platform.proto */ = {isa = PBXFileReference; lastKnownFileType = text; path = platform.proto; sourceTree = "<group>"; };
+		2A3DD9971ED18C160085B75F /* Message.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		2A3DD9981ED18C160085B75F /* NetCmd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetCmd.h; sourceTree = "<group>"; };
+		2A3DD9C71ED19DED0085B75F /* nanomsg_reqrep.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nanomsg_reqrep.cpp; path = ../nanomsg_reqrep.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2A3DD93A1ED037F00085B75F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A3DD9601ED082CE0085B75F /* libprotocd.a in Frameworks */,
+				2A3DD9611ED082CE0085B75F /* libprotobufd.a in Frameworks */,
+				2A3DD9571ED039670085B75F /* libbusiness.a in Frameworks */,
+				2A3DD9581ED039670085B75F /* libnanomsg.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2A3DD9341ED037F00085B75F = {
+			isa = PBXGroup;
+			children = (
+				2A3DD9511ED038C60085B75F /* nanomsg.xcodeproj */,
+				2A3DD94B1ED038470085B75F /* business.xcodeproj */,
+				2A3DD98B1ED18BC90085B75F /* nanomsg_pub */,
+				2A3DD95D1ED082CE0085B75F /* Frameworks */,
+				2A3DD93E1ED037F00085B75F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2A3DD93E1ED037F00085B75F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2A3DD93D1ED037F00085B75F /* nanomsg_pub */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A3DD94C1ED038470085B75F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2A3DD9501ED038470085B75F /* libbusiness.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A3DD9521ED038C60085B75F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2A3DD9561ED038C70085B75F /* libnanomsg.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2A3DD95D1ED082CE0085B75F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2A3DD95E1ED082CE0085B75F /* libprotocd.a */,
+				2A3DD95F1ED082CE0085B75F /* libprotobufd.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2A3DD98B1ED18BC90085B75F /* nanomsg_pub */ = {
+			isa = PBXGroup;
+			children = (
+				2A3DD9C71ED19DED0085B75F /* nanomsg_reqrep.cpp */,
+				2A3DD98C1ED18BD70085B75F /* nanomsg_pub.cpp */,
+				2A3DD98E1ED18C160085B75F /* protocol */,
+				2A3DD9961ED18C160085B75F /* protocol_0 */,
+			);
+			name = nanomsg_pub;
+			sourceTree = "<group>";
+		};
+		2A3DD98E1ED18C160085B75F /* protocol */ = {
+			isa = PBXGroup;
+			children = (
+				2A3DD9901ED18C160085B75F /* platform.pb.cc */,
+				2A3DD9911ED18C160085B75F /* platform.pb.h */,
+				2A3DD9921ED18C160085B75F /* platform.proto */,
+			);
+			name = protocol;
+			path = ../../protocol;
+			sourceTree = "<group>";
+		};
+		2A3DD9961ED18C160085B75F /* protocol_0 */ = {
+			isa = PBXGroup;
+			children = (
+				2A3DD9971ED18C160085B75F /* Message.h */,
+				2A3DD9981ED18C160085B75F /* NetCmd.h */,
+			);
+			name = protocol_0;
+			path = ../../protocol_0;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2A3DD93C1ED037F00085B75F /* nanomsg_pub */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2A3DD9441ED037F00085B75F /* Build configuration list for PBXNativeTarget "nanomsg_pub" */;
+			buildPhases = (
+				2A3DD9391ED037F00085B75F /* Sources */,
+				2A3DD93A1ED037F00085B75F /* Frameworks */,
+				2A3DD93B1ED037F00085B75F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = nanomsg_pub;
+			productName = nanomsg_ipc;
+			productReference = 2A3DD93D1ED037F00085B75F /* nanomsg_pub */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2A3DD9351ED037F00085B75F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = lwstar;
+				TargetAttributes = {
+					2A3DD93C1ED037F00085B75F = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 9HZXUTMSZT;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 2A3DD9381ED037F00085B75F /* Build configuration list for PBXProject "nanomsg_pub" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2A3DD9341ED037F00085B75F;
+			productRefGroup = 2A3DD93E1ED037F00085B75F /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 2A3DD94C1ED038470085B75F /* Products */;
+					ProjectRef = 2A3DD94B1ED038470085B75F /* business.xcodeproj */;
+				},
+				{
+					ProductGroup = 2A3DD9521ED038C60085B75F /* Products */;
+					ProjectRef = 2A3DD9511ED038C60085B75F /* nanomsg.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				2A3DD93C1ED037F00085B75F /* nanomsg_pub */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		2A3DD9501ED038470085B75F /* libbusiness.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libbusiness.a;
+			remoteRef = 2A3DD94F1ED038470085B75F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2A3DD9561ED038C70085B75F /* libnanomsg.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libnanomsg.a;
+			remoteRef = 2A3DD9551ED038C70085B75F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2A3DD9391ED037F00085B75F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A3DD9C41ED19B390085B75F /* platform.pb.cc in Sources */,
+				2A3DD9C81ED19DED0085B75F /* nanomsg_reqrep.cpp in Sources */,
+				2A3DD98D1ED18BD70085B75F /* nanomsg_pub.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2A3DD9421ED037F00085B75F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2A3DD9431ED037F00085B75F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		2A3DD9451ED037F00085B75F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = ../../debug;
+				DEVELOPMENT_TEAM = 9HZXUTMSZT;
+				HEADER_SEARCH_PATHS = (
+					../,
+					../../business,
+					../../business/common,
+					../../protocol,
+					../../protocol_0,
+					../../../../include,
+					../../../../nanomsg.ios,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../debug,
+					../../../../lib/debug,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2A3DD9461ED037F00085B75F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CONFIGURATION_BUILD_DIR = ../../release;
+				DEVELOPMENT_TEAM = 9HZXUTMSZT;
+				HEADER_SEARCH_PATHS = (
+					../,
+					../../business,
+					../../business/common,
+					../../protocol,
+					../../protocol_0,
+					../../../../include,
+					../../../../nanomsg.ios,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../release,
+					../../../../lib/release,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2A3DD9381ED037F00085B75F /* Build configuration list for PBXProject "nanomsg_pub" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A3DD9421ED037F00085B75F /* Debug */,
+				2A3DD9431ED037F00085B75F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2A3DD9441ED037F00085B75F /* Build configuration list for PBXNativeTarget "nanomsg_pub" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2A3DD9451ED037F00085B75F /* Debug */,
+				2A3DD9461ED037F00085B75F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2A3DD9351ED037F00085B75F /* Project object */;
+}

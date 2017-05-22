@@ -94,8 +94,31 @@ For example:
 
 #include <nn.h>
 #include <pubsub.h>
+
+#ifdef _WIN32
 #include <winsock.h>
 #include <process.h>
+#else
+#include <unistd.h>
+#endif
+
+
+#include "base_type.h"
+#include "common_marco.h"
+
+#include "NetHead.h"
+#include "NetMessage.h"
+#include "ProtocolData.h"
+
+#include "Message.h"
+
+
+#include "platform.pb.h"
+
+
+#include "business.h"
+
+using namespace LW;
 
 
 #ifdef _WIN32
@@ -103,6 +126,63 @@ For example:
 #else
 #define SLEEP(seconds) sleep(seconds);
 #endif
+
+static void on_recv(void* buf)
+{
+    NetMessage* smsg = (NetMessage*)buf;
+    switch (smsg->messageHead.cmd)
+    {
+        case 10000:
+        {
+            sc_userinfo *user = (sc_userinfo*)(smsg->message);
+            printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
+                   user->age, user->sex, user->name, user->address);
+        } break;
+        case 10001:	//
+        {
+            platform::sc_msg_userinfo msg;
+            msg.ParseFromArray(smsg->message, smsg->messageSize);
+            printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
+                   msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
+        }break;
+        case 10002:
+        {
+            
+        }break;
+        default:
+            break;
+    }
+}
+
+lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
+{
+    LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
+    
+    lw_int32 result = nn_send(sock, p->buf, p->size, 0);
+    
+    lw_free_net_message(p);
+    
+    return result;
+}
+
+lw_int32 recv_data(lw_int32 sock)
+{
+    char *buf = NULL;
+    lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
+    if (result > 0)
+    {
+        lw_on_parse_socket_data(buf, result, on_recv);
+        
+        nn_freemsg(buf);
+    }
+    else
+    {
+        
+    }
+    
+    return result;
+}
+
 
 /*  The client runs in a loop, displaying the content. */
 
@@ -133,30 +213,8 @@ int sub_client(const char *url)
 
 	for (;;) 
 	{
-		uint8_t msg[2 * sizeof(uint32_t)];
-		char hhmmss[9];  /* HH:MM:SS\0 */
-		uint32_t subs, secs;
-		time_t t;
-
-		rc = nn_recv(fd, msg, sizeof(msg), 0);
-		if (rc < 0) {
-			fprintf(stderr, "nn_recv: %s\n", nn_strerror(nn_errno()));
-			break;
-		}
-
-		if (rc != sizeof(msg)) 
-		{
-			fprintf(stderr, "nn_recv: got %d bytes, wanted %d\n", rc, (int)sizeof(msg));
-			break;
-		}
-
-		memcpy(&secs, msg, sizeof(secs));
-		memcpy(&subs, msg + sizeof(secs), sizeof(subs));
-
-		t = (time_t)ntohl(secs);
-		strftime(hhmmss, sizeof(hhmmss), "%T", localtime(&t));
-		printf("%s <pid %u> There are %u clients connected.\n", hhmmss, (unsigned)getpid(), (unsigned)ntohl(subs));
-	}
+        recv_data(fd);
+    }
 
 	nn_close(fd);
 

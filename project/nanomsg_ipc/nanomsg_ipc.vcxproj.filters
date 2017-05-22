@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="通讯协议1">
-      <UniqueIdentifier>{737587c5-78a9-4e68-9c2b-eb9e8bb77dbe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="通讯协议0">
       <UniqueIdentifier>{629b8e9c-d73c-4c78-9601-8e0e7a186e93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="通讯协议">
+      <UniqueIdentifier>{737587c5-78a9-4e68-9c2b-eb9e8bb77dbe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,33 +27,33 @@
     <ClCompile Include="nanomsg_ipc.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="protocol\game.pb.cc">
-      <Filter>通讯协议1</Filter>
+    <ClCompile Include="..\protocol\game.pb.cc">
+      <Filter>通讯协议</Filter>
     </ClCompile>
-    <ClCompile Include="protocol\platform.pb.cc">
-      <Filter>通讯协议1</Filter>
+    <ClCompile Include="..\protocol\platform.pb.cc">
+      <Filter>通讯协议</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="protocol\game.pb.h">
-      <Filter>通讯协议1</Filter>
-    </ClInclude>
-    <ClInclude Include="protocol\platform.pb.h">
-      <Filter>通讯协议1</Filter>
-    </ClInclude>
-    <ClInclude Include="Message.h">
+    <ClInclude Include="..\protocol_0\Message.h">
       <Filter>通讯协议0</Filter>
     </ClInclude>
-    <ClInclude Include="NetCmd.h">
+    <ClInclude Include="..\protocol_0\NetCmd.h">
       <Filter>通讯协议0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protocol\game.pb.h">
+      <Filter>通讯协议</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protocol\platform.pb.h">
+      <Filter>通讯协议</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="protocol\game.proto">
-      <Filter>通讯协议1</Filter>
+    <None Include="..\protocol\game.proto">
+      <Filter>通讯协议</Filter>
     </None>
-    <None Include="protocol\platform.proto">
-      <Filter>通讯协议1</Filter>
+    <None Include="..\protocol\platform.proto">
+      <Filter>通讯协议</Filter>
     </None>
   </ItemGroup>
 </Project>

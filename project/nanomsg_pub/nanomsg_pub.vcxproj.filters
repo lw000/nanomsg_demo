@@ -13,13 +13,50 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="通讯协议">
+      <UniqueIdentifier>{f2011200-0298-4228-8ba1-8d3531e588d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="通讯协议0">
+      <UniqueIdentifier>{17443695-5839-4a27-ab2d-947e100c32f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\protocol\game.pb.cc">
+      <Filter>通讯协议</Filter>
+    </ClCompile>
+    <ClCompile Include="..\protocol\platform.pb.cc">
+      <Filter>通讯协议</Filter>
+    </ClCompile>
     <ClCompile Include="nanomsg_pub.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="nanomsg_reqrep.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\protocol_0\Message.h">
+      <Filter>通讯协议0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protocol_0\NetCmd.h">
+      <Filter>通讯协议0</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protocol\game.pb.h">
+      <Filter>通讯协议</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protocol\platform.pb.h">
+      <Filter>通讯协议</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\protocol\game.proto">
+      <Filter>通讯协议</Filter>
+    </None>
+    <None Include="..\protocol\platform.proto">
+      <Filter>通讯协议</Filter>
+    </None>
   </ItemGroup>
 </Project>

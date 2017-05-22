@@ -1,8 +1,15 @@
 ﻿#include "NetMessage.h"
-#include <winsock.h>
-#include <time.h>
 
-namespace LW 
+#include <time.h>
+#include <stdlib.h>
+
+#ifdef _WIN32
+#include <winsock.h>
+#else
+#include <arpa/inet.h>
+#endif
+
+namespace LW
 {
 	//////////////////////////////////////////////////////////////////////////
 
@@ -16,15 +23,15 @@ namespace LW
 		SAFE_DELETE(message);
 	}
 
-	NetMessage::NetMessage() : messageSize(0), Status(SocketStatus_UNKNOW)
+	NetMessage::NetMessage() : message(NULL), messageSize(0), Status(SocketStatus_UNKNOW)
 	{
-		::memset(message, 0x0, sizeof(message));
+		//::memset(message, 0x0, sizeof(message));
 		::memset(&messageHead, 0x0, sizeof(message));
 	}
 
 	NetMessage::~NetMessage()
 	{
-
+        free(message);
 	}
 
 // 	void *HNSocketMessage::operator new(std::size_t ObjectSize)
@@ -48,6 +55,8 @@ namespace LW
 
 		messageSize = msgsize;
 		
+        message = (lw_char8*)malloc(messageSize*sizeof(lw_char8));
+        
 		memcpy(message, msg, messageSize);
 
 		ullKey = messageHead.cmd;

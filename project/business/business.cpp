@@ -22,51 +22,54 @@ DataCacheQueue			__g_data_queue;
 
 std::mutex				__g_data_mutex;
 
+
+static const lw_int32 NET_MSG_HEAD_SIZE = sizeof(NetHead);
+
+
 lw_int32 lw_on_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_RECV_SOCKET_CALLFUNC func)
 {
 	if (bufSize <= 0) return -1;
 	if (NULL == buf) return -2;
-
-	const lw_int32 NeMsgHeadSize = sizeof(NetHead);
 
 	__g_data_queue.push(const_cast<char*>(buf), bufSize);
 
 	NetHead* pHead = nullptr;
 
 	lw_int32 msgSize = (lw_int32)__g_data_queue.size();
-	if (msgSize >= NeMsgHeadSize)
+	if (msgSize >= NET_MSG_HEAD_SIZE)
 	{
 		do
 		{
 			pHead = (NetHead*)__g_data_queue.front();
 			if (nullptr != pHead && msgSize >= pHead->size)
 			{
-				pHead->debug();
-
-				lw_char8* pData = (__g_data_queue.front() + NeMsgHeadSize);
+				lw_char8* pData = (__g_data_queue.front() + NET_MSG_HEAD_SIZE);
 
 				NetMessage* smsg = NetMessage::createMessage();			
 				if (smsg)
 				{
-					smsg->setContent(pHead, pData, pHead->size - NeMsgHeadSize, SocketStatus_RECV);
+					smsg->setContent(pHead, pData, pHead->size - NET_MSG_HEAD_SIZE, SocketStatus_RECV);
 
 					__g_data_queue.pop(pHead->size);
 					
-					//分发数据
+					//push message
 					//__g_msg_queue.push_back(smsg);
 
-					func(smsg);
+                    {
+                        func(smsg);
+                    }
 
 					NetMessage::releaseMessage(smsg);
 				}
-				else
-				{
-					printf("%s >> not a complete data packet [msgSize = %d, pHead->size = %d]",
-						"1111111", msgSize, pHead->size);
-				}
-				msgSize = (lw_uint32)__g_data_queue.size();
 			}
-		} while (msgSize >= pHead->size);
+            else
+            {
+                printf("%s >> not a complete data packet [msgSize = %d, pHead->size = %d]",
+                       "1111111", msgSize, pHead->size);
+            }
+            msgSize = (lw_uint32)__g_data_queue.size();
+		//} while (msgSize >= pHead->size);
+        } while (msgSize >= NET_MSG_HEAD_SIZE);
 	}
 
 	return 0;

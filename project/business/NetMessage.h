@@ -37,7 +37,8 @@ namespace LW
 		public:
 			NetHead messageHead;
 			lw_uint32 messageSize;			// message size
-			lw_char8 message[1024*8];
+			//lw_char8 message[1024*8];
+            lw_char8 *message;
 			lw_ullong64 ullKey;
 
 	private:

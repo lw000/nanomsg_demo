@@ -1,6 +1,3 @@
-// project.cpp : 定义控制台应用程序的入口点。
-//
-
 /*
 
 Copyright 2016 Garrett D'Amore <garrett@damore.org>
@@ -94,16 +91,91 @@ For example:
 
 #include <nn.h>
 #include <pubsub.h>
+#include <transport.h>
 
+#ifdef _WIN32
 #include <winsock.h>
 #include <process.h>
+#else
+#include <unistd.h>
+#endif
 
+#include "base_type.h"
+#include "common_marco.h"
+
+#include "business.h"
+
+#include "NetHead.h"
+#include "NetMessage.h"
+#include "ProtocolData.h"
+
+#include "Message.h"
+#include "platform.pb.h"
+
+
+using namespace LW;
 
 #ifdef _WIN32
 #define SLEEP(seconds) SleepEx(seconds * 1000, 1);
 #else
 #define SLEEP(seconds) sleep(seconds);
 #endif
+
+static void on_recv(void* buf)
+{
+    NetMessage* smsg = (NetMessage*)buf;
+    switch (smsg->messageHead.cmd)
+    {
+        case 10000:
+        {
+            sc_userinfo *user = (sc_userinfo*)(smsg->message);
+            printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
+                   user->age, user->sex, user->name, user->address);
+        } break;
+        case 10001:
+        {
+            platform::sc_msg_userinfo msg;
+            msg.ParseFromArray(smsg->message, smsg->messageSize);
+            printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
+                   msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
+        }break;
+        case 10002:
+        {
+            
+        }break;
+        default:
+            break;
+    }
+}
+
+static lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
+{
+    LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
+    
+    lw_int32 result = nn_send(sock, p->buf, p->size, 0);
+    
+    lw_free_net_message(p);
+    
+    return result;
+}
+
+static lw_int32 recv_data(lw_int32 sock)
+{
+    char *buf = NULL;
+    lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
+    if (result > 0)
+    {
+        lw_on_parse_socket_data(buf, result, on_recv);
+        
+        nn_freemsg(buf);
+    }
+    else
+    {
+        
+    }
+    
+    return result;
+}
 
 
 /*  The server runs forever. */
@@ -141,41 +213,51 @@ int pub_server(const char *url)
 
 	accept required.  We just start writing the information. */
 
-	for (;;) {
-
-		uint8_t msg[2 * sizeof(uint32_t)];
-		uint32_t secs, subs;
-		int rc;
-
-		secs = (uint32_t)time(NULL);
-
-		subs = (uint32_t)nn_get_statistic(fd, NN_STAT_CURRENT_CONNECTIONS);
-
-		secs = htonl(secs);
-
-		subs = htonl(subs);
-
-		memcpy(msg, &secs, sizeof(secs));
-
-		memcpy(msg + sizeof(secs), &subs, sizeof(subs));
-
-		rc = nn_send(fd, msg, sizeof(msg), 0);
-
-		if (rc < 0) {
-			/*  There are several legitimate reasons this can fail.
-			We note them for debugging purposes, but then ignore
-			otherwise. */
-			fprintf(stderr, "nn_send: %s (ignoring)\n", nn_strerror(nn_errno()));
-		}
-
-		SLEEP(1);
+	for (;;)
+    {
+        int i = rand() % 2;
+        switch (i) {
+            case 0:
+            {
+				sc_userinfo userinfo;
+                userinfo.age = 30;
+                userinfo.sex = 1;
+                strcpy(userinfo.name, "liwei");
+                strcpy(userinfo.address, "shanxi");
+                send_data(fd, 10000, &userinfo, sizeof(userinfo));
+            } break;
+            case 1:
+            {
+                platform::sc_msg_userinfo msg;
+                msg.set_age(40);
+                msg.set_sex(0);
+                msg.set_name("heshanshan");
+                msg.set_address("guangdong");
+                
+                int len = (int)msg.ByteSizeLong();
+                char s[256] = { 0 };
+                bool ret = msg.SerializeToArray(s, len);
+                if (ret) {
+                    send_data(fd, 10001, s, len);
+                }
+            } break;
+                case 2:
+            {
+                platform::sc_msg_servertime sertime;
+                time_t secs = time(NULL);
+                sertime.set_time((lw_int32)secs);
+            } break;
+            default:
+                break;
+        }
+        
+//		SLEEP(1);
 	}
 	/* NOTREACHED */
 
 	nn_close(fd);
 
 	return (-1);
-
 }
 
 int main(int argc, char **argv)

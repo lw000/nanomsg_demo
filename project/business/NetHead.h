@@ -1,9 +1,14 @@
 ﻿#ifndef __NetHead_H_
 #define __NetHead_H_
 
-#include "base_type.h"
-#include <winsock.h>
 #include <time.h>
+#ifdef _WIN32
+#include <winsock.h>
+#else
+#include <arpa/inet.h>
+#endif
+
+#include "base_type.h"
 
 namespace LW 
 {

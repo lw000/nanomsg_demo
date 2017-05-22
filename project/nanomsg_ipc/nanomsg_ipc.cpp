@@ -47,7 +47,7 @@ static void on_recv(void* buf)
 	{
 	case 10000:	//用户信息
 	{
-		platform::sc_msg_userInfo msg;
+		platform::sc_msg_userinfo msg;
 		msg.ParsePartialFromArray(smsg->message, smsg->messageSize);
 		printf("age: %d\n sex: %d\n name: %s\n address: %s\n",
 			msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
@@ -66,7 +66,7 @@ static void on_recv(void* buf)
 	}
 }
 
-lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
+static lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
 	LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
 
@@ -77,7 +77,7 @@ lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSiz
 	return result;
 }
 
-lw_int32 recv_data(lw_int32 sock)
+static lw_int32 recv_data(lw_int32 sock)
 {
 	char *buf = NULL;
 	lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
@@ -107,7 +107,7 @@ static int on_pair_data(int sock)
 		
 		//SLEEP(1);
 
-		platform::sc_msg_userInfo msg;
+		platform::sc_msg_userinfo msg;
 		msg.set_age(30);
 		msg.set_sex(1);
 		msg.set_name("liwei");

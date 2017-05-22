@@ -1,5 +1,6 @@
 ﻿#include "ProtocolData.h"
 #include <assert.h>
+#include <string.h>
 
 namespace LW 
 {
