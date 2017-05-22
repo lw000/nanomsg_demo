@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\event2">
+      <UniqueIdentifier>{cefa48b0-c4fa-42ba-a276-2ae5f190f2ef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\event2\buffer.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\buffer_compat.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\bufferevent.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\bufferevent_compat.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\bufferevent_ssl.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\bufferevent_struct.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\dns.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\dns_compat.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\dns_struct.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\event.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\event_compat.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\event_struct.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\http.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\http_compat.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\http_struct.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\keyvalq_struct.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\listener.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\rpc.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\rpc_compat.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\rpc_struct.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\tag.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\tag_compat.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\thread.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="include\event2\util.h">
+      <Filter>头文件\event2</Filter>
+    </ClInclude>
+    <ClInclude Include="evutil.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="strlcpy.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="signal.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="log.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="listener.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="evutil_rand.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="evutil.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="evthread.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="event.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bufferevent_sock.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bufferevent_ratelim.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bufferevent_pair.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bufferevent_filter.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bufferevent.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="buffer.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="evmap.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="event_iocp.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
