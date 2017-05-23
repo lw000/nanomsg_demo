@@ -30,7 +30,7 @@ public:
 	{
 		if (pos <= 0) return;
 		if (_vtbuffer->empty()) return;
-		if (_vtbuffer->size() > pos) return;
+		if (_vtbuffer->size() < pos) return;
 
 		{
 			//std::lock_guard < std::mutex > lock(_mutex);

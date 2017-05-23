@@ -63,7 +63,6 @@ Good morning, Garrett.
 #include "Message.h"
 #include "platform.pb.h"
 
-
 using namespace LW;
 
 #ifdef _WIN32
@@ -72,21 +71,24 @@ using namespace LW;
 #define SLEEP(seconds) sleep(seconds);
 #endif
 
-static void on_recv(void* buf)
+static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize);
+static lw_int32 recv_socket_data(lw_int32 sock);
+static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
+
+static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
-    NetMessage* smsg = (NetMessage*)buf;
-    switch (smsg->messageHead.cmd)
+	switch (cmd)
     {
         case 10000:
         {
-            sc_userinfo *user = (sc_userinfo*)(smsg->message);
+            sc_userinfo *user = (sc_userinfo*)(buf);
             printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
                    user->age, user->sex, user->name, user->address);
         } break;
             //        case 10001:	//
             //        {
             //            platform::sc_msg_userinfo msg;
-            //            msg.ParseFromArray(smsg->message, smsg->messageSize);
+            //            msg.ParseFromArray(buf, bufsize);
             //            printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
             //                   msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
             //        }break;
@@ -99,7 +101,7 @@ static void on_recv(void* buf)
     }
 }
 
-static lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
+static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
     LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
     
@@ -110,13 +112,13 @@ static lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 ob
     return result;
 }
 
-static lw_int32 recv_data(lw_int32 sock)
+static lw_int32 recv_socket_data(lw_int32 sock)
 {
     char *buf = NULL;
     lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
     if (result > 0)
     {
-        lw_on_parse_socket_data(buf, result, on_recv);
+        lw_on_parse_socket_data(buf, result, on_socket_recv, NULL);
         
         nn_freemsg(buf);
     }

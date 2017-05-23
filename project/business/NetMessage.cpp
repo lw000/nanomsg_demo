@@ -3,6 +3,8 @@
 #include <time.h>
 #include <stdlib.h>
 
+#include "common_marco.h"
+
 #ifdef _WIN32
 #include <winsock.h>
 #else

@@ -12,20 +12,20 @@
 #include <nn.h>
 #include <pair.h>
 
-#include <windows.h>
+#ifdef _WIN32
+#include <winsock.h>
+#include <process.h>
+#else
+#include <unistd.h>
+#endif
 
 #include "base_type.h"
 #include "common_marco.h"
-
-#include "NetHead.h"
-#include "Message.h"
 #include "NetMessage.h"
-#include "ProtocolData.h"
-
-#include "platform.pb.h"
-#include "game.pb.h"
-#include "DataCacheQueueT.h"
 #include "business.h"
+
+#include "Message.h"
+#include "platform.pb.h"
 
 using namespace LW;
 
@@ -40,15 +40,18 @@ using namespace LW;
 #define SLEEP(seconds) sleep(seconds);
 #endif
 
-static void on_recv(void* buf)
+static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize);
+static lw_int32 recv_socket_data(lw_int32 sock);
+static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
+
+static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
-	NetMessage* smsg = (NetMessage*)buf;
-	switch (smsg->messageHead.cmd)
+	switch (cmd)
 	{
 	case 10000:	//用户信息
 	{
 		platform::sc_msg_userinfo msg;
-		msg.ParsePartialFromArray(smsg->message, smsg->messageSize);
+		msg.ParsePartialFromArray(buf, bufsize);
 		printf("age: %d\n sex: %d\n name: %s\n address: %s\n",
 			msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
 
@@ -66,7 +69,7 @@ static void on_recv(void* buf)
 	}
 }
 
-static lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
+static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
 	LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
 
@@ -77,13 +80,13 @@ static lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 ob
 	return result;
 }
 
-static lw_int32 recv_data(lw_int32 sock)
+static lw_int32 recv_socket_data(lw_int32 sock)
 {
 	char *buf = NULL;
 	lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
 	if (result > 0)
 	{
-		lw_on_parse_socket_data(buf, result, on_recv);
+		lw_on_parse_socket_data(buf, result, on_socket_recv, NULL);
 
 		nn_freemsg(buf);
 	}
@@ -102,7 +105,7 @@ static int on_pair_data(int sock)
 	while (1)
 	{
 		{
-			recv_data(sock);
+			recv_socket_data(sock);
 		}
 		
 		//SLEEP(1);
@@ -116,7 +119,7 @@ static int on_pair_data(int sock)
 		char s[256] = { 0 };
 		bool ret = msg.SerializePartialToArray(s, sizeof(s));
 
-		send_data(sock, 10000, s, strlen(s));
+		send_socket_data(sock, 10000, s, strlen(s));
 	}
 }
 

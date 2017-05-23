@@ -3,13 +3,13 @@
 #include <assert.h>
 #include <deque>
 #include <mutex>
+#include <string>
 
+#include "base_type.h"
 #include "common_marco.h"
-
-#include "NetHead.h"
-#include "NetMessage.h"
 #include "ProtocolData.h"
 #include "DataCacheQueueT.h"
+#include "NetMessage.h"
 
 using namespace LW;
 
@@ -23,10 +23,10 @@ DataCacheQueue			__g_data_queue;
 std::mutex				__g_data_mutex;
 
 
-static const lw_int32 NET_MSG_HEAD_SIZE = sizeof(NetHead);
+static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
 
 
-lw_int32 lw_on_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_RECV_SOCKET_CALLFUNC func)
+lw_int32 lw_on_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_RECV_SOCKET_CALLFUNC func, void* userdata)
 {
 	if (bufSize <= 0) return -1;
 	if (NULL == buf) return -2;
@@ -35,41 +35,44 @@ lw_int32 lw_on_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_RECV
 
 	NetHead* pHead = nullptr;
 
-	lw_int32 msgSize = (lw_int32)__g_data_queue.size();
-	if (msgSize >= NET_MSG_HEAD_SIZE)
+	lw_int32 data_queue_size = (lw_int32)__g_data_queue.size();
+	if (data_queue_size >= C_NET_HEAD_SIZE)
 	{
 		do
 		{
 			pHead = (NetHead*)__g_data_queue.front();
-			if (nullptr != pHead && msgSize >= pHead->size)
+
+			if (nullptr == pHead) break;
+			if (pHead->size > data_queue_size)
 			{
-				lw_char8* pData = (__g_data_queue.front() + NET_MSG_HEAD_SIZE);
-
-				NetMessage* smsg = NetMessage::createMessage();			
-				if (smsg)
-				{
-					smsg->setContent(pHead, pData, pHead->size - NET_MSG_HEAD_SIZE, SocketStatus_RECV);
-
-					__g_data_queue.pop(pHead->size);
-					
-					//push message
-					//__g_msg_queue.push_back(smsg);
-
-                    {
-                        func(smsg);
-                    }
-
-					NetMessage::releaseMessage(smsg);
-				}
+				printf("not a complete data packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, pHead->size);
+				break;
 			}
-            else
-            {
-                printf("%s >> not a complete data packet [msgSize = %d, pHead->size = %d]",
-                       "1111111", msgSize, pHead->size);
-            }
-            msgSize = (lw_uint32)__g_data_queue.size();
-		//} while (msgSize >= pHead->size);
-        } while (msgSize >= NET_MSG_HEAD_SIZE);
+
+			lw_char8* pData = (__g_data_queue.front() + C_NET_HEAD_SIZE);
+
+			NetMessage* smsg = NetMessage::createMessage();
+			if (smsg)
+			{
+				smsg->setContent(pHead, pData, pHead->size - C_NET_HEAD_SIZE, SocketStatus_RECV);
+
+				//push message
+				//__g_msg_queue.push_back(smsg);
+
+				{
+					func(smsg->messageHead.cmd, smsg->message, smsg->messageSize, userdata);
+				}
+
+				NetMessage::releaseMessage(smsg);
+			}
+
+			__g_data_queue.pop(pHead->size);
+
+			data_queue_size = (lw_uint32)__g_data_queue.size();
+
+			printf("packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, pHead->size);
+
+        } while (data_queue_size >= C_NET_HEAD_SIZE);
 	}
 
 	return 0;
@@ -77,14 +80,14 @@ lw_int32 lw_on_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_RECV
 
 void lw_get_message(std::function<void(NetMessage* smsg)> func)
 {
-	int queueSize = 0;
+	int queue_size = 0;
 	do
 	{
 		NetMessage* smsg = nullptr;
 		{
 			std::lock_guard < std::mutex > lock(__g_data_mutex);
-			queueSize = __g_msg_queue.size();
-			if (queueSize > 0)
+			queue_size = __g_msg_queue.size();
+			if (queue_size > 0)
 			{
 				smsg = __g_msg_queue.front();
 				__g_msg_queue.pop_front();
@@ -95,7 +98,7 @@ void lw_get_message(std::function<void(NetMessage* smsg)> func)
 			func(smsg);
 			NetMessage::releaseMessage(smsg);
 		}
-	} while (queueSize > 0);
+	} while (queue_size > 0);
 	//Director::getInstance()->getScheduler()->pauseTarget(this);
 }
 

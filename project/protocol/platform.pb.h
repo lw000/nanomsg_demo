@@ -40,11 +40,112 @@ void protobuf_ShutdownFile_platform_2eproto();
 class cs_msg_chat;
 class cs_msg_login;
 class cs_msg_logout;
+class cs_msg_recvresult;
 class csc_msg_heartbeat;
+class sc_msg_connected;
+class sc_msg_request_userinfo;
 class sc_msg_servertime;
 class sc_msg_userinfo;
 
 // ===================================================================
+
+class sc_msg_connected : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:platform.sc_msg_connected) */ {
+ public:
+  sc_msg_connected();
+  virtual ~sc_msg_connected();
+
+  sc_msg_connected(const sc_msg_connected& from);
+
+  inline sc_msg_connected& operator=(const sc_msg_connected& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const sc_msg_connected& default_instance();
+
+  static const sc_msg_connected* internal_default_instance();
+
+  void Swap(sc_msg_connected* other);
+
+  // implements Message ----------------------------------------------
+
+  inline sc_msg_connected* New() const { return New(NULL); }
+
+  sc_msg_connected* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const sc_msg_connected& from);
+  void MergeFrom(const sc_msg_connected& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  size_t ByteSizeLong() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(sc_msg_connected* other);
+  void UnsafeMergeFrom(const sc_msg_connected& from);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 order = 1;
+  bool has_order() const;
+  void clear_order();
+  static const int kOrderFieldNumber = 1;
+  ::google::protobuf::int32 order() const;
+  void set_order(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:platform.sc_msg_connected)
+ private:
+  inline void set_has_order();
+  inline void clear_has_order();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable int _cached_size_;
+  ::google::protobuf::int32 order_;
+  friend void  protobuf_InitDefaults_platform_2eproto_impl();
+  friend void  protobuf_AddDesc_platform_2eproto_impl();
+  friend void protobuf_AssignDesc_platform_2eproto();
+  friend void protobuf_ShutdownFile_platform_2eproto();
+
+  void InitAsDefaultInstance();
+};
+extern ::google::protobuf::internal::ExplicitlyConstructed<sc_msg_connected> sc_msg_connected_default_instance_;
+
+// -------------------------------------------------------------------
 
 class csc_msg_heartbeat : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:platform.csc_msg_heartbeat) */ {
  public:
@@ -141,6 +242,104 @@ class csc_msg_heartbeat : public ::google::protobuf::Message /* @@protoc_inserti
   void InitAsDefaultInstance();
 };
 extern ::google::protobuf::internal::ExplicitlyConstructed<csc_msg_heartbeat> csc_msg_heartbeat_default_instance_;
+
+// -------------------------------------------------------------------
+
+class cs_msg_recvresult : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:platform.cs_msg_recvresult) */ {
+ public:
+  cs_msg_recvresult();
+  virtual ~cs_msg_recvresult();
+
+  cs_msg_recvresult(const cs_msg_recvresult& from);
+
+  inline cs_msg_recvresult& operator=(const cs_msg_recvresult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const cs_msg_recvresult& default_instance();
+
+  static const cs_msg_recvresult* internal_default_instance();
+
+  void Swap(cs_msg_recvresult* other);
+
+  // implements Message ----------------------------------------------
+
+  inline cs_msg_recvresult* New() const { return New(NULL); }
+
+  cs_msg_recvresult* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const cs_msg_recvresult& from);
+  void MergeFrom(const cs_msg_recvresult& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  size_t ByteSizeLong() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(cs_msg_recvresult* other);
+  void UnsafeMergeFrom(const cs_msg_recvresult& from);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 result = 1;
+  bool has_result() const;
+  void clear_result();
+  static const int kResultFieldNumber = 1;
+  ::google::protobuf::int32 result() const;
+  void set_result(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:platform.cs_msg_recvresult)
+ private:
+  inline void set_has_result();
+  inline void clear_has_result();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable int _cached_size_;
+  ::google::protobuf::int32 result_;
+  friend void  protobuf_InitDefaults_platform_2eproto_impl();
+  friend void  protobuf_AddDesc_platform_2eproto_impl();
+  friend void protobuf_AssignDesc_platform_2eproto();
+  friend void protobuf_ShutdownFile_platform_2eproto();
+
+  void InitAsDefaultInstance();
+};
+extern ::google::protobuf::internal::ExplicitlyConstructed<cs_msg_recvresult> cs_msg_recvresult_default_instance_;
 
 // -------------------------------------------------------------------
 
@@ -645,6 +844,104 @@ extern ::google::protobuf::internal::ExplicitlyConstructed<cs_msg_chat> cs_msg_c
 
 // -------------------------------------------------------------------
 
+class sc_msg_request_userinfo : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:platform.sc_msg_request_userinfo) */ {
+ public:
+  sc_msg_request_userinfo();
+  virtual ~sc_msg_request_userinfo();
+
+  sc_msg_request_userinfo(const sc_msg_request_userinfo& from);
+
+  inline sc_msg_request_userinfo& operator=(const sc_msg_request_userinfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _internal_metadata_.unknown_fields();
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return _internal_metadata_.mutable_unknown_fields();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const sc_msg_request_userinfo& default_instance();
+
+  static const sc_msg_request_userinfo* internal_default_instance();
+
+  void Swap(sc_msg_request_userinfo* other);
+
+  // implements Message ----------------------------------------------
+
+  inline sc_msg_request_userinfo* New() const { return New(NULL); }
+
+  sc_msg_request_userinfo* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const sc_msg_request_userinfo& from);
+  void MergeFrom(const sc_msg_request_userinfo& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  size_t ByteSizeLong() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(sc_msg_request_userinfo* other);
+  void UnsafeMergeFrom(const sc_msg_request_userinfo& from);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 userid = 1;
+  bool has_userid() const;
+  void clear_userid();
+  static const int kUseridFieldNumber = 1;
+  ::google::protobuf::int32 userid() const;
+  void set_userid(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:platform.sc_msg_request_userinfo)
+ private:
+  inline void set_has_userid();
+  inline void clear_has_userid();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::HasBits<1> _has_bits_;
+  mutable int _cached_size_;
+  ::google::protobuf::int32 userid_;
+  friend void  protobuf_InitDefaults_platform_2eproto_impl();
+  friend void  protobuf_AddDesc_platform_2eproto_impl();
+  friend void protobuf_AssignDesc_platform_2eproto();
+  friend void protobuf_ShutdownFile_platform_2eproto();
+
+  void InitAsDefaultInstance();
+};
+extern ::google::protobuf::internal::ExplicitlyConstructed<sc_msg_request_userinfo> sc_msg_request_userinfo_default_instance_;
+
+// -------------------------------------------------------------------
+
 class sc_msg_userinfo : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:platform.sc_msg_userinfo) */ {
  public:
   sc_msg_userinfo();
@@ -716,24 +1013,31 @@ class sc_msg_userinfo : public ::google::protobuf::Message /* @@protoc_insertion
 
   // accessors -------------------------------------------------------
 
-  // required int32 age = 1;
+  // required int32 userid = 1;
+  bool has_userid() const;
+  void clear_userid();
+  static const int kUseridFieldNumber = 1;
+  ::google::protobuf::int32 userid() const;
+  void set_userid(::google::protobuf::int32 value);
+
+  // required int32 age = 2;
   bool has_age() const;
   void clear_age();
-  static const int kAgeFieldNumber = 1;
+  static const int kAgeFieldNumber = 2;
   ::google::protobuf::int32 age() const;
   void set_age(::google::protobuf::int32 value);
 
-  // required int32 sex = 2;
+  // required int32 sex = 3;
   bool has_sex() const;
   void clear_sex();
-  static const int kSexFieldNumber = 2;
+  static const int kSexFieldNumber = 3;
   ::google::protobuf::int32 sex() const;
   void set_sex(::google::protobuf::int32 value);
 
-  // required string name = 3;
+  // required string name = 4;
   bool has_name() const;
   void clear_name();
-  static const int kNameFieldNumber = 3;
+  static const int kNameFieldNumber = 4;
   const ::std::string& name() const;
   void set_name(const ::std::string& value);
   void set_name(const char* value);
@@ -742,10 +1046,10 @@ class sc_msg_userinfo : public ::google::protobuf::Message /* @@protoc_insertion
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
 
-  // required string address = 4;
+  // required string address = 5;
   bool has_address() const;
   void clear_address();
-  static const int kAddressFieldNumber = 4;
+  static const int kAddressFieldNumber = 5;
   const ::std::string& address() const;
   void set_address(const ::std::string& value);
   void set_address(const char* value);
@@ -756,6 +1060,8 @@ class sc_msg_userinfo : public ::google::protobuf::Message /* @@protoc_insertion
 
   // @@protoc_insertion_point(class_scope:platform.sc_msg_userinfo)
  private:
+  inline void set_has_userid();
+  inline void clear_has_userid();
   inline void set_has_age();
   inline void clear_has_age();
   inline void set_has_sex();
@@ -773,6 +1079,7 @@ class sc_msg_userinfo : public ::google::protobuf::Message /* @@protoc_insertion
   mutable int _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr name_;
   ::google::protobuf::internal::ArenaStringPtr address_;
+  ::google::protobuf::int32 userid_;
   ::google::protobuf::int32 age_;
   ::google::protobuf::int32 sex_;
   friend void  protobuf_InitDefaults_platform_2eproto_impl();
@@ -790,6 +1097,37 @@ extern ::google::protobuf::internal::ExplicitlyConstructed<sc_msg_userinfo> sc_m
 // ===================================================================
 
 #if !PROTOBUF_INLINE_NOT_IN_HEADERS
+// sc_msg_connected
+
+// required int32 order = 1;
+inline bool sc_msg_connected::has_order() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void sc_msg_connected::set_has_order() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void sc_msg_connected::clear_has_order() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void sc_msg_connected::clear_order() {
+  order_ = 0;
+  clear_has_order();
+}
+inline ::google::protobuf::int32 sc_msg_connected::order() const {
+  // @@protoc_insertion_point(field_get:platform.sc_msg_connected.order)
+  return order_;
+}
+inline void sc_msg_connected::set_order(::google::protobuf::int32 value) {
+  set_has_order();
+  order_ = value;
+  // @@protoc_insertion_point(field_set:platform.sc_msg_connected.order)
+}
+
+inline const sc_msg_connected* sc_msg_connected::internal_default_instance() {
+  return &sc_msg_connected_default_instance_.get();
+}
+// -------------------------------------------------------------------
+
 // csc_msg_heartbeat
 
 // required int32 order = 1;
@@ -818,6 +1156,37 @@ inline void csc_msg_heartbeat::set_order(::google::protobuf::int32 value) {
 
 inline const csc_msg_heartbeat* csc_msg_heartbeat::internal_default_instance() {
   return &csc_msg_heartbeat_default_instance_.get();
+}
+// -------------------------------------------------------------------
+
+// cs_msg_recvresult
+
+// required int32 result = 1;
+inline bool cs_msg_recvresult::has_result() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void cs_msg_recvresult::set_has_result() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void cs_msg_recvresult::clear_has_result() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void cs_msg_recvresult::clear_result() {
+  result_ = 0;
+  clear_has_result();
+}
+inline ::google::protobuf::int32 cs_msg_recvresult::result() const {
+  // @@protoc_insertion_point(field_get:platform.cs_msg_recvresult.result)
+  return result_;
+}
+inline void cs_msg_recvresult::set_result(::google::protobuf::int32 value) {
+  set_has_result();
+  result_ = value;
+  // @@protoc_insertion_point(field_set:platform.cs_msg_recvresult.result)
+}
+
+inline const cs_msg_recvresult* cs_msg_recvresult::internal_default_instance() {
+  return &cs_msg_recvresult_default_instance_.get();
 }
 // -------------------------------------------------------------------
 
@@ -1257,17 +1626,72 @@ inline const cs_msg_chat* cs_msg_chat::internal_default_instance() {
 }
 // -------------------------------------------------------------------
 
-// sc_msg_userinfo
+// sc_msg_request_userinfo
 
-// required int32 age = 1;
-inline bool sc_msg_userinfo::has_age() const {
+// required int32 userid = 1;
+inline bool sc_msg_request_userinfo::has_userid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void sc_msg_userinfo::set_has_age() {
+inline void sc_msg_request_userinfo::set_has_userid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void sc_msg_userinfo::clear_has_age() {
+inline void sc_msg_request_userinfo::clear_has_userid() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void sc_msg_request_userinfo::clear_userid() {
+  userid_ = 0;
+  clear_has_userid();
+}
+inline ::google::protobuf::int32 sc_msg_request_userinfo::userid() const {
+  // @@protoc_insertion_point(field_get:platform.sc_msg_request_userinfo.userid)
+  return userid_;
+}
+inline void sc_msg_request_userinfo::set_userid(::google::protobuf::int32 value) {
+  set_has_userid();
+  userid_ = value;
+  // @@protoc_insertion_point(field_set:platform.sc_msg_request_userinfo.userid)
+}
+
+inline const sc_msg_request_userinfo* sc_msg_request_userinfo::internal_default_instance() {
+  return &sc_msg_request_userinfo_default_instance_.get();
+}
+// -------------------------------------------------------------------
+
+// sc_msg_userinfo
+
+// required int32 userid = 1;
+inline bool sc_msg_userinfo::has_userid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void sc_msg_userinfo::set_has_userid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void sc_msg_userinfo::clear_has_userid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void sc_msg_userinfo::clear_userid() {
+  userid_ = 0;
+  clear_has_userid();
+}
+inline ::google::protobuf::int32 sc_msg_userinfo::userid() const {
+  // @@protoc_insertion_point(field_get:platform.sc_msg_userinfo.userid)
+  return userid_;
+}
+inline void sc_msg_userinfo::set_userid(::google::protobuf::int32 value) {
+  set_has_userid();
+  userid_ = value;
+  // @@protoc_insertion_point(field_set:platform.sc_msg_userinfo.userid)
+}
+
+// required int32 age = 2;
+inline bool sc_msg_userinfo::has_age() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void sc_msg_userinfo::set_has_age() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void sc_msg_userinfo::clear_has_age() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void sc_msg_userinfo::clear_age() {
   age_ = 0;
@@ -1283,15 +1707,15 @@ inline void sc_msg_userinfo::set_age(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:platform.sc_msg_userinfo.age)
 }
 
-// required int32 sex = 2;
+// required int32 sex = 3;
 inline bool sc_msg_userinfo::has_sex() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void sc_msg_userinfo::set_has_sex() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void sc_msg_userinfo::clear_has_sex() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void sc_msg_userinfo::clear_sex() {
   sex_ = 0;
@@ -1307,15 +1731,15 @@ inline void sc_msg_userinfo::set_sex(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:platform.sc_msg_userinfo.sex)
 }
 
-// required string name = 3;
+// required string name = 4;
 inline bool sc_msg_userinfo::has_name() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void sc_msg_userinfo::set_has_name() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void sc_msg_userinfo::clear_has_name() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void sc_msg_userinfo::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -1361,15 +1785,15 @@ inline void sc_msg_userinfo::set_allocated_name(::std::string* name) {
   // @@protoc_insertion_point(field_set_allocated:platform.sc_msg_userinfo.name)
 }
 
-// required string address = 4;
+// required string address = 5;
 inline bool sc_msg_userinfo::has_address() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void sc_msg_userinfo::set_has_address() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void sc_msg_userinfo::clear_has_address() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void sc_msg_userinfo::clear_address() {
   address_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -1419,6 +1843,12 @@ inline const sc_msg_userinfo* sc_msg_userinfo::internal_default_instance() {
   return &sc_msg_userinfo_default_instance_.get();
 }
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -1,6 +1,3 @@
-// project.cpp : 定义控制台应用程序的入口点。
-//
-
 /*
 
 Copyright 2016 Garrett D'Amore <garrett@damore.org>
@@ -102,24 +99,15 @@ For example:
 #include <unistd.h>
 #endif
 
-
 #include "base_type.h"
 #include "common_marco.h"
-
-#include "NetHead.h"
 #include "NetMessage.h"
-#include "ProtocolData.h"
-
-#include "Message.h"
-
-
-#include "platform.pb.h"
-
-
 #include "business.h"
 
-using namespace LW;
+#include "Message.h"
+#include "platform.pb.h"
 
+using namespace LW;
 
 #ifdef _WIN32
 #define SLEEP(seconds) SleepEx(seconds * 1000, 1);
@@ -127,21 +115,24 @@ using namespace LW;
 #define SLEEP(seconds) sleep(seconds);
 #endif
 
-static void on_recv(void* buf)
+static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize);
+static lw_int32 recv_socket_data(lw_int32 sock);
+static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
+
+static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
-    NetMessage* smsg = (NetMessage*)buf;
-    switch (smsg->messageHead.cmd)
+	switch (cmd)
     {
         case 10000:
         {
-            sc_userinfo *user = (sc_userinfo*)(smsg->message);
+            sc_userinfo *user = (sc_userinfo*)(buf);
             printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
                    user->age, user->sex, user->name, user->address);
         } break;
         case 10001:	//
         {
             platform::sc_msg_userinfo msg;
-            msg.ParseFromArray(smsg->message, smsg->messageSize);
+            msg.ParseFromArray(buf, bufsize);
             printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
                    msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
         }break;
@@ -154,7 +145,7 @@ static void on_recv(void* buf)
     }
 }
 
-lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
+lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
     LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
     
@@ -165,13 +156,13 @@ lw_int32 send_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSiz
     return result;
 }
 
-lw_int32 recv_data(lw_int32 sock)
+lw_int32 recv_socket_data(lw_int32 sock)
 {
     char *buf = NULL;
     lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
     if (result > 0)
     {
-        lw_on_parse_socket_data(buf, result, on_recv);
+        lw_on_parse_socket_data(buf, result, on_socket_recv, NULL);
         
         nn_freemsg(buf);
     }
@@ -186,10 +177,9 @@ lw_int32 recv_data(lw_int32 sock)
 
 /*  The client runs in a loop, displaying the content. */
 
-int sub_client(const char *url)
+int client(const char *url)
 {
 	int fd;
-	int rc;
 	fd = nn_socket(AF_SP, NN_SUB);
 
 	if (fd < 0) {
@@ -211,10 +201,10 @@ int sub_client(const char *url)
 		return (-1);
 	}
 
-	for (;;) 
+	do
 	{
-        recv_data(fd);
-    }
+		recv_socket_data(fd);
+	} while (1);
 
 	nn_close(fd);
 
@@ -225,7 +215,7 @@ int main(int argc, char **argv)
 {
 	int rc;
 	if (argc == 2) {
-		rc = sub_client(argv[1]);
+		rc = client(argv[1]);
 	}
 	else {
 		fprintf(stderr, "Usage: %s <url> [-s]\n", argv[0]);

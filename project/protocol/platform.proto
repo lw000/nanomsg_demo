@@ -2,10 +2,22 @@ syntax = "proto2";
 
 package platform;
 
+// 连接消息
+message sc_msg_connected
+{
+	required int32     order = 1;  // ID
+}
+
 // 心跳消息
 message csc_msg_heartbeat
 {
 	required int32     order = 1;  // ID
+}
+
+// 消息
+message cs_msg_recvresult
+{
+	required int32     result = 1;  // ID
 }
 
 message sc_msg_servertime {
@@ -39,11 +51,17 @@ message cs_msg_chat
 }
 
 // 用户信息消息
+message sc_msg_request_userinfo
+{
+	required int32     userid = 1;			// u_id
+}
+
 message sc_msg_userinfo
 {
-	required int32     age = 1;			// u_id
-	required int32     sex = 2;			// u_id
-	required string    name = 3;			// u_id
-	required string    address = 4;		// str
+	required int32     userid = 1;			// u_id
+	required int32     age = 2;			// u_id
+	required int32     sex = 3;			// u_id
+	required string    name = 4;			// u_id
+	required string    address = 5;		// str
 }
 
