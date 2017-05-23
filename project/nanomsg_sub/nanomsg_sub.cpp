@@ -99,9 +99,6 @@ For example:
 #include <unistd.h>
 #endif
 
-#include "base_type.h"
-#include "common_marco.h"
-#include "NetMessage.h"
 #include "business.h"
 
 #include "Message.h"
@@ -147,13 +144,13 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
-    LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
-    
-    lw_int32 result = nn_send(sock, p->buf, p->size, 0);
-    
-    lw_free_net_message(p);
-    
-    return result;
+	lw_int32 result = 0;
+	{
+		LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
+		result = nn_send(sock, p->buf, p->size, 0);
+		lw_free_net_message(p);
+	}
+	return result;
 }
 
 lw_int32 recv_socket_data(lw_int32 sock)
@@ -162,7 +159,7 @@ lw_int32 recv_socket_data(lw_int32 sock)
     lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
     if (result > 0)
     {
-        lw_on_parse_socket_data(buf, result, on_socket_recv, NULL);
+		lw_parse_socket_data(buf, result, on_socket_recv, NULL);
         
         nn_freemsg(buf);
     }

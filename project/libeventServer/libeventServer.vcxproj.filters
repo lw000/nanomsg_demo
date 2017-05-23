@@ -36,6 +36,9 @@
     <ClCompile Include="..\protocol\platform.pb.cc">
       <Filter>通讯协议</Filter>
     </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protocol\game.pb.h">
@@ -49,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="..\protocol_0\NetCmd.h">
       <Filter>通讯协议0</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,12 +13,9 @@
 #include<event2/buffer.h>
 #include<event2/util.h>
 
-
-#include "base_type.h"
-#include "common_marco.h"
-#include "NetMessage.h"
 #include "business.h"
 
+#include "NetCmd.h"
 #include "Message.h"
 #include "platform.pb.h"
 
@@ -49,13 +46,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	struct bufferevent *bev = (struct bufferevent *)userdata;
 	switch (cmd)
 	{
-	case 100:
-	{
-		platform::csc_msg_heartbeat msg;
-		msg.ParseFromArray(buf, bufsize);
-		printf(" order: %d\n", msg.order());
-	}break;
-	case 20001:
+	case CMD_PLATFORM_SC_USERINFO:
 	{
 		platform::sc_msg_userinfo userinfo;
 		userinfo.ParseFromArray(buf, bufsize);
@@ -69,11 +60,12 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 static lw_int32 send_socket_data(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
-	LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
-
-	lw_int32 result = bufferevent_write(bev, p->buf, p->size);
-	lw_free_net_message(p);
-
+	lw_int32 result = 0;
+	{
+		LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
+		result = bufferevent_write(bev, p->buf, p->size);
+		lw_free_net_message(p);
+	}
 	return result;
 }
 
@@ -92,26 +84,15 @@ static void time_cb(evutil_socket_t fd, short event, void *arg)
 		event_add(&client->timer, &tv);
 
 		{
-			platform::csc_msg_heartbeat msg;
-			msg.set_order(100);
-
-			int len = (int)msg.ByteSizeLong();
-			char s[256] = { 0 };
-			bool ret = msg.SerializeToArray(s, len);
-			if (ret) {
-				send_socket_data(client->bev, 100, s, len);
-			}
-		}
-
-		{
 			platform::sc_msg_request_userinfo msg;
 			msg.set_userid(400001);
 
 			int len = (int)msg.ByteSizeLong();
 			char s[256] = { 0 };
 			bool ret = msg.SerializeToArray(s, len);
-			if (ret) {
-				send_socket_data(client->bev, 10001, s, len);
+			if (ret)
+			{
+				send_socket_data(client->bev, CMD_PLATFORM_CS_USERINFO, s, len);
 			}
 		}
 	}
@@ -119,20 +100,21 @@ static void time_cb(evutil_socket_t fd, short event, void *arg)
 
 static void read_cb(struct bufferevent* bev, void* arg)
 {
-	struct evbuffer *input;
-	input = bufferevent_get_input(bev);
+	struct evbuffer *input = bufferevent_get_input(bev);
 	size_t input_len = evbuffer_get_length(input);
 
-	char *read_buf = (char*)malloc(input_len);
-
-	size_t read_len = bufferevent_read(bev, read_buf, input_len);
-
-	if (lw_on_parse_socket_data(read_buf, read_len, on_socket_recv, bev) == 0)
 	{
+		char *read_buf = (char*)malloc(input_len);
 
+		size_t read_len = bufferevent_read(bev, read_buf, input_len);
+
+		if (lw_parse_socket_data(read_buf, read_len, on_socket_recv, bev) == 0)
+		{
+
+		}
+
+		free(read_buf);
 	}
-
-	free(read_buf);
 }
 
 static void event_cb(struct bufferevent *bev, short event, void *arg)

@@ -26,18 +26,17 @@ std::mutex				__g_data_mutex;
 static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
 
 
-lw_int32 lw_on_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_RECV_SOCKET_CALLFUNC func, void* userdata)
+lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_DATA_CALLFUNC func, void* userdata)
 {
 	if (bufSize <= 0) return -1;
 	if (NULL == buf) return -2;
 
 	__g_data_queue.push(const_cast<char*>(buf), bufSize);
 
-	NetHead* pHead = nullptr;
-
 	lw_int32 data_queue_size = (lw_int32)__g_data_queue.size();
 	if (data_queue_size >= C_NET_HEAD_SIZE)
 	{
+		NetHead* pHead = nullptr;
 		do
 		{
 			pHead = (NetHead*)__g_data_queue.front();
@@ -70,7 +69,7 @@ lw_int32 lw_on_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_RECV
 
 			data_queue_size = (lw_uint32)__g_data_queue.size();
 
-			printf("packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, pHead->size);
+			/*printf("packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, pHead->size);*/
 
         } while (data_queue_size >= C_NET_HEAD_SIZE);
 	}
@@ -101,7 +100,6 @@ void lw_get_message(std::function<void(NetMessage* smsg)> func)
 	} while (queue_size > 0);
 	//Director::getInstance()->getScheduler()->pauseTarget(this);
 }
-
 
 LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, void* object, lw_int32 objectSize)
 {

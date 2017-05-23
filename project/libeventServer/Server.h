@@ -1,10 +1,12 @@
-#ifndef __HNSocketServer_H__
-#define __HNSocketServer_H__
+#ifndef __Server_H__
+#define __Server_H__
 
 #include "event2/event.h"
-#include <hash_map>
+#include "business.h"
 
-class Client;
+#include <vector>
+
+struct CLIENT;
 
 class Server final
 {
@@ -13,24 +15,26 @@ public:
 	~Server();
 
 public:
-	static Server* getInstance();
-
-public:
-	std::hash_map<int, Client*> SocktClients;
-
-public:
-	void run(u_short port = 9876);
+	static Server* sharedInstance();
 
 public:
 	event_base* getEventBase();
-	int attach(Client* client);
 
 public:
-	void onAccept(evutil_socket_t sock, short event, void* arg);
+	lw_int32 sendData(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize);
+	lw_int32 run(u_short port, LW_PARSE_DATA_CALLFUNC func);
+
+public:
+	void listenerCB(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
+	void readCB(struct bufferevent *, void *);
+	void writeCB(struct bufferevent *, void *);
+	void eventCB(struct bufferevent *, short, void *);
+	void signalCB(evutil_socket_t, short, void *);
 
 private:
 	struct event_base* _base;
-	FILE* f;
+	LW_PARSE_DATA_CALLFUNC _on_recv_func;
+	std::vector<CLIENT*> vtClients;
 };
 
-#endif // !__HNSocketServer_H__
+#endif // !__Server_H__

@@ -19,9 +19,6 @@
 #include <unistd.h>
 #endif
 
-#include "base_type.h"
-#include "common_marco.h"
-#include "NetMessage.h"
 #include "business.h"
 
 #include "Message.h"
@@ -86,7 +83,7 @@ static lw_int32 recv_socket_data(lw_int32 sock)
 	lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
 	if (result > 0)
 	{
-		lw_on_parse_socket_data(buf, result, on_socket_recv, NULL);
+		lw_parse_socket_data(buf, result, on_socket_recv, NULL);
 
 		nn_freemsg(buf);
 	}

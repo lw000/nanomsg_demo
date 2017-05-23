@@ -93,6 +93,7 @@
     <ClCompile Include="..\protocol\platform.pb.cc" />
     <ClCompile Include="libeventServerEx.cpp" />
     <ClCompile Include="libeventServer.cpp" />
+    <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\protobuf_demo\protobuf_demo.vcxproj">
@@ -104,6 +105,7 @@
     <ClInclude Include="..\protocol\platform.pb.h" />
     <ClInclude Include="..\protocol_0\Message.h" />
     <ClInclude Include="..\protocol_0\NetCmd.h" />
+    <ClInclude Include="Server.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\protocol\game.proto" />
