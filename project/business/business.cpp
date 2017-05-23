@@ -18,28 +18,26 @@ typedef DataCacheQueueT<lw_char8>		DataCacheQueue;
 
 NetMessageQueue			__g_msg_queue;
 
-DataCacheQueue			__g_data_queue;
+DataCacheQueue			__g_cache_queue;
 
 std::mutex				__g_data_mutex;
 
-
 static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
-
 
 lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_DATA_CALLFUNC func, void* userdata)
 {
 	if (bufSize <= 0) return -1;
 	if (NULL == buf) return -2;
 
-	__g_data_queue.push(const_cast<char*>(buf), bufSize);
+	__g_cache_queue.push(const_cast<char*>(buf), bufSize);
 
-	lw_int32 data_queue_size = (lw_int32)__g_data_queue.size();
+	lw_int32 data_queue_size = (lw_int32)__g_cache_queue.size();
 	if (data_queue_size >= C_NET_HEAD_SIZE)
 	{
 		NetHead* pHead = nullptr;
 		do
 		{
-			pHead = (NetHead*)__g_data_queue.front();
+			pHead = (NetHead*)__g_cache_queue.front();
 
 			if (nullptr == pHead) break;
 			if (pHead->size > data_queue_size)
@@ -48,7 +46,7 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 				break;
 			}
 
-			lw_char8* pData = (__g_data_queue.front() + C_NET_HEAD_SIZE);
+			lw_char8* pData = (__g_cache_queue.front() + C_NET_HEAD_SIZE);
 
 			NetMessage* smsg = NetMessage::createMessage();
 			if (smsg)
@@ -65,9 +63,9 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 				NetMessage::releaseMessage(smsg);
 			}
 
-			__g_data_queue.pop(pHead->size);
+			__g_cache_queue.pop(pHead->size);
 
-			data_queue_size = (lw_uint32)__g_data_queue.size();
+			data_queue_size = (lw_uint32)__g_cache_queue.size();
 
 			/*printf("packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, pHead->size);*/
 
