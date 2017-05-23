@@ -16,18 +16,27 @@
 
 #include "common_marco.h"
 
+#ifdef WIN32
+#include <ws2tcpip.h>
+#else
+#include <sys/socket.h>
+#endif // _WIN32
+
+
 static Server * __gs_shared_server = NULL;
 
 struct CLIENT
 {
 	struct bufferevent* bev;
 	bool live;
+	char ip[64];
+	char port[8];
 };
 
 static void listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
-static void read_cb(struct bufferevent *, void *);
-static void write_cb(struct bufferevent *, void *);
-static void event_cb(struct bufferevent *, short, void *);
+static void bufferread_cb(struct bufferevent *, void *);
+static void bufferwrite_cb(struct bufferevent *, void *);
+static void bufferevent_cb(struct bufferevent *, short, void *);
 static void signal_cb(evutil_socket_t, short, void *);
 
 static void listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
@@ -35,19 +44,19 @@ static void listener_cb(struct evconnlistener *listener, evutil_socket_t fd, str
 	__gs_shared_server->listenerCB(listener, fd, sa, socklen, user_data);
 }
 
-static void read_cb(struct bufferevent *bev, void *user_data)
+static void bufferread_cb(struct bufferevent *bev, void *user_data)
 {
-	__gs_shared_server->readCB(bev, user_data);
+	__gs_shared_server->bufferreadCB(bev, user_data);
 }
 
-static void write_cb(struct bufferevent *bev, void *user_data)
+static void bufferwrite_cb(struct bufferevent *bev, void *user_data)
 {
-	__gs_shared_server->writeCB(bev, user_data);
+	__gs_shared_server->bufferwriteCB(bev, user_data);
 }
 
-static void event_cb(struct bufferevent *bev, short event, void *user_data)
+static void bufferevent_cb(struct bufferevent *bev, short event, void *user_data)
 {
-	__gs_shared_server->eventCB(bev, event, user_data);
+	__gs_shared_server->buffereventCB(bev, event, user_data);
 }
 
 static void signal_cb(evutil_socket_t fd, short event, void *user_data)
@@ -58,6 +67,16 @@ static void signal_cb(evutil_socket_t fd, short event, void *user_data)
 static void log_cb(int severity, const char *msg)
 {
 
+}
+
+static void accept_error_cb(struct evconnlistener * listener, void * userdata)
+{
+	struct event_base *base = evconnlistener_get_base(listener);
+	int err = EVUTIL_SOCKET_ERROR();
+
+	printf("got an error %d (%s) on the listener. Shutting down.\n", err, evutil_socket_error_to_string(err));
+	
+	event_base_loopexit(base, NULL);
 }
 
 
@@ -110,8 +129,10 @@ void Server::signalCB(evutil_socket_t fd, short events, void *user_data)
 	event_base_loopexit(base, &delay);
 }
 
-void Server::writeCB(struct bufferevent *bev, void *user_data)
+void Server::bufferwriteCB(struct bufferevent *bev, void *user_data)
 {
+	CLIENT* pClient = (CLIENT*)user_data;
+
 	struct evbuffer *output = bufferevent_get_output(bev);
 	if (evbuffer_get_length(output) == 0)
 	{
@@ -122,14 +143,17 @@ void Server::writeCB(struct bufferevent *bev, void *user_data)
 }
 
 // 从客户端读取数据
-void Server::readCB(struct bufferevent *bev, void *user_data)
+void Server::bufferreadCB(struct bufferevent *bev, void *user_data)
 {
+	CLIENT* pClient = (CLIENT*)user_data;
+
 	{
 		struct evbuffer *input;
 		input = bufferevent_get_input(bev);
 		size_t input_len = evbuffer_get_length(input);
 
 		char *read_buf = (char*)malloc(input_len);
+		
 		size_t read_len = bufferevent_read(bev, read_buf, input_len);
 
 		if (read_len == input_len)
@@ -144,8 +168,10 @@ void Server::readCB(struct bufferevent *bev, void *user_data)
 	}
 }
 
-void Server::eventCB(struct bufferevent *bev, short event, void *user_data)
+void Server::buffereventCB(struct bufferevent *bev, short event, void *user_data)
 {
+	CLIENT* pClient = (CLIENT*)user_data;
+
 	if (event & BEV_EVENT_EOF)
 	{
 		printf("connection closed.\n");
@@ -179,12 +205,20 @@ void Server::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, str
 	bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
 	if (NULL != bev)
 	{
-		bufferevent_setcb(bev, ::read_cb, ::write_cb, ::event_cb, nullptr);
-		bufferevent_enable(bev, EV_WRITE | EV_READ);
+		char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
+
+		getnameinfo(sa, socklen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf),
+			NI_NUMERICHOST | NI_NUMERICSERV);
+		printf("Welcome (host=%s, port=%s)\n", hbuf, sbuf);
 
 		CLIENT* pClient = new CLIENT();
 		pClient->bev = bev;
 		pClient->live = true;
+		strcpy(pClient->ip, hbuf);
+		strcpy(pClient->port, sbuf);
+
+		bufferevent_setcb(bev, ::bufferread_cb, ::bufferwrite_cb, ::bufferevent_cb, pClient);
+		bufferevent_enable(bev, EV_WRITE | EV_READ);
 
 		vtClients.push_back(pClient);
 	}
@@ -216,7 +250,7 @@ lw_int32 Server::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
 
 	struct sockaddr_in sin;
 	sin.sin_family = AF_INET;
-	sin.sin_addr.s_addr = 0;
+	sin.sin_addr.s_addr = htonl(0);	//绑定0.0.0.0地址
 	sin.sin_port = htons(port);
 
 	struct evconnlistener *listener;
@@ -230,6 +264,8 @@ lw_int32 Server::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
 		fprintf(stderr, "could not create/add a signal event!\n");
 		return -3;
 	}
+
+	evconnlistener_set_error_cb(listener, accept_error_cb);
 
 	int ret = event_base_dispatch(base);
 

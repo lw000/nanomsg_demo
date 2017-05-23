@@ -26,9 +26,9 @@ public:
 
 public:
 	void listenerCB(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
-	void readCB(struct bufferevent *, void *);
-	void writeCB(struct bufferevent *, void *);
-	void eventCB(struct bufferevent *, short, void *);
+	void bufferreadCB(struct bufferevent *, void *);
+	void bufferwriteCB(struct bufferevent *, void *);
+	void buffereventCB(struct bufferevent *, short, void *);
 	void signalCB(evutil_socket_t, short, void *);
 
 private:
