@@ -12,15 +12,14 @@ namespace LW
 
 	#define SOCKET_CALLBACK(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, ##__VA_ARGS__)
 
-
 	class NetMessage 
 	{
 		public:
-			static NetMessage* createMessage();
-			static void releaseMessage(NetMessage* message);
+			static NetMessage* createNetMessage();
+			static void releaseNetMessage(NetMessage* message);
 
 		public:
-			void setContent(const NetHead* head, lw_char8* msg, lw_int32 msgsize, emSocketStatus Status);
+			void setMessage(const NetHead* head, lw_char8* msg, lw_int32 msgsize, enMsgStatus Status);
 
 		private:
 			NetMessage();
@@ -37,7 +36,7 @@ namespace LW
 			lw_ullong64 ullKey;
 
 	private:
-		emSocketStatus Status;
+		enMsgStatus Status;
 	};
 
 	class NetMessageSelectorItem

@@ -15,17 +15,17 @@ namespace LW
 {
 	//////////////////////////////////////////////////////////////////////////
 
-	NetMessage* NetMessage::createMessage()
+	NetMessage* NetMessage::createNetMessage()
 	{
 		return new NetMessage();
 	}
 
-	void NetMessage::releaseMessage(NetMessage* message)
+	void NetMessage::releaseNetMessage(NetMessage* message)
 	{
 		SAFE_DELETE(message);
 	}
 
-	NetMessage::NetMessage() : message(NULL), messageSize(0), Status(SocketStatus_UNKNOW)
+	NetMessage::NetMessage() : message(NULL), messageSize(0), Status(msgStatus_UNKNOW)
 	{
 		//::memset(message, 0x0, sizeof(message));
 		::memset(&messageHead, 0x0, sizeof(message));
@@ -46,7 +46,7 @@ namespace LW
 // 		gMemPool.release(ptrObject);
 // 	}
 
-	void NetMessage::setContent(const NetHead* head, lw_char8* msg, lw_int32 msgsize, emSocketStatus Status)
+	void NetMessage::setMessage(const NetHead* head, lw_char8* msg, lw_int32 msgsize, enMsgStatus Status)
 	{
 		time_t t;
 		t = (time_t)ntohl(head->create_time);

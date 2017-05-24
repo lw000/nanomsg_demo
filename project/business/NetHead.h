@@ -20,7 +20,11 @@ namespace LW
 		lw_int32						cmd;				// 指令
 		lw_uint32						create_time;		// 发送时间
 		lw_int32						reserve;			// 保留字段
-
+	public:
+		tagNetHead()
+		{
+			memset(this, 0x00, sizeof(tagNetHead));
+		}
 	public:
 		void debug()
 		{

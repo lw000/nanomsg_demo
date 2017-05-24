@@ -18,17 +18,15 @@ typedef		unsigned long long		lw_ullong64;
 
 typedef		double					lw_double;
 
-#define		INVALID_VALUE			lw_uint32(-1)
-
-enum emSocketStatus
+enum enMsgStatus
 {
-	SocketStatus_UNKNOW			= 0,
-	SocketStatus_CONNECTING,
-	SocketStatus_OUTTIME,
-	SocketStatus_CONNECED,
-	SocketStatus_RECV,
-	SocketStatus_DISCONNECT,
-	SocketStatus_ERROR
+	msgStatus_UNKNOW			= 0,
+	msgStatus_CONNECTING,
+	msgStatus_TIMEOUT,
+	msgStatus_CONNECED,
+	msgStatus_RECV,
+	msgStatus_DISCONNECT,
+	msgStatus_ERROR
 };
 
 #endif	//__BaseType_H__

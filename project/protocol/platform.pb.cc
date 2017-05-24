@@ -75,7 +75,7 @@ void protobuf_AssignDesc_platform_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_connected, _internal_metadata_));
   csc_msg_heartbeat_descriptor_ = file->message_type(1);
   static const int csc_msg_heartbeat_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(csc_msg_heartbeat, order_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(csc_msg_heartbeat, time_),
   };
   csc_msg_heartbeat_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -291,19 +291,19 @@ void protobuf_AddDesc_platform_2eproto_impl() {
   protobuf_InitDefaults_platform_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\016platform.proto\022\010platform\"!\n\020sc_msg_con"
-    "nected\022\r\n\005order\030\001 \002(\005\"\"\n\021csc_msg_heartbe"
-    "at\022\r\n\005order\030\001 \002(\005\"#\n\021cs_msg_recvresult\022\016"
-    "\n\006result\030\001 \002(\005\"!\n\021sc_msg_servertime\022\014\n\004t"
-    "ime\030\001 \002(\005\"A\n\014cs_msg_login\022\016\n\006device\030\001 \002("
-    "\005\022\020\n\010username\030\002 \002(\t\022\017\n\007userpsd\030\003 \002(\t\"N\n\r"
-    "cs_msg_logout\022\016\n\006device\030\001 \002(\005\022\017\n\007from_id"
-    "\030\002 \002(\005\022\017\n\007recv_id\030\003 \002(\005\022\013\n\003msg\030\004 \002(\t\"L\n\013"
-    "cs_msg_chat\022\016\n\006device\030\001 \002(\005\022\017\n\007from_id\030\002"
-    " \002(\005\022\017\n\007recv_id\030\003 \002(\005\022\013\n\003msg\030\004 \002(\t\")\n\027sc"
-    "_msg_request_userinfo\022\016\n\006userid\030\001 \002(\005\"Z\n"
-    "\017sc_msg_userinfo\022\016\n\006userid\030\001 \002(\005\022\013\n\003age\030"
-    "\002 \002(\005\022\013\n\003sex\030\003 \002(\005\022\014\n\004name\030\004 \002(\t\022\017\n\007addr"
-    "ess\030\005 \002(\t", 529);
+    "nected\022\r\n\005order\030\001 \002(\005\"!\n\021csc_msg_heartbe"
+    "at\022\014\n\004time\030\001 \002(\003\"#\n\021cs_msg_recvresult\022\016\n"
+    "\006result\030\001 \002(\005\"!\n\021sc_msg_servertime\022\014\n\004ti"
+    "me\030\001 \002(\005\"A\n\014cs_msg_login\022\016\n\006device\030\001 \002(\005"
+    "\022\020\n\010username\030\002 \002(\t\022\017\n\007userpsd\030\003 \002(\t\"N\n\rc"
+    "s_msg_logout\022\016\n\006device\030\001 \002(\005\022\017\n\007from_id\030"
+    "\002 \002(\005\022\017\n\007recv_id\030\003 \002(\005\022\013\n\003msg\030\004 \002(\t\"L\n\013c"
+    "s_msg_chat\022\016\n\006device\030\001 \002(\005\022\017\n\007from_id\030\002 "
+    "\002(\005\022\017\n\007recv_id\030\003 \002(\005\022\013\n\003msg\030\004 \002(\t\")\n\027sc_"
+    "msg_request_userinfo\022\016\n\006userid\030\001 \002(\005\"Z\n\017"
+    "sc_msg_userinfo\022\016\n\006userid\030\001 \002(\005\022\013\n\003age\030\002"
+    " \002(\005\022\013\n\003sex\030\003 \002(\005\022\014\n\004name\030\004 \002(\t\022\017\n\007addre"
+    "ss\030\005 \002(\t", 528);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "platform.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_platform_2eproto);
@@ -613,7 +613,7 @@ inline const sc_msg_connected* sc_msg_connected::internal_default_instance() {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int csc_msg_heartbeat::kOrderFieldNumber;
+const int csc_msg_heartbeat::kTimeFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 csc_msg_heartbeat::csc_msg_heartbeat()
@@ -636,7 +636,7 @@ csc_msg_heartbeat::csc_msg_heartbeat(const csc_msg_heartbeat& from)
 
 void csc_msg_heartbeat::SharedCtor() {
   _cached_size_ = 0;
-  order_ = 0;
+  time_ = GOOGLE_LONGLONG(0);
 }
 
 csc_msg_heartbeat::~csc_msg_heartbeat() {
@@ -674,7 +674,7 @@ csc_msg_heartbeat* csc_msg_heartbeat::New(::google::protobuf::Arena* arena) cons
 
 void csc_msg_heartbeat::Clear() {
 // @@protoc_insertion_point(message_clear_start:platform.csc_msg_heartbeat)
-  order_ = 0;
+  time_ = GOOGLE_LONGLONG(0);
   _has_bits_.Clear();
   if (_internal_metadata_.have_unknown_fields()) {
     mutable_unknown_fields()->Clear();
@@ -691,13 +691,13 @@ bool csc_msg_heartbeat::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int32 order = 1;
+      // required int64 time = 1;
       case 1: {
         if (tag == 8) {
-          set_has_order();
+          set_has_time();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &order_)));
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &time_)));
         } else {
           goto handle_unusual;
         }
@@ -730,9 +730,9 @@ failure:
 void csc_msg_heartbeat::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:platform.csc_msg_heartbeat)
-  // required int32 order = 1;
-  if (has_order()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->order(), output);
+  // required int64 time = 1;
+  if (has_time()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->time(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -746,9 +746,9 @@ void csc_msg_heartbeat::SerializeWithCachedSizes(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
   // @@protoc_insertion_point(serialize_to_array_start:platform.csc_msg_heartbeat)
-  // required int32 order = 1;
-  if (has_order()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->order(), target);
+  // required int64 time = 1;
+  if (has_time()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->time(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -763,11 +763,11 @@ size_t csc_msg_heartbeat::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:platform.csc_msg_heartbeat)
   size_t total_size = 0;
 
-  // required int32 order = 1;
-  if (has_order()) {
+  // required int64 time = 1;
+  if (has_time()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->order());
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->time());
   }
   if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
@@ -808,8 +808,8 @@ void csc_msg_heartbeat::MergeFrom(const csc_msg_heartbeat& from) {
 void csc_msg_heartbeat::UnsafeMergeFrom(const csc_msg_heartbeat& from) {
   GOOGLE_DCHECK(&from != this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_order()) {
-      set_order(from.order());
+    if (from.has_time()) {
+      set_time(from.time());
     }
   }
   if (from._internal_metadata_.have_unknown_fields()) {
@@ -843,7 +843,7 @@ void csc_msg_heartbeat::Swap(csc_msg_heartbeat* other) {
   InternalSwap(other);
 }
 void csc_msg_heartbeat::InternalSwap(csc_msg_heartbeat* other) {
-  std::swap(order_, other->order_);
+  std::swap(time_, other->time_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -860,28 +860,28 @@ void csc_msg_heartbeat::InternalSwap(csc_msg_heartbeat* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // csc_msg_heartbeat
 
-// required int32 order = 1;
-bool csc_msg_heartbeat::has_order() const {
+// required int64 time = 1;
+bool csc_msg_heartbeat::has_time() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-void csc_msg_heartbeat::set_has_order() {
+void csc_msg_heartbeat::set_has_time() {
   _has_bits_[0] |= 0x00000001u;
 }
-void csc_msg_heartbeat::clear_has_order() {
+void csc_msg_heartbeat::clear_has_time() {
   _has_bits_[0] &= ~0x00000001u;
 }
-void csc_msg_heartbeat::clear_order() {
-  order_ = 0;
-  clear_has_order();
+void csc_msg_heartbeat::clear_time() {
+  time_ = GOOGLE_LONGLONG(0);
+  clear_has_time();
 }
-::google::protobuf::int32 csc_msg_heartbeat::order() const {
-  // @@protoc_insertion_point(field_get:platform.csc_msg_heartbeat.order)
-  return order_;
+::google::protobuf::int64 csc_msg_heartbeat::time() const {
+  // @@protoc_insertion_point(field_get:platform.csc_msg_heartbeat.time)
+  return time_;
 }
-void csc_msg_heartbeat::set_order(::google::protobuf::int32 value) {
-  set_has_order();
-  order_ = value;
-  // @@protoc_insertion_point(field_set:platform.csc_msg_heartbeat.order)
+void csc_msg_heartbeat::set_time(::google::protobuf::int64 value) {
+  set_has_time();
+  time_ = value;
+  // @@protoc_insertion_point(field_set:platform.csc_msg_heartbeat.time)
 }
 
 inline const csc_msg_heartbeat* csc_msg_heartbeat::internal_default_instance() {

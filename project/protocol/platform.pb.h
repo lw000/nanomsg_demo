@@ -218,22 +218,22 @@ class csc_msg_heartbeat : public ::google::protobuf::Message /* @@protoc_inserti
 
   // accessors -------------------------------------------------------
 
-  // required int32 order = 1;
-  bool has_order() const;
-  void clear_order();
-  static const int kOrderFieldNumber = 1;
-  ::google::protobuf::int32 order() const;
-  void set_order(::google::protobuf::int32 value);
+  // required int64 time = 1;
+  bool has_time() const;
+  void clear_time();
+  static const int kTimeFieldNumber = 1;
+  ::google::protobuf::int64 time() const;
+  void set_time(::google::protobuf::int64 value);
 
   // @@protoc_insertion_point(class_scope:platform.csc_msg_heartbeat)
  private:
-  inline void set_has_order();
-  inline void clear_has_order();
+  inline void set_has_time();
+  inline void clear_has_time();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
-  ::google::protobuf::int32 order_;
+  ::google::protobuf::int64 time_;
   friend void  protobuf_InitDefaults_platform_2eproto_impl();
   friend void  protobuf_AddDesc_platform_2eproto_impl();
   friend void protobuf_AssignDesc_platform_2eproto();
@@ -1130,28 +1130,28 @@ inline const sc_msg_connected* sc_msg_connected::internal_default_instance() {
 
 // csc_msg_heartbeat
 
-// required int32 order = 1;
-inline bool csc_msg_heartbeat::has_order() const {
+// required int64 time = 1;
+inline bool csc_msg_heartbeat::has_time() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void csc_msg_heartbeat::set_has_order() {
+inline void csc_msg_heartbeat::set_has_time() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void csc_msg_heartbeat::clear_has_order() {
+inline void csc_msg_heartbeat::clear_has_time() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void csc_msg_heartbeat::clear_order() {
-  order_ = 0;
-  clear_has_order();
+inline void csc_msg_heartbeat::clear_time() {
+  time_ = GOOGLE_LONGLONG(0);
+  clear_has_time();
 }
-inline ::google::protobuf::int32 csc_msg_heartbeat::order() const {
-  // @@protoc_insertion_point(field_get:platform.csc_msg_heartbeat.order)
-  return order_;
+inline ::google::protobuf::int64 csc_msg_heartbeat::time() const {
+  // @@protoc_insertion_point(field_get:platform.csc_msg_heartbeat.time)
+  return time_;
 }
-inline void csc_msg_heartbeat::set_order(::google::protobuf::int32 value) {
-  set_has_order();
-  order_ = value;
-  // @@protoc_insertion_point(field_set:platform.csc_msg_heartbeat.order)
+inline void csc_msg_heartbeat::set_time(::google::protobuf::int64 value) {
+  set_has_time();
+  time_ = value;
+  // @@protoc_insertion_point(field_set:platform.csc_msg_heartbeat.time)
 }
 
 inline const csc_msg_heartbeat* csc_msg_heartbeat::internal_default_instance() {

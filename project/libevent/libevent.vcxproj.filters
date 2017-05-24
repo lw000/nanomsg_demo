@@ -99,6 +99,72 @@
     <ClInclude Include="event.h">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="bufferevent-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="changelist-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="defer-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="evbuffer-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="evdns.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="event-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="evhttp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="evmap-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="evrpc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="evrpc-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="evsignal-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="evthread-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ht-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="http-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="iocp-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ipv6-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="log-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="minheap-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mm-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ratelim-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="strlcpy-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="util-internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="strlcpy.c">

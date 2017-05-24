@@ -1,4 +1,4 @@
-#include "Server.h"
+﻿#include "Server.h"
 
 #include <assert.h>
 #include <signal.h>
@@ -13,6 +13,7 @@
 #include <event2/listener.h>
 #include <event2/util.h>
 #include <event2/thread.h>
+#include "iocp-internal.h"
 
 #include "common_marco.h"
 
@@ -74,7 +75,7 @@ static void accept_error_cb(struct evconnlistener * listener, void * userdata)
 	struct event_base *base = evconnlistener_get_base(listener);
 	int err = EVUTIL_SOCKET_ERROR();
 
-	printf("got an error %d (%s) on the listener. Shutting down.\n", err, evutil_socket_error_to_string(err));
+	printf("got an error %d (%s) on the listener. shutting down.\n", err, evutil_socket_error_to_string(err));
 	
 	event_base_loopexit(base, NULL);
 }
@@ -85,20 +86,53 @@ Server* Server::sharedInstance()
 	return __gs_shared_server;
 }
 
-Server::Server() : _on_recv_func(NULL)
+Server::Server() : _base(NULL), _on_recv_func(NULL)
 {
 	__gs_shared_server = this;
-	_base = event_base_new();
+
 }
 
 Server::~Server()
 {
-	std::vector<CLIENT*>::iterator iter = vtClients.begin();
+	VTCLIENT::iterator iter = vtClients.begin();
 	for (iter; iter != vtClients.end(); ++iter)
 	{
 		delete (*iter);
 	}
 
+}
+
+lw_int32 Server::init()
+{
+
+
+	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
+
+	event_set_log_callback(log_cb);
+#ifdef WIN32
+
+	evthread_use_windows_threads();
+
+	struct event_config *cfg = event_config_new();
+	event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
+	if (cfg) {
+		_base = event_base_new_with_config(cfg);
+		event_config_free(cfg);
+	}
+#else
+	_base = event_base_new();
+#endif
+	
+	const char* method = event_base_get_method(_base);
+	printf("method: %s\n", method);
+
+	if (!_base) return -1;
+
+	return 0;
+}
+
+void Server::unInit()
+{
 	event_base_free(_base);
 }
 
@@ -142,11 +176,10 @@ void Server::bufferwriteCB(struct bufferevent *bev, void *user_data)
 	}
 }
 
-// �ӿͻ��˶�ȡ����
+// 从客户端读取数据
 void Server::bufferreadCB(struct bufferevent *bev, void *user_data)
 {
 	CLIENT* pClient = (CLIENT*)user_data;
-
 	{
 		struct evbuffer *input;
 		input = bufferevent_get_input(bev);
@@ -172,19 +205,32 @@ void Server::buffereventCB(struct bufferevent *bev, short event, void *user_data
 {
 	CLIENT* pClient = (CLIENT*)user_data;
 
-	if (event & BEV_EVENT_EOF)
+	if (event & BEV_EVENT_READING)
+	{
+		printf("EVENT_READING\n");
+	}
+	else if (event & BEV_EVENT_WRITING)
+	{
+		printf("BEV_EVENT_WRITING\n");
+	}
+	else if (event & BEV_EVENT_EOF)
 	{
 		printf("connection closed.\n");
 	}
+	else if (event & BEV_EVENT_TIMEOUT)
+	{
+		printf("BEV_EVENT_TIMEOUT.\n");
+	}
 	else if (event & BEV_EVENT_ERROR)
 	{
-		printf("got an error on the connection: %s\n", strerror(errno));/*XXX win32*/
+//		printf("got an error on the connection: %s\n", strerror(errno));/*XXX win32*/
 
-		std::vector<CLIENT*>::iterator iter = vtClients.begin();
+		VTCLIENT::iterator iter = vtClients.begin();
 		for (iter; iter != vtClients.end(); ++iter)
 		{
 			if ((*iter)->bev == bev)
 			{
+				printf("leave (host=%s, port=%s)\n", (*iter)->ip, (*iter)->port);
 				delete (*iter);
 				vtClients.erase(iter);
 				break;
@@ -209,7 +255,7 @@ void Server::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, str
 
 		getnameinfo(sa, socklen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf),
 			NI_NUMERICHOST | NI_NUMERICSERV);
-		printf("Welcome (host=%s, port=%s)\n", hbuf, sbuf);
+		printf("join (host=%s, port=%s)\n", hbuf, sbuf);
 
 		CLIENT* pClient = new CLIENT();
 		pClient->bev = bev;
@@ -231,13 +277,6 @@ void Server::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, str
 
 lw_int32 Server::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
 {
-	event_set_log_callback(log_cb);
-
-	evthread_use_windows_threads();
-
-	struct event_base *base;
-	base = event_base_new();
-	if (!base) return -1;
 	if (!func) return -2;
 
 	if (func != _on_recv_func)
@@ -245,20 +284,17 @@ lw_int32 Server::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
 		_on_recv_func = func;
 	}
 	
-	const char* method = event_base_get_method(base);
-	printf("method: %s\n", method);
-
 	struct sockaddr_in sin;
 	sin.sin_family = AF_INET;
-	sin.sin_addr.s_addr = htonl(0);	//��0.0.0.0��ַ
+	sin.sin_addr.s_addr = htonl(0);	//绑定0.0.0.0地址
 	sin.sin_port = htons(port);
 
 	struct evconnlistener *listener;
-	listener = evconnlistener_new_bind(base, ::listener_cb, (void *)base,
+	listener = evconnlistener_new_bind(_base, ::listener_cb, (void *)_base,
 		LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE, -1, (struct sockaddr*)&sin, sizeof(sin));
 
 	struct event *signal_event;
-	signal_event = evsignal_new(base, SIGINT, ::signal_cb, (void *)base);
+	signal_event = evsignal_new(_base, SIGINT, ::signal_cb, (void *)_base);
 	if (!signal_event || event_add(signal_event, nullptr) < 0)
 	{
 		fprintf(stderr, "could not create/add a signal event!\n");
@@ -267,11 +303,11 @@ lw_int32 Server::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
 
 	evconnlistener_set_error_cb(listener, accept_error_cb);
 
-	int ret = event_base_dispatch(base);
+	int ret = event_base_dispatch(_base);
 
 	event_free(signal_event);
 	evconnlistener_free(listener);
-	event_base_free(base);
+	event_base_free(_base);
 
 	return ret;
 }

@@ -26,6 +26,8 @@
 
 using namespace LW;
 
+Server __g_Serv;
+
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
@@ -35,15 +37,18 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 	case CMD_HEART_BEAT:
 	{
+		//{
+		//	platform::csc_msg_heartbeat msg;
+		//	msg.ParseFromArray(buf, bufsize);
+		//	printf(" order: %d\n", msg.time());
+		//}
+		//
 		{
 			platform::csc_msg_heartbeat msg;
-			msg.ParseFromArray(buf, bufsize);
-			printf(" order: %d\n", msg.order());
-		}
-		
-		{
-			platform::csc_msg_heartbeat msg;
-			msg.set_order(1);
+			time_t t;
+			t = time(NULL);
+			//t = (time_t)ntohl(create_time);
+			msg.set_time(t);
 
 			lw_int32 len = (lw_int32)msg.ByteSizeLong();
 			lw_char8 s[256] = { 0 };
@@ -59,7 +64,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 		platform::sc_msg_request_userinfo client_userinfo;
 		client_userinfo.ParseFromArray(buf, bufsize);
-		printf(" userid: %d\n", client_userinfo.userid());
+		//printf(" userid: %d\n", client_userinfo.userid());
 
 		platform::sc_msg_userinfo userinfo;
 		userinfo.set_userid(client_userinfo.userid());
@@ -92,8 +97,11 @@ int main(int argc, char** argv)
 	}
 #endif
 
-	Server serv;
-	serv.run(9876, on_socket_recv);
+	__g_Serv.init();
+
+	__g_Serv.run(9876, on_socket_recv);
+
+	__g_Serv.unInit();
 
 // 	std::thread t(run_server, 9876);
 // 	t.join();

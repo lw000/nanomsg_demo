@@ -10,6 +10,8 @@ struct CLIENT;
 
 class Server final
 {
+	typedef std::vector<CLIENT*> VTCLIENT;
+
 public:
 	Server();
 	~Server();
@@ -18,6 +20,9 @@ public:
 	static Server* sharedInstance();
 
 public:
+	lw_int32 init();
+	void unInit();
+
 	event_base* getEventBase();
 
 public:
@@ -34,7 +39,7 @@ public:
 private:
 	struct event_base* _base;
 	LW_PARSE_DATA_CALLFUNC _on_recv_func;
-	std::vector<CLIENT*> vtClients;
+	VTCLIENT vtClients;
 };
 
 #endif // !__Server_H__

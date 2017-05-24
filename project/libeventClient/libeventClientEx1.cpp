@@ -18,8 +18,16 @@
 #include "NetCmd.h"
 #include "Message.h"
 #include "platform.pb.h"
+#include <thread>
 
 using namespace LW;
+
+
+#ifdef _WIN32
+#define SLEEP(seconds) SleepEx(seconds * 1000, 1);
+#else
+#define SLEEP(seconds) sleep(seconds);
+#endif
 
 
 #define BUF_SIZE	1024
@@ -50,7 +58,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 		platform::sc_msg_userinfo userinfo;
 		userinfo.ParseFromArray(buf, bufsize);
-		printf(" userid : %d\n age: %d\n sex: %d\n name: %s\n address: %s\n", userinfo.userid(),
+		printf(" userid: %d age:%d sex:%d name:%s address:%s\n", userinfo.userid(),
 			userinfo.age(), userinfo.sex(), userinfo.name().c_str(), userinfo.address().c_str());
 	}break;
 	default:
@@ -144,9 +152,52 @@ static void event_cb(struct bufferevent *bev, short event, void *arg)
 	//这将自动close套接字和free读写缓冲区  
 	bufferevent_free(bev);
 	item->t = false;
+}
 
-// 	struct event *ev = (struct event*)arg;
-// 	event_free(ev);
+void runClient()
+{
+	struct CLIENT client = { 0 };
+
+	struct event_base *base = event_base_new();
+	if (nullptr != base)
+	{
+		client.bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
+
+		struct sockaddr_in server_addr;
+		memset(&server_addr, 0, sizeof(server_addr));
+		server_addr.sin_family = AF_INET;
+		server_addr.sin_port = htons(9876);
+		server_addr.sin_addr.s_addr = inet_addr("192.168.1.169");
+
+		bufferevent_setcb(client.bev, read_cb, NULL, event_cb, (void*)&client);
+
+		int con = bufferevent_socket_connect(client.bev, (struct sockaddr *)&server_addr, sizeof(server_addr));
+		if (con >= 0)
+		{
+
+			bufferevent_enable(client.bev, EV_READ | EV_PERSIST);
+
+			const char* method = event_base_get_method(base);
+
+			{
+				event_assign(&client.timer, base, -1, 0, time_cb, (void*)&client);
+				// 设置定时器 
+				struct timeval tv;
+				evutil_timerclear(&tv);
+				tv.tv_sec = 1;
+				tv.tv_usec = 0;
+				event_add(&client.timer, &tv);
+			}
+
+			event_base_dispatch(base);
+			event_base_free(base);
+		}
+		else
+		{
+			/* error starting connection */
+			bufferevent_free(client.bev);
+		}
+	}
 }
 
 int main(int argc, char** argv)
@@ -160,55 +211,14 @@ int main(int argc, char** argv)
 		return 1;
 	}
 #endif
-
-	struct CLIENT client = { 0 };
-
-	struct event_base *base = event_base_new();
-	if (nullptr == base)
+	for (size_t i = 0; i < 500; i++)
 	{
-		goto exe_over;
+		std::thread t(runClient);
+		t.detach();
+		SLEEP(0.1);
 	}
 
-	client.bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
-
-	struct sockaddr_in server_addr;
-	memset(&server_addr, 0, sizeof(server_addr));
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_port = htons(9876);
-	server_addr.sin_addr.s_addr = inet_addr("192.168.1.169");
-	
-	bufferevent_setcb(client.bev, read_cb, nullptr, event_cb, (void*)&client);
-	
-	int con = bufferevent_socket_connect(client.bev, (struct sockaddr *)&server_addr, sizeof(server_addr));
-	if (con < 0)
-	{
-		/* error starting connection */
-		bufferevent_free(client.bev);
-		goto exe_over;
-	}
-
-	bufferevent_enable(client.bev, EV_READ | EV_PERSIST);
-
-	const char* method = event_base_get_method(base);
-
-	{
-		event_assign(&client.timer, base, -1, 0, time_cb, (void*)&client);
-		// 设置定时器回调函数 
-		struct timeval tv;
-		evutil_timerclear(&tv);
-		tv.tv_sec = 1;
-		tv.tv_usec = 0;
-		// 添加事件  
-		event_add(&client.timer, &tv);
-	}
-	
-	event_base_dispatch(base);
-	
-	event_base_free(base);
-	
-exe_over:
-	printf("exe_over. \n");
-
+	int ch = getchar();
 
 #if defined(WIN32) || defined(_WIN32)
 	WSACleanup();

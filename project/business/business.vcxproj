@@ -138,7 +138,7 @@
     <ClInclude Include="business.h" />
     <ClInclude Include="common\base_type.h" />
     <ClInclude Include="common\common_marco.h" />
-    <ClInclude Include="DataCacheQueueT.h" />
+    <ClInclude Include="CacheQueueT.h" />
     <ClInclude Include="NetHead.h" />
     <ClInclude Include="NetMessage.h" />
     <ClInclude Include="ProtocolData.h" />

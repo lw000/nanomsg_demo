@@ -8,19 +8,19 @@
 #include "base_type.h"
 #include "common_marco.h"
 #include "ProtocolData.h"
-#include "DataCacheQueueT.h"
+#include "CacheQueueT.h"
 #include "NetMessage.h"
 
 using namespace LW;
 
-typedef std::deque<NetMessage*>			NetMessageQueue;
-typedef DataCacheQueueT<lw_char8>		DataCacheQueue;
+typedef std::deque<NetMessage*>		NetMessageQueue;
+typedef CacheQueueT<lw_char8>		CacheQueue;
 
-NetMessageQueue			__g_msg_queue;
+NetMessageQueue		__g_msg_queue;
+std::mutex			__g_data_mutex;
 
-DataCacheQueue			__g_cache_queue;
-
-std::mutex				__g_data_mutex;
+CacheQueue			__g_cache_queue;
+std::mutex			__g_cache_mutex;
 
 static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
 
@@ -29,46 +29,51 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 	if (bufSize <= 0) return -1;
 	if (NULL == buf) return -2;
 
-	__g_cache_queue.push(const_cast<char*>(buf), bufSize);
+	{	
+		std::lock_guard < std::mutex > lock(__g_cache_mutex);
+		__g_cache_queue.push(const_cast<char*>(buf), bufSize);
+	}
 
 	lw_int32 data_queue_size = (lw_int32)__g_cache_queue.size();
 	if (data_queue_size >= C_NET_HEAD_SIZE)
 	{
-		NetHead* pHead = nullptr;
+		
 		do
 		{
-			pHead = (NetHead*)__g_cache_queue.front();
-
-			if (nullptr == pHead) break;
-			if (pHead->size > data_queue_size)
 			{
-				printf("not a complete data packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, pHead->size);
-				break;
-			}
+				std::lock_guard < std::mutex > lock(__g_cache_mutex);
+				NetHead *phead = (NetHead*)__g_cache_queue.front();
 
-			lw_char8* pData = (__g_cache_queue.front() + C_NET_HEAD_SIZE);
+				if (nullptr == phead) break;
 
-			NetMessage* smsg = NetMessage::createMessage();
-			if (smsg)
-			{
-				smsg->setContent(pHead, pData, pHead->size - C_NET_HEAD_SIZE, SocketStatus_RECV);
-
-				//push message
-				//__g_msg_queue.push_back(smsg);
-
+				if (phead->size > data_queue_size)
 				{
-					func(smsg->messageHead.cmd, smsg->message, smsg->messageSize, userdata);
+					printf("not a complete data packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, phead->size);
+					break;
 				}
 
-				NetMessage::releaseMessage(smsg);
-			}
+				char* data = __g_cache_queue.front() + C_NET_HEAD_SIZE;
+				lw_int32 data_len = phead->size - C_NET_HEAD_SIZE;
 
-			__g_cache_queue.pop(pHead->size);
+				NetMessage* msg = NetMessage::createNetMessage();
+				if (nullptr != msg)
+				{
+					msg->setMessage(phead, data, data_len, msgStatus_RECV);
+
+					//__g_msg_queue.push_back(smsg);
+
+					{
+						func(msg->messageHead.cmd, msg->message, msg->messageSize, userdata);
+					}
+
+					NetMessage::releaseNetMessage(msg);
+				}
+				__g_cache_queue.pop(phead->size);
+			}
 
 			data_queue_size = (lw_uint32)__g_cache_queue.size();
 
-			/*printf("packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, pHead->size);*/
-
+			/*printf("packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, pHead->size);*/		
         } while (data_queue_size >= C_NET_HEAD_SIZE);
 	}
 
@@ -93,7 +98,7 @@ void lw_get_message(std::function<void(NetMessage* smsg)> func)
 		if (nullptr != smsg)
 		{
 			func(smsg);
-			NetMessage::releaseMessage(smsg);
+			NetMessage::releaseNetMessage(smsg);
 		}
 	} while (queue_size > 0);
 	//Director::getInstance()->getScheduler()->pauseTarget(this);

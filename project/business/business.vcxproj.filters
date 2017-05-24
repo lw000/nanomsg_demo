@@ -30,9 +30,6 @@
     <ClInclude Include="common\common_marco.h">
       <Filter>公共库</Filter>
     </ClInclude>
-    <ClInclude Include="DataCacheQueueT.h">
-      <Filter>网络层模块</Filter>
-    </ClInclude>
     <ClInclude Include="NetHead.h">
       <Filter>网络层模块</Filter>
     </ClInclude>
@@ -44,6 +41,9 @@
     </ClInclude>
     <ClInclude Include="business.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CacheQueueT.h">
+      <Filter>网络层模块</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
