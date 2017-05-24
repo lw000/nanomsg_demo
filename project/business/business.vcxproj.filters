@@ -45,6 +45,9 @@
     <ClInclude Include="CacheQueueT.h">
       <Filter>网络层模块</Filter>
     </ClInclude>
+    <ClInclude Include="MemoryPool.h">
+      <Filter>网络层模块</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NetMessage.cpp">
@@ -56,5 +59,10 @@
     <ClCompile Include="business.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MemoryPool.tcc">
+      <Filter>网络层模块</Filter>
+    </None>
   </ItemGroup>
 </Project>

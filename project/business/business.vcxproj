@@ -76,7 +76,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;-----------LW_ENABLE_POOL_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\business;.\protocol;.\common;..\..\..\nanomsg\src;..\..\..\cppnanomsg</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -139,6 +139,7 @@
     <ClInclude Include="common\base_type.h" />
     <ClInclude Include="common\common_marco.h" />
     <ClInclude Include="CacheQueueT.h" />
+    <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="NetHead.h" />
     <ClInclude Include="NetMessage.h" />
     <ClInclude Include="ProtocolData.h" />
@@ -147,6 +148,9 @@
     <ClCompile Include="business.cpp" />
     <ClCompile Include="NetMessage.cpp" />
     <ClCompile Include="ProtocolData.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MemoryPool.tcc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

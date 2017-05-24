@@ -20,19 +20,26 @@ namespace LW
 
 		public:
 			void setMessage(const NetHead* head, lw_char8* msg, lw_int32 msgsize, enMsgStatus Status);
-
+		
 		private:
 			NetMessage();
 			~NetMessage();
 
-// 		private:
-// 			void *operator new(std::size_t ObjectSize);
-// 			void operator delete(void *ptrObject);
+#ifdef LW_ENABLE_POOL_
+	private:
+		void *operator new(std::size_t ObjectSize);
+		void operator delete(void *ptrObject);
+#endif
 
 		public:
 			NetHead messageHead;
 			lw_uint32 messageSize;// message size
-            lw_char8 *message;
+
+#ifdef LW_ENABLE_POOL_
+			lw_char8 message[8 * 1024];
+#else
+			lw_char8 *message;
+#endif        
 			lw_ullong64 ullKey;
 
 	private:

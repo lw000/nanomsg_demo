@@ -19,6 +19,8 @@
 
 #include "business.h"
 
+#include <NetMessage.h>
+
 #include "Message.h"
 #include "platform.pb.h"
 #include "Server.h"
@@ -96,6 +98,21 @@ int main(int argc, char** argv)
 		return 1;
 	}
 #endif
+	
+	/*int create_times = 10000000;
+	{
+		clock_t t = clock();
+		for (size_t i = 0; i < create_times; i++)
+		{
+			NetMessage* msg = NetMessage::createNetMessage();
+			if (nullptr != msg)
+			{
+				NetMessage::releaseNetMessage(msg);
+			}
+		}
+		clock_t t1 = clock();
+		printf("NetMessage create[%d] : %f \n", create_times, ((double)t1 - t) / CLOCKS_PER_SEC);
+	}*/
 
 	__g_Serv.init();
 
