@@ -138,7 +138,7 @@ static const char* lw_get_command(struct evhttp_request * req)
 	return cmd;
 }
 
-static void http_request_handler(struct evhttp_request *req, void *arg)
+static void http_default_handler(struct evhttp_request *req, void *arg)
 {
 	evhttp_send_error(req, HTTP_BADREQUEST, "sorry，你走错地方了！");
 	return;
@@ -146,10 +146,13 @@ static void http_request_handler(struct evhttp_request *req, void *arg)
 
 static void post_login_cb(struct evhttp_request *req, void *arg)
 {
-	const char* cmd = lw_get_command(req);
+	if (evhttp_request_get_command(req) != EVHTTP_REQ_POST)
+	{
+		lw_http_reply(req, "0");
+		return;
+	}
 
-	const char* host = evhttp_request_get_host(req);
-	
+
 	char buff[POST_BUF_MAX] = "\0";
 
 	int data_len = EVBUFFER_LENGTH(req->input_buffer);
@@ -167,11 +170,12 @@ static void post_login_cb(struct evhttp_request *req, void *arg)
 	std::unordered_map<std::string, std::string> urldata = split_url_pragma_data(buff);
 
 	{
+		const char* host = evhttp_request_get_host(req);
+
 		rapidjson::Document doc;
 		doc.SetObject();
 		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 		doc.AddMember("host", host, allocator);
-		doc.AddMember("method", cmd, allocator);
 		doc.AddMember("length", out.size(), allocator);
 		
 		for (auto d : urldata)
@@ -201,23 +205,20 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 		return;
 	}
 
-	const char *uri = evhttp_request_uri(req);
-
 	struct evkeyvalq http_query;
 	do
 	{
+		const char *uri = evhttp_request_uri(req);
 		int ret = evhttp_parse_query_str(uri, &http_query);
 		if (ret != 0)
 		{
 			lw_http_reply(req, "paragma is error!");
-			//evhttp_send_error(req, HTTP_BADREQUEST, "paragma is error!");
 			break;
 		}
 
 		//解析URI的参数(即GET方法的参数)
 		struct evkeyvalq params;
 		ret = evhttp_parse_query(uri, &params);
-
 		if (ret != 0)
 		{
 			lw_http_reply(req, "paragma is error!");
@@ -309,7 +310,7 @@ void run_http_server(unsigned short port)
 	evhttp_set_timeout(httpServ, 120);
 
 	// 设置回调  
-	evhttp_set_gencb(httpServ, http_request_handler, NULL);
+	evhttp_set_gencb(httpServ, http_default_handler, NULL);
 
 	//设置路由 post method
 	{
