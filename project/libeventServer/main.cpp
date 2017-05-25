@@ -1,7 +1,10 @@
-// libevent-demo.cpp : 定义控制台应用程序的入口点。
+// main.cpp : 定义控制台应用程序的入口点。
 //
 
+#if defined(WIN32) || defined(_WIN32)
 #include <winsock2.h>
+#endif // WIN32
+
 #include <stdio.h>
 #include <iostream>
 #include <signal.h>
@@ -21,14 +24,18 @@
 
 #include <NetMessage.h>
 
+#include "NetCmd.h"
 #include "Message.h"
 #include "platform.pb.h"
-#include "Server.h"
-#include "NetCmd.h"
+
+#include "http_server.h"
+#include "socket_server.h"
+#include "rpc_server.h"
 
 using namespace LW;
 
-Server __g_Serv;
+SocketServer __g_serv;
+FILE *logfile = NULL;
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
 
@@ -57,7 +64,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 			lw_bool ret = msg.SerializeToArray(s, len);
 			if (ret)
 			{
-				Server::sharedInstance()->sendData(bev, CMD_HEART_BEAT, s, len);
+				SocketServer::sharedInstance()->sendData(bev, CMD_HEART_BEAT, s, len);
 			}
 		}
 
@@ -78,7 +85,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		char s[256] = { 0 };
 		bool ret = userinfo.SerializePartialToArray(s, sizeof(s));
 
-		Server::sharedInstance()->sendData(bev, CMD_PLATFORM_SC_USERINFO, s, strlen(s));
+		SocketServer::sharedInstance()->sendData(bev, CMD_PLATFORM_SC_USERINFO, s, strlen(s));
 
 	} break;
 	default:
@@ -86,16 +93,36 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	}
 }
 
+static void write_to_file_cb(int severity, const char *msg)
+{
+	const char *s;
+	if (!logfile)
+		return;
+	switch (severity) {
+	case _EVENT_LOG_DEBUG: s = "debug"; break;
+	case _EVENT_LOG_MSG:   s = "msg";   break;
+	case _EVENT_LOG_WARN:  s = "warn";  break;
+	case _EVENT_LOG_ERR:   s = "error"; break;
+	default:               s = "?";     break; /* never reached */
+	}
+	fprintf(logfile, "[%s] %s\n", s, msg);
+}
+
 int main(int argc, char** argv)
 {
 #if defined(WIN32) || defined(_WIN32)
-	WSADATA WSAData;
-	int ret;
-	if (ret = WSAStartup(MAKEWORD(2, 2), &WSAData))
 	{
-		std::cout << "can not initilize winsock.dll" << std::endl;
-		std::cout << "error code:" << WSAGetLastError() << std::endl;
-		return 1;
+		WORD wVersionRequested;
+		WSADATA wsaData;
+		int err;
+
+		wVersionRequested = MAKEWORD(2, 2);
+
+		err = WSAStartup(wVersionRequested, &wsaData);
+		if (err != 0) {
+			printf("WSAStartup failed with error: %d\n", err);
+			return 0;
+		}
 	}
 #endif
 	
@@ -114,12 +141,30 @@ int main(int argc, char** argv)
 		printf("NetMessage create[%d] : %f \n", create_times, ((double)t1 - t) / CLOCKS_PER_SEC);
 	}*/
 
-	__g_Serv.init();
 
-	__g_Serv.run(9876, on_socket_recv);
+	event_set_log_callback(write_to_file_cb);
 
-	__g_Serv.unInit();
+	logfile = fopen("error.log", "w");
 
+	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
+#ifdef WIN32
+	evthread_use_windows_threads();
+#endif
+
+	event_enable_debug_mode();
+
+	http_server_run(argc, argv);
+
+	if (__g_serv.init() == 0)
+	{
+		__g_serv.run(9876, on_socket_recv);
+
+		__g_serv.unInit();
+	}
+
+	fflush(logfile);
+	fclose(logfile);
+	
 // 	std::thread t(run_server, 9876);
 // 	t.join();
 

@@ -1,4 +1,4 @@
-﻿#include "Server.h"
+﻿#include "socket_server.h"
 
 #include <assert.h>
 #include <signal.h>
@@ -13,7 +13,6 @@
 #include <event2/listener.h>
 #include <event2/util.h>
 #include <event2/thread.h>
-#include "iocp-internal.h"
 
 #include "common_marco.h"
 
@@ -24,7 +23,7 @@
 #endif // _WIN32
 
 
-static Server * __gs_shared_server = NULL;
+static SocketServer * __gs_shared_server = NULL;
 
 struct CLIENT
 {
@@ -65,11 +64,6 @@ static void signal_cb(evutil_socket_t fd, short event, void *user_data)
 	__gs_shared_server->signalCB(fd, event, user_data);
 }
 
-static void log_cb(int severity, const char *msg)
-{
-
-}
-
 static void accept_error_cb(struct evconnlistener * listener, void * userdata)
 {
 	struct event_base *base = evconnlistener_get_base(listener);
@@ -81,18 +75,18 @@ static void accept_error_cb(struct evconnlistener * listener, void * userdata)
 }
 
 
-Server* Server::sharedInstance()
+SocketServer* SocketServer::sharedInstance()
 {
 	return __gs_shared_server;
 }
 
-Server::Server() : _base(NULL), _on_recv_func(NULL)
+SocketServer::SocketServer() : _base(NULL), _on_recv_func(NULL)
 {
 	__gs_shared_server = this;
 
 }
 
-Server::~Server()
+SocketServer::~SocketServer()
 {
 	VTCLIENT::iterator iter = vtClients.begin();
 	for (iter; iter != vtClients.end(); ++iter)
@@ -102,17 +96,10 @@ Server::~Server()
 
 }
 
-lw_int32 Server::init()
+lw_int32 SocketServer::init()
 {
 
-
-	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
-
-	event_set_log_callback(log_cb);
 #ifdef WIN32
-
-	evthread_use_windows_threads();
-
 	struct event_config *cfg = event_config_new();
 	event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
 	if (cfg) {
@@ -123,25 +110,22 @@ lw_int32 Server::init()
 	_base = event_base_new();
 #endif
 	
-	const char* method = event_base_get_method(_base);
-	printf("method: %s\n", method);
-
 	if (!_base) return -1;
 
 	return 0;
 }
 
-void Server::unInit()
+void SocketServer::unInit()
 {
 	event_base_free(_base);
 }
 
-event_base* Server::getEventBase()
+event_base* SocketServer::getEventBase()
 {
 	return _base;
 }
 
-lw_int32 Server::sendData(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
+lw_int32 SocketServer::sendData(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
 	lw_int32 result = 0;
 	{
@@ -153,7 +137,7 @@ lw_int32 Server::sendData(struct bufferevent *bev, lw_int32 cmd, void* object, l
 	return result;
 }
 
-void Server::signalCB(evutil_socket_t fd, short events, void *user_data)
+void SocketServer::signalCB(evutil_socket_t fd, short events, void *user_data)
 {
 	struct event_base *base = (struct event_base *)user_data;
 	struct timeval delay = { 1, 0 };
@@ -163,7 +147,7 @@ void Server::signalCB(evutil_socket_t fd, short events, void *user_data)
 	event_base_loopexit(base, &delay);
 }
 
-void Server::bufferwriteCB(struct bufferevent *bev, void *user_data)
+void SocketServer::bufferwriteCB(struct bufferevent *bev, void *user_data)
 {
 	CLIENT* pClient = (CLIENT*)user_data;
 
@@ -177,7 +161,7 @@ void Server::bufferwriteCB(struct bufferevent *bev, void *user_data)
 }
 
 // 从客户端读取数据
-void Server::bufferreadCB(struct bufferevent *bev, void *user_data)
+void SocketServer::bufferreadCB(struct bufferevent *bev, void *user_data)
 {
 	CLIENT* pClient = (CLIENT*)user_data;
 	{
@@ -201,25 +185,27 @@ void Server::bufferreadCB(struct bufferevent *bev, void *user_data)
 	}
 }
 
-void Server::buffereventCB(struct bufferevent *bev, short event, void *user_data)
+void SocketServer::buffereventCB(struct bufferevent *bev, short event, void *user_data)
 {
+	evutil_socket_t fd = bufferevent_getfd(bev);
+	
 	CLIENT* pClient = (CLIENT*)user_data;
 
 	if (event & BEV_EVENT_READING)
 	{
-		printf("EVENT_READING\n");
+		printf("[%d]: EVENT_READING\n", fd);
 	}
 	else if (event & BEV_EVENT_WRITING)
 	{
-		printf("BEV_EVENT_WRITING\n");
+		printf("[%d]: BEV_EVENT_WRITING\n", fd);
 	}
 	else if (event & BEV_EVENT_EOF)
 	{
-		printf("connection closed.\n");
+		printf("[%d]: connection closed.\n", fd);
 	}
 	else if (event & BEV_EVENT_TIMEOUT)
 	{
-		printf("BEV_EVENT_TIMEOUT.\n");
+		printf("[%d]: BEV_EVENT_TIMEOUT.\n", fd);
 	}
 	else if (event & BEV_EVENT_ERROR)
 	{
@@ -230,7 +216,7 @@ void Server::buffereventCB(struct bufferevent *bev, short event, void *user_data
 		{
 			if ((*iter)->bev == bev)
 			{
-				printf("leave (host=%s, port=%s)\n", (*iter)->ip, (*iter)->port);
+				printf("leave ([] host=%s, port=%s)\n", fd, (*iter)->ip, (*iter)->port);
 				delete (*iter);
 				vtClients.erase(iter);
 				break;
@@ -243,7 +229,7 @@ void Server::buffereventCB(struct bufferevent *bev, short event, void *user_data
 	bufferevent_free(bev);
 }
 
-void Server::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
+void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
 {
 	struct event_base *base = (struct event_base *)user_data;
 
@@ -275,9 +261,9 @@ void Server::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, str
 	}
 }
 
-lw_int32 Server::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
+lw_int32 SocketServer::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
 {
-	if (!func) return -2;
+	if (!func) return -1;
 
 	if (func != _on_recv_func)
 	{
@@ -307,7 +293,6 @@ lw_int32 Server::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
 
 	event_free(signal_event);
 	evconnlistener_free(listener);
-	event_base_free(_base);
 
 	return ret;
 }

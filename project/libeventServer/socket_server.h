@@ -8,16 +8,16 @@
 
 struct CLIENT;
 
-class Server final
+class SocketServer final
 {
 	typedef std::vector<CLIENT*> VTCLIENT;
 
 public:
-	Server();
-	~Server();
+	SocketServer();
+	~SocketServer();
 
 public:
-	static Server* sharedInstance();
+	static SocketServer* sharedInstance();
 
 public:
 	lw_int32 init();

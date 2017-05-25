@@ -19,24 +19,27 @@
     <Filter Include="通讯协议0">
       <UniqueIdentifier>{17f0a85f-41d5-4b25-a62d-58642c9542cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="server">
+      <UniqueIdentifier>{168627d2-653a-4e2b-b5fd-77bbc666bc73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="libeventServer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="libeventServerEx.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\protocol\game.pb.cc">
       <Filter>通讯协议</Filter>
     </ClCompile>
     <ClCompile Include="..\protocol\platform.pb.cc">
       <Filter>通讯协议</Filter>
     </ClCompile>
-    <ClCompile Include="Server.cpp">
+    <ClCompile Include="http_server.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="socket_server.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,8 +56,11 @@
     <ClInclude Include="..\protocol_0\NetCmd.h">
       <Filter>通讯协议0</Filter>
     </ClInclude>
-    <ClInclude Include="Server.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="http_server.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="socket_server.h">
+      <Filter>server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
