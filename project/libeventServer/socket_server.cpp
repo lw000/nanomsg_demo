@@ -35,6 +35,13 @@ static void bufferread_cb(struct bufferevent *, void *);
 static void bufferwrite_cb(struct bufferevent *, void *);
 static void bufferevent_cb(struct bufferevent *, short, void *);
 static void signal_cb(evutil_socket_t, short, void *);
+static void time_cb(evutil_socket_t fd, short event, void *arg);
+
+static void time_cb(evutil_socket_t fd, short event, void *arg)
+{
+	SocketServer * sev = (SocketServer*)arg;
+	sev->timeCB(fd, event, arg);
+}
 
 static void listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
 {
@@ -80,7 +87,7 @@ static void signal_cb(evutil_socket_t fd, short event, void *user_data)
 	event_base_loopexit(base, &delay);
 }
 
-SocketServer::SocketServer() : _base(NULL), _on_recv_func(NULL)
+SocketServer::SocketServer() : _base(NULL), _on_start(NULL), _on_recv_func(NULL)
 {
 }
 
@@ -127,6 +134,14 @@ lw_int32 SocketServer::sendData(struct bufferevent *bev, lw_int32 cmd, void* obj
 	}
 
 	return result;
+}
+
+void SocketServer::timeCB(evutil_socket_t fd, short event, void *arg)
+{
+	if (_on_start != NULL)
+	{
+		_on_start(0);
+	}
 }
 
 void SocketServer::bufferwriteCB(struct bufferevent *bev, void *user_data)
@@ -241,13 +256,18 @@ void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t f
 	}
 }
 
-lw_int32 SocketServer::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
+lw_int32 SocketServer::run(u_short port, LW_SERVER_START_COMPLETE start_func, LW_PARSE_DATA_CALLFUNC func)
 {
 	if (!func) return -1;
 
 	if (func != _on_recv_func)
 	{
 		_on_recv_func = func;
+	}
+
+	if (_on_start != start_func)
+	{
+		_on_start = start_func;
 	}
 	
 	struct sockaddr_in sin;
@@ -268,6 +288,15 @@ lw_int32 SocketServer::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
 	}
 
 	evconnlistener_set_error_cb(listener, accept_error_cb);
+
+	// 设置定时器 
+	struct event evtimer;
+	event_assign(&evtimer, _base, 0, 0, time_cb, this);
+	struct timeval tv;
+	evutil_timerclear(&tv);
+	tv.tv_sec = 1;
+	tv.tv_usec = 0;
+	event_add(&evtimer, &tv);
 
 	int ret = event_base_dispatch(_base);
 

@@ -36,7 +36,10 @@
     <ClCompile Include="socket_server.cpp">
       <Filter>server</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="server_main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="client_main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -52,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="socket_server.h">
       <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="client_main.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

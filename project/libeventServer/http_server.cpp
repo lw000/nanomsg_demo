@@ -245,10 +245,13 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 		int a = std::atoi(_a);
 		int b = std::atoi(_b);
 		struct evbuffer *buf = evbuffer_new();
-		evbuffer_add_printf(buf, "%d + %d = %d", a, b, std::to_string(a + b).c_str());
+		evbuffer_add_printf(buf, "%d + %d = %d", a, b, a + b);
+		
 		evhttp_send_reply(req, HTTP_OK, "1", buf);
 
 		evbuffer_free(buf);
+
+		printf("%d + %d = %d\n", a, b, a + b);
 
 	} while (0);
 
@@ -274,7 +277,7 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 // 	}
 // }
 
-void run_http_server(unsigned short port)
+void __run_http_server(unsigned short port)
 {
 	char uri_root[512];
 
@@ -383,7 +386,7 @@ void run_http_server(unsigned short port)
 	event_base_free(__http_base);
 }
 
-int http_server_run(unsigned short port)
+int run_http_server(unsigned short port)
 {
 	//自定义信号处理函数
 // 	signal(SIGINT, signal_handler);
@@ -394,7 +397,7 @@ int http_server_run(unsigned short port)
 // 	signal(SIGBREAK, signal_handler);
 // 	signal(SIGABRT, signal_handler);
 
-	std::thread t(run_http_server, port);
+	std::thread t(__run_http_server, port);
 	t.detach();
 
 	return 0;
