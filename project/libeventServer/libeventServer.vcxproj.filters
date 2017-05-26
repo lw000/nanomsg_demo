@@ -16,9 +16,6 @@
     <Filter Include="通讯协议">
       <UniqueIdentifier>{1254a101-e76a-452a-b624-0a951b6492ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="通讯协议0">
-      <UniqueIdentifier>{17f0a85f-41d5-4b25-a62d-58642c9542cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="server">
       <UniqueIdentifier>{168627d2-653a-4e2b-b5fd-77bbc666bc73}</UniqueIdentifier>
     </Filter>
@@ -49,12 +46,6 @@
     </ClInclude>
     <ClInclude Include="..\protocol\platform.pb.h">
       <Filter>通讯协议</Filter>
-    </ClInclude>
-    <ClInclude Include="..\protocol_0\Message.h">
-      <Filter>通讯协议0</Filter>
-    </ClInclude>
-    <ClInclude Include="..\protocol_0\NetCmd.h">
-      <Filter>通讯协议0</Filter>
     </ClInclude>
     <ClInclude Include="http_server.h">
       <Filter>server</Filter>

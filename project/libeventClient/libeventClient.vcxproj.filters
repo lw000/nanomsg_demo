@@ -16,9 +16,6 @@
     <Filter Include="通讯协议">
       <UniqueIdentifier>{0a4d27ba-3c48-4da5-b22f-46a45db64570}</UniqueIdentifier>
     </Filter>
-    <Filter Include="通讯协议0">
-      <UniqueIdentifier>{ac67ceed-7e2a-41d9-a3ad-9c63e2e00cbc}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -41,11 +38,11 @@
     <ClInclude Include="..\protocol\platform.pb.h">
       <Filter>通讯协议</Filter>
     </ClInclude>
-    <ClInclude Include="..\protocol_0\Message.h">
-      <Filter>通讯协议0</Filter>
+    <ClInclude Include="..\protocol\Message.h">
+      <Filter>通讯协议</Filter>
     </ClInclude>
-    <ClInclude Include="..\protocol_0\NetCmd.h">
-      <Filter>通讯协议0</Filter>
+    <ClInclude Include="..\protocol\NetCmd.h">
+      <Filter>通讯协议</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

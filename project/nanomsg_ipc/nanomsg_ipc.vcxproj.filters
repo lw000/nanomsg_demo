@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="通讯协议0">
-      <UniqueIdentifier>{629b8e9c-d73c-4c78-9601-8e0e7a186e93}</UniqueIdentifier>
-    </Filter>
     <Filter Include="通讯协议">
       <UniqueIdentifier>{737587c5-78a9-4e68-9c2b-eb9e8bb77dbe}</UniqueIdentifier>
     </Filter>
@@ -35,16 +32,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\protocol_0\Message.h">
-      <Filter>通讯协议0</Filter>
-    </ClInclude>
-    <ClInclude Include="..\protocol_0\NetCmd.h">
-      <Filter>通讯协议0</Filter>
-    </ClInclude>
     <ClInclude Include="..\protocol\game.pb.h">
       <Filter>通讯协议</Filter>
     </ClInclude>
     <ClInclude Include="..\protocol\platform.pb.h">
+      <Filter>通讯协议</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protocol\Message.h">
+      <Filter>通讯协议</Filter>
+    </ClInclude>
+    <ClInclude Include="..\protocol\NetCmd.h">
       <Filter>通讯协议</Filter>
     </ClInclude>
   </ItemGroup>
