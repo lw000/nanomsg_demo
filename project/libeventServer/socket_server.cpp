@@ -22,9 +22,6 @@
 #include <sys/socket.h>
 #endif // _WIN32
 
-
-static SocketServer * __gs_shared_server = NULL;
-
 struct CLIENT
 {
 	struct bufferevent* bev;
@@ -41,27 +38,26 @@ static void signal_cb(evutil_socket_t, short, void *);
 
 static void listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
 {
-	__gs_shared_server->listenerCB(listener, fd, sa, socklen, user_data);
+	SocketServer * sev = (SocketServer*)user_data;
+	sev->listenerCB(listener, fd, sa, socklen, user_data);
 }
 
 static void bufferread_cb(struct bufferevent *bev, void *user_data)
 {
-	__gs_shared_server->bufferreadCB(bev, user_data);
+	SocketServer * sev = (SocketServer*)user_data;
+	sev->bufferreadCB(bev, user_data);
 }
 
 static void bufferwrite_cb(struct bufferevent *bev, void *user_data)
 {
-	__gs_shared_server->bufferwriteCB(bev, user_data);
+	SocketServer * sev = (SocketServer*)user_data;
+	sev->bufferwriteCB(bev, user_data);
 }
 
 static void bufferevent_cb(struct bufferevent *bev, short event, void *user_data)
 {
-	__gs_shared_server->buffereventCB(bev, event, user_data);
-}
-
-static void signal_cb(evutil_socket_t fd, short event, void *user_data)
-{
-	__gs_shared_server->signalCB(fd, event, user_data);
+	SocketServer * sev = (SocketServer*)user_data;
+	sev->buffereventCB(bev, event, user_data);
 }
 
 static void accept_error_cb(struct evconnlistener * listener, void * userdata)
@@ -74,16 +70,18 @@ static void accept_error_cb(struct evconnlistener * listener, void * userdata)
 	event_base_loopexit(base, NULL);
 }
 
-
-SocketServer* SocketServer::sharedInstance()
+static void signal_cb(evutil_socket_t fd, short event, void *user_data)
 {
-	return __gs_shared_server;
+	struct event_base *base = (struct event_base *)user_data;
+	struct timeval delay = { 1, 0 };
+
+	printf("caught an interrupt signal; exiting cleanly in two seconds.\n");
+
+	event_base_loopexit(base, &delay);
 }
 
 SocketServer::SocketServer() : _base(NULL), _on_recv_func(NULL)
 {
-	__gs_shared_server = this;
-
 }
 
 SocketServer::~SocketServer()
@@ -93,16 +91,15 @@ SocketServer::~SocketServer()
 	{
 		delete (*iter);
 	}
-
 }
 
 lw_int32 SocketServer::init()
 {
-
 #ifdef WIN32
 	struct event_config *cfg = event_config_new();
 	event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
-	if (cfg) {
+	if (cfg)
+	{
 		_base = event_base_new_with_config(cfg);
 		event_config_free(cfg);
 	}
@@ -120,11 +117,6 @@ void SocketServer::unInit()
 	event_base_free(_base);
 }
 
-event_base* SocketServer::getEventBase()
-{
-	return _base;
-}
-
 lw_int32 SocketServer::sendData(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
 	lw_int32 result = 0;
@@ -135,16 +127,6 @@ lw_int32 SocketServer::sendData(struct bufferevent *bev, lw_int32 cmd, void* obj
 	}
 
 	return result;
-}
-
-void SocketServer::signalCB(evutil_socket_t fd, short events, void *user_data)
-{
-	struct event_base *base = (struct event_base *)user_data;
-	struct timeval delay = { 1, 0 };
-
-	printf("caught an interrupt signal; exiting cleanly in two seconds.\n");
-
-	event_base_loopexit(base, &delay);
 }
 
 void SocketServer::bufferwriteCB(struct bufferevent *bev, void *user_data)
@@ -216,7 +198,7 @@ void SocketServer::buffereventCB(struct bufferevent *bev, short event, void *use
 		{
 			if ((*iter)->bev == bev)
 			{
-				printf("leave ([] host=%s, port=%s)\n", fd, (*iter)->ip, (*iter)->port);
+				printf("leave ([%d] host=%s, port=%s)\n", fd, (*iter)->ip, (*iter)->port);
 				delete (*iter);
 				vtClients.erase(iter);
 				break;
@@ -231,27 +213,25 @@ void SocketServer::buffereventCB(struct bufferevent *bev, short event, void *use
 
 void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
 {
-	struct event_base *base = (struct event_base *)user_data;
+	struct event_base *base = evconnlistener_get_base(listener);
 
 	struct bufferevent *bev;
 	bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
 	if (NULL != bev)
 	{
+		bufferevent_setcb(bev, ::bufferread_cb, ::bufferwrite_cb, ::bufferevent_cb, this);
+		bufferevent_enable(bev, EV_WRITE | EV_READ);
+
 		char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
 
-		getnameinfo(sa, socklen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf),
-			NI_NUMERICHOST | NI_NUMERICSERV);
-		printf("join (host=%s, port=%s)\n", hbuf, sbuf);
+		getnameinfo(sa, socklen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
+		printf("join (host = %s, port = %s)\n", hbuf, sbuf);
 
 		CLIENT* pClient = new CLIENT();
 		pClient->bev = bev;
 		pClient->live = true;
 		strcpy(pClient->ip, hbuf);
 		strcpy(pClient->port, sbuf);
-
-		bufferevent_setcb(bev, ::bufferread_cb, ::bufferwrite_cb, ::bufferevent_cb, pClient);
-		bufferevent_enable(bev, EV_WRITE | EV_READ);
-
 		vtClients.push_back(pClient);
 	}
 	else
@@ -276,7 +256,7 @@ lw_int32 SocketServer::run(u_short port, LW_PARSE_DATA_CALLFUNC func)
 	sin.sin_port = htons(port);
 
 	struct evconnlistener *listener;
-	listener = evconnlistener_new_bind(_base, ::listener_cb, (void *)_base,
+	listener = evconnlistener_new_bind(_base, ::listener_cb, this,
 		LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE, -1, (struct sockaddr*)&sin, sizeof(sin));
 
 	struct event *signal_event;

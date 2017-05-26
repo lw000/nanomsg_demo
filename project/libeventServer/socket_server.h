@@ -17,13 +17,8 @@ public:
 	~SocketServer();
 
 public:
-	static SocketServer* sharedInstance();
-
-public:
 	lw_int32 init();
 	void unInit();
-
-	event_base* getEventBase();
 
 public:
 	lw_int32 sendData(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize);
@@ -34,7 +29,6 @@ public:
 	void bufferreadCB(struct bufferevent *, void *);
 	void bufferwriteCB(struct bufferevent *, void *);
 	void buffereventCB(struct bufferevent *, short, void *);
-	void signalCB(evutil_socket_t, short, void *);
 
 private:
 	struct event_base* _base;

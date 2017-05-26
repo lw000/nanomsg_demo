@@ -82,22 +82,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bufferevent-internal.h" />
-    <ClInclude Include="changelist-internal.h" />
-    <ClInclude Include="defer-internal.h" />
-    <ClInclude Include="evbuffer-internal.h" />
-    <ClInclude Include="evdns.h" />
-    <ClInclude Include="event-internal.h" />
     <ClInclude Include="event.h" />
-    <ClInclude Include="evhttp.h" />
-    <ClInclude Include="evmap-internal.h" />
-    <ClInclude Include="evrpc-internal.h" />
-    <ClInclude Include="evrpc.h" />
-    <ClInclude Include="evsignal-internal.h" />
-    <ClInclude Include="evthread-internal.h" />
     <ClInclude Include="evutil.h" />
-    <ClInclude Include="ht-internal.h" />
-    <ClInclude Include="http-internal.h" />
     <ClInclude Include="include\event2\buffer.h" />
     <ClInclude Include="include\event2\bufferevent.h" />
     <ClInclude Include="include\event2\bufferevent_compat.h" />
@@ -122,14 +108,6 @@
     <ClInclude Include="include\event2\tag_compat.h" />
     <ClInclude Include="include\event2\thread.h" />
     <ClInclude Include="include\event2\util.h" />
-    <ClInclude Include="iocp-internal.h" />
-    <ClInclude Include="ipv6-internal.h" />
-    <ClInclude Include="log-internal.h" />
-    <ClInclude Include="minheap-internal.h" />
-    <ClInclude Include="mm-internal.h" />
-    <ClInclude Include="ratelim-internal.h" />
-    <ClInclude Include="strlcpy-internal.h" />
-    <ClInclude Include="util-internal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="buffer.c" />

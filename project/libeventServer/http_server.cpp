@@ -27,11 +27,11 @@
 #include <event2/event.h>
 #include <event2/event-config.h>
 #include <event2/event_struct.h>
-#include <event2/event_compat.h>
+//#include <event2/event_compat.h>
 #include <event2/buffer.h>
-#include <event2/buffer_compat.h>
+//#include <event2/buffer_compat.h>
 #include <event2/http.h>
-#include <event2/http_compat.h>
+//#include <event2/http_compat.h>
 #include <event2/http_struct.h>
 #include <event2/util.h>
 
@@ -43,6 +43,8 @@
 #define MYHTTPD_SIGNATURE   "myhttpd v 0.0.1"
 
 #define POST_BUF_MAX			1024*4
+
+static struct event_base* __http_base = NULL;
 
 static char * lw_strtok_r(char *s, const char *delim, char **state) {
 	char *cp, *start;
@@ -155,8 +157,8 @@ static void post_login_cb(struct evhttp_request *req, void *arg)
 
 	char buff[POST_BUF_MAX] = "\0";
 
-	int data_len = EVBUFFER_LENGTH(req->input_buffer);
-	char *data = (char *)EVBUFFER_DATA(req->input_buffer);
+	int data_len = evbuffer_get_length(req->input_buffer);
+	char *data = (char *)evbuffer_pullup(req->input_buffer, -1);
 
 	std::string out;
 
@@ -208,7 +210,7 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 	struct evkeyvalq http_query;
 	do
 	{
-		const char *uri = evhttp_request_uri(req);
+		const char *uri = evhttp_request_get_uri(req);
 		int ret = evhttp_parse_query_str(uri, &http_query);
 		if (ret != 0)
 		{
@@ -256,19 +258,21 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 }
 
 //当向进程发出SIGTERM/SIGHUP/SIGINT/SIGQUIT的时候，终止event的事件侦听循环
-void signal_handler(int sig) {
-	switch (sig) {
-	case SIGINT:
-	case SIGILL:
-	case SIGFPE:
-	case SIGSEGV:
-	case SIGTERM:
-	case SIGBREAK:
-	case SIGABRT:
-		event_loopbreak();  //终止侦听event_dispatch()的事件侦听循环，执行之后的代码
-		break;
-	}
-}
+// void signal_handler(evutil_socket_t fd, short event, void *user_data)
+// {
+// 	switch (sig)
+// 	{
+// 	case SIGINT:
+// 	case SIGILL:
+// 	case SIGFPE:
+// 	case SIGSEGV:
+// 	case SIGTERM:
+// 	case SIGBREAK:
+// 	case SIGABRT:
+// 		event_base_loopbreak(__http_base);
+// 		break;
+// 	}
+// }
 
 void run_http_server(unsigned short port)
 {
@@ -278,21 +282,20 @@ void run_http_server(unsigned short port)
 	struct evhttp *httpServ = NULL;
 	struct evhttp_bound_socket *handle = NULL;
 
-	struct event_base* base = NULL;
 	struct event_config *cfg = event_config_new();
 	event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
 	if (cfg)
 	{
-		base = event_base_new_with_config(cfg);
+		__http_base = event_base_new_with_config(cfg);
 		event_config_free(cfg);
 	}
 
-	httpServ = evhttp_new(base);
+	httpServ = evhttp_new(__http_base);
 	if (!httpServ)
 	{
 		fprintf(stderr, "couldn't create evhttp. Exiting.\n");
 
-		event_base_free(base);
+		event_base_free(__http_base);
 
 		return;
 	}
@@ -373,14 +376,14 @@ void run_http_server(unsigned short port)
 		
 	}
 
-	int ret = event_base_dispatch(base);
+	int ret = event_base_dispatch(__http_base);
 
 	evhttp_free(httpServ);
 
-	event_base_free(base);
+	event_base_free(__http_base);
 }
 
-int http_server_run(int argc, char **argv)
+int http_server_run(unsigned short port)
 {
 	//自定义信号处理函数
 // 	signal(SIGINT, signal_handler);
@@ -391,7 +394,7 @@ int http_server_run(int argc, char **argv)
 // 	signal(SIGBREAK, signal_handler);
 // 	signal(SIGABRT, signal_handler);
 
-	std::thread t(run_http_server, 9877);
+	std::thread t(run_http_server, port);
 	t.detach();
 
 	return 0;

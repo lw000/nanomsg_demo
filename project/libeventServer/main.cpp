@@ -64,7 +64,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 			lw_bool ret = msg.SerializeToArray(s, len);
 			if (ret)
 			{
-				SocketServer::sharedInstance()->sendData(bev, CMD_HEART_BEAT, s, len);
+				__g_serv.sendData(bev, CMD_HEART_BEAT, s, len);
 			}
 		}
 
@@ -85,7 +85,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		char s[256] = { 0 };
 		bool ret = userinfo.SerializePartialToArray(s, sizeof(s));
 
-		SocketServer::sharedInstance()->sendData(bev, CMD_PLATFORM_SC_USERINFO, s, strlen(s));
+		__g_serv.sendData(bev, CMD_PLATFORM_SC_USERINFO, s, strlen(s));
 
 	} break;
 	default:
@@ -93,7 +93,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	}
 }
 
-static void write_to_file_cb(int severity, const char *msg)
+static void _write_to_file_cb(int severity, const char *msg)
 {
 	const char *s;
 	if (!logfile)
@@ -106,6 +106,11 @@ static void write_to_file_cb(int severity, const char *msg)
 	default:               s = "?";     break; /* never reached */
 	}
 	fprintf(logfile, "[%s] %s\n", s, msg);
+}
+
+static void _event_fatal_cb(int err)
+{
+
 }
 
 int main(int argc, char** argv)
@@ -141,8 +146,9 @@ int main(int argc, char** argv)
 		printf("NetMessage create[%d] : %f \n", create_times, ((double)t1 - t) / CLOCKS_PER_SEC);
 	}*/
 
+	event_set_fatal_callback(_event_fatal_cb);
 
-	event_set_log_callback(write_to_file_cb);
+	event_set_log_callback(_write_to_file_cb);
 
 	logfile = fopen("error.log", "w");
 
@@ -153,7 +159,7 @@ int main(int argc, char** argv)
 
 	event_enable_debug_mode();
 
-	http_server_run(argc, argv);
+	http_server_run(9877);
 
 	if (__g_serv.init() == 0)
 	{

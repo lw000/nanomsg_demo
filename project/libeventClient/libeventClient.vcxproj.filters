@@ -24,14 +24,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="libeventClientEx1.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\protocol\game.pb.cc">
       <Filter>通讯协议</Filter>
     </ClCompile>
     <ClCompile Include="..\protocol\platform.pb.cc">
       <Filter>通讯协议</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

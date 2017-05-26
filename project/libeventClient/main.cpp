@@ -32,12 +32,9 @@ using namespace LW;
 
 #define BUF_SIZE	1024
 
-static const char SEND_MESSAGE[] = "{\"data\":\"1111111111\"}";
-
 static void read_cb(struct bufferevent* bev, void* arg);
 static void event_cb(struct bufferevent *bev, short event, void *arg);
 static void time_cb(evutil_socket_t fd, short event, void *arg);
-
 
 static lw_int32 send_socket_data(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize);
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
@@ -77,7 +74,6 @@ static lw_int32 send_socket_data(struct bufferevent *bev, lw_int32 cmd, void* ob
 	return result;
 }
 
-
 static void time_cb(evutil_socket_t fd, short event, void *arg)
 {
 	struct CLIENT* client = (CLIENT*)arg;
@@ -88,7 +84,6 @@ static void time_cb(evutil_socket_t fd, short event, void *arg)
 		evutil_timerclear(&tv);
 		tv.tv_sec = 1;
 		tv.tv_usec = 0;
-		// 添加事件  
 		event_add(&client->timer, &tv);
 
 		{
@@ -159,42 +154,36 @@ void runClient()
 	struct CLIENT client = { 0 };
 
 	struct event_base *base = event_base_new();
-	if (nullptr != base)
+	if (NULL != base)
 	{
 		client.bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
 
-		struct sockaddr_in server_addr;
-		memset(&server_addr, 0, sizeof(server_addr));
-		server_addr.sin_family = AF_INET;
-		server_addr.sin_port = htons(9876);
-		server_addr.sin_addr.s_addr = inet_addr("192.168.1.169");
+		struct sockaddr_in addr;
+		memset(&addr, 0, sizeof(addr));
+		addr.sin_family = AF_INET;
+		addr.sin_port = htons(9876);
+		addr.sin_addr.s_addr = inet_addr("192.168.1.169");
 
 		bufferevent_setcb(client.bev, read_cb, NULL, event_cb, (void*)&client);
 
-		int con = bufferevent_socket_connect(client.bev, (struct sockaddr *)&server_addr, sizeof(server_addr));
+		int con = bufferevent_socket_connect(client.bev, (struct sockaddr *)&addr, sizeof(addr));
 		if (con >= 0)
 		{
-
 			bufferevent_enable(client.bev, EV_READ | EV_PERSIST);
 
-			const char* method = event_base_get_method(base);
-
-			{
-				event_assign(&client.timer, base, -1, 0, time_cb, (void*)&client);
-				// 设置定时器 
-				struct timeval tv;
-				evutil_timerclear(&tv);
-				tv.tv_sec = 1;
-				tv.tv_usec = 0;
-				event_add(&client.timer, &tv);
-			}
+			// 设置定时器 
+			event_assign(&client.timer, base, -1, 0, time_cb, (void*)&client);
+			struct timeval tv;
+			evutil_timerclear(&tv);
+			tv.tv_sec = 1;
+			tv.tv_usec = 0;
+			event_add(&client.timer, &tv);
 
 			event_base_dispatch(base);
 			event_base_free(base);
 		}
 		else
 		{
-			/* error starting connection */
 			bufferevent_free(client.bev);
 		}
 	}

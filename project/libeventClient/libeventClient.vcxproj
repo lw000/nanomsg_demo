@@ -91,7 +91,7 @@
   <ItemGroup>
     <ClCompile Include="..\protocol\game.pb.cc" />
     <ClCompile Include="..\protocol\platform.pb.cc" />
-    <ClCompile Include="libeventClientEx1.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\protobuf_demo\protobuf_demo.vcxproj">
