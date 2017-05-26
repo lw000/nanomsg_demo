@@ -240,7 +240,8 @@ void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t f
 		char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
 
 		getnameinfo(sa, socklen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
-		printf("join (host = %s, port = %s)\n", hbuf, sbuf);
+		
+		//printf("join (host = %s, port = %s)\n", hbuf, sbuf);
 
 		CLIENT* pClient = new CLIENT();
 		pClient->bev = bev;
@@ -269,11 +270,23 @@ lw_int32 SocketServer::run(u_short port, LW_SERVER_START_COMPLETE start_func, LW
 	{
 		_on_start = start_func;
 	}
-	
+	if (_port != port)
+	{
+		_port = port;
+	}
+
+	std::thread t(std::bind(&SocketServer::__run, this));
+	t.detach();
+
+	return 0;
+}
+
+void SocketServer::__run()
+{
 	struct sockaddr_in sin;
 	sin.sin_family = AF_INET;
 	sin.sin_addr.s_addr = htonl(0);	//绑定0.0.0.0地址
-	sin.sin_port = htons(port);
+	sin.sin_port = htons(_port);
 
 	struct evconnlistener *listener;
 	listener = evconnlistener_new_bind(_base, ::listener_cb, this,
@@ -284,7 +297,7 @@ lw_int32 SocketServer::run(u_short port, LW_SERVER_START_COMPLETE start_func, LW
 	if (!signal_event || event_add(signal_event, nullptr) < 0)
 	{
 		fprintf(stderr, "could not create/add a signal event!\n");
-		return -3;
+		return;
 	}
 
 	evconnlistener_set_error_cb(listener, accept_error_cb);
@@ -303,5 +316,7 @@ lw_int32 SocketServer::run(u_short port, LW_SERVER_START_COMPLETE start_func, LW
 	event_free(signal_event);
 	evconnlistener_free(listener);
 
-	return ret;
+	event_base_free(_base);
+
+	return;
 }

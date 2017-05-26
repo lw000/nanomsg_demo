@@ -33,9 +33,13 @@ public:
 	void bufferwriteCB(struct bufferevent *, void *);
 	void buffereventCB(struct bufferevent *, short, void *);
 	void timeCB(evutil_socket_t fd, short event, void *arg);
+
+private:
+	void __run();
+
 private:
 	struct event_base* _base;
-	
+	u_short _port;
 	LW_PARSE_DATA_CALLFUNC _on_recv_func;
 	LW_SERVER_START_COMPLETE _on_start;
 	VTCLIENT vtClients;
