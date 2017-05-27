@@ -5,6 +5,18 @@
 #include <string>
 #include <unordered_map>
 
+#ifdef _WIN32
+#include <process.h>
+#else
+#include <unistd.h>
+#endif
+
+#ifdef _WIN32
+#define lw_sleep(seconds) SleepEx(seconds * 1000, 1);
+#else
+#define lw_sleep(seconds) sleep(seconds);
+#endif
+
 char * lw_strtok_r(char *s, const char *delim, char **state);
 
 std::vector<std::string> split(const char* str, const char* pattern);

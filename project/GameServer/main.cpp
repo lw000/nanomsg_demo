@@ -21,16 +21,9 @@
 #include "platform.pb.h"
 
 #include "cmdline.h"
+#include "lwutil.h"
 
 using namespace LW;
-
-
-#ifdef _WIN32
-#define SLEEP(seconds) SleepEx(seconds * 1000, 1);
-#else
-#define SLEEP(seconds) sleep(seconds);
-#endif
-
 
 #define BUF_SIZE	1024
 
@@ -222,7 +215,7 @@ int main(int argc, char** argv)
 	{
 		std::thread t(runClient, rport);
 		t.detach();
-		SLEEP(0.1);
+		lw_sleep(0.1);
 	}
 
 	int ch = getchar();

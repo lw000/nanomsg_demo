@@ -2,6 +2,7 @@
 
 #include <string.h>
 
+
 char * lw_strtok_r(char *s, const char *delim, char **state) {
 	char *cp, *start;
 	start = cp = s ? s : *state;

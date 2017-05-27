@@ -31,12 +31,6 @@ using namespace LW;
 
 #define SOCKET_ADDR "ipc:///tmp/pair.ipc"
 
-#ifdef _WIN32
-#define SLEEP(seconds) SleepEx(seconds * 1000, 1);
-#else
-#define SLEEP(seconds) sleep(seconds);
-#endif
-
 static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize);
 static lw_int32 recv_socket_data(lw_int32 sock);
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
