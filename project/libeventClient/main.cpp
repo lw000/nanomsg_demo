@@ -5,20 +5,22 @@
 #include <stdio.h>
 #include <iostream>
 #include <signal.h>
+#include <thread>
 
-#include<event2/event.h>
+#include <event2/event.h>
 #include <event2/event_struct.h>
 #include <event2/event_compat.h>
-#include<event2/bufferevent.h>
-#include<event2/buffer.h>
-#include<event2/util.h>
+#include <event2/bufferevent.h>
+#include <event2/buffer.h>
+#include <event2/util.h>
 
 #include "business.h"
 
 #include "NetCmd.h"
 #include "Message.h"
 #include "platform.pb.h"
-#include <thread>
+
+#include "cmdline.h"
 
 using namespace LW;
 
@@ -41,10 +43,11 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 struct CLIENT
 {
-	struct event timer;
 	struct bufferevent* bev;
-	bool t;
+	bool live;
 };
+
+struct event __g_timer;
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
@@ -55,7 +58,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 		platform::sc_msg_userinfo userinfo;
 		userinfo.ParseFromArray(buf, bufsize);
-		printf(" userid: %d age:%d sex:%d name:%s address:%s\n", userinfo.userid(),
+		printf("userid: %d age:%d sex:%d name:%s address:%s\n", userinfo.userid(),
 			userinfo.age(), userinfo.sex(), userinfo.name().c_str(), userinfo.address().c_str());
 	}break;
 	default:
@@ -77,14 +80,14 @@ static lw_int32 send_socket_data(struct bufferevent *bev, lw_int32 cmd, void* ob
 static void time_cb(evutil_socket_t fd, short event, void *arg)
 {
 	struct CLIENT* client = (CLIENT*)arg;
-	if (client->t)
+	if (client->live)
 	{
 		// 设置定时器回调函数 
 		struct timeval tv;
 		evutil_timerclear(&tv);
 		tv.tv_sec = 1;
 		tv.tv_usec = 0;
-		event_add(&client->timer, &tv);
+		event_add(&__g_timer, &tv);
 
 		{
 			platform::sc_msg_request_userinfo msg;
@@ -130,6 +133,7 @@ static void event_cb(struct bufferevent *bev, short event, void *arg)
 	}
 	else if (event & BEV_EVENT_ERROR)
 	{
+		item->live = false;
 		printf("some other error\n");
 	}
 	else if (event & BEV_EVENT_TIMEOUT)
@@ -138,48 +142,48 @@ static void event_cb(struct bufferevent *bev, short event, void *arg)
 	}
 	else if (event & BEV_EVENT_CONNECTED)
 	{
-		item->t = true;
-		printf("conneted ...\n");
+		item->live = true;
+		printf("服务端连接成功\n");
 
 		return;
 	}
 
 	//这将自动close套接字和free读写缓冲区  
 	bufferevent_free(bev);
-	item->t = false;
+
 }
 
-void runClient()
+void runClient(lw_int32 port)
 {
 	struct CLIENT client = { 0 };
 
 	struct event_base *base = event_base_new();
 	if (NULL != base)
 	{
-		client.bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
-
 		struct sockaddr_in addr;
 		memset(&addr, 0, sizeof(addr));
 		addr.sin_family = AF_INET;
-		addr.sin_port = htons(9876);
-		addr.sin_addr.s_addr = inet_addr("192.168.1.169");
+		addr.sin_port = htons(port);
+		addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
+		client.bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
 		bufferevent_setcb(client.bev, read_cb, NULL, event_cb, (void*)&client);
-
 		int con = bufferevent_socket_connect(client.bev, (struct sockaddr *)&addr, sizeof(addr));
 		if (con >= 0)
 		{
 			bufferevent_enable(client.bev, EV_READ | EV_PERSIST);
 
-			// 设置定时器 
-			event_assign(&client.timer, base, -1, 0, time_cb, (void*)&client);
+			// 设置定时器
+			event_assign(&__g_timer, base, -1, 0, time_cb, (void*)&client); //EV_PERSIST
+
 			struct timeval tv;
 			evutil_timerclear(&tv);
 			tv.tv_sec = 1;
 			tv.tv_usec = 0;
-			event_add(&client.timer, &tv);
+			event_add(&__g_timer, &tv);
 
 			event_base_dispatch(base);
+
 			event_base_free(base);
 		}
 		else
@@ -200,9 +204,23 @@ int main(int argc, char** argv)
 		return 1;
 	}
 #endif
-	for (size_t i = 0; i < 500; i++)
+
+	lw_int32 rport = 0;
+
+	cmdline::parser a;
+	a.add<int>("rport", 'r', "远程RPC服务器端口", false, 9876, cmdline::range(9000, 65535));
+
+	a.parse_check(argc, argv);
+
+	if (a.exist("rport"))
 	{
-		std::thread t(runClient);
+		rport = a.get<int>("rport");
+
+	}
+
+	for (size_t i = 0; i < 1; i++)
+	{
+		std::thread t(runClient, rport);
 		t.detach();
 		SLEEP(0.1);
 	}

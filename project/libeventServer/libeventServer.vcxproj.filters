@@ -40,7 +40,7 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="client_main.cpp">
-      <Filter>源文件</Filter>
+      <Filter>server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +57,7 @@
       <Filter>server</Filter>
     </ClInclude>
     <ClInclude Include="client_main.h">
-      <Filter>头文件</Filter>
+      <Filter>server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

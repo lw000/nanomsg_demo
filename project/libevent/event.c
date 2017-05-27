@@ -2713,7 +2713,9 @@ event_mm_free_(void *ptr)
 	if (_mm_free_fn)
 		_mm_free_fn(ptr);
 	else
+	{
 		free(ptr);
+	}
 }
 
 void

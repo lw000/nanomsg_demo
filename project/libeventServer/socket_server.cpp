@@ -276,7 +276,7 @@ lw_int32 SocketServer::run(u_short port, LW_SERVER_START_COMPLETE start_func, LW
 	}
 
 	std::thread t(std::bind(&SocketServer::__run, this));
-	t.detach();
+	t.join();
 
 	return 0;
 }

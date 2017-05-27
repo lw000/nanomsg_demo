@@ -40,6 +40,10 @@ using namespace LW;
 SocketServer __g_serv;
 FILE *logfile = NULL;
 
+static lw_int32 __s_lport = 9876;
+static lw_int32 __s_rport = 9876;
+static lw_int32 __s_hport = 9878;
+
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
@@ -59,7 +63,6 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 			platform::csc_msg_heartbeat msg;
 			time_t t;
 			t = time(NULL);
-			//t = (time_t)ntohl(create_time);
 			msg.set_time(t);
 
 			lw_int32 len = (lw_int32)msg.ByteSizeLong();
@@ -83,7 +86,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		userinfo.set_age(30);
 		userinfo.set_sex(1);
 		userinfo.set_name("liwei");
-		userinfo.set_address("guangdong shenzhen");
+		userinfo.set_address("guangdong");
 
 		char s[256] = { 0 };
 		bool ret = userinfo.SerializePartialToArray(s, sizeof(s));
@@ -118,9 +121,10 @@ static void _event_fatal_cb(int err)
 
 static void _start_cb(int what)
 {
-	printf("本地服务端启动完成！\n");
-	run_rpc_client("192.168.1.169", 9876);
-	run_http_server(9877);
+	printf("RPC服务启动完成！\n");
+
+	run_rpc_client("127.0.0.1", __s_rport);
+	run_http_server(__s_hport);
 }
 
 int main(int argc, char** argv)
@@ -157,21 +161,33 @@ int main(int argc, char** argv)
 	}*/
 
 	cmdline::parser a;
-	a.add<int>("lport", 'l', "lport number", false, 9876, cmdline::range(1, 65535));
-	a.add<int>("rport", 'r', "rport number", false, 9877, cmdline::range(1, 65535));
-	a.add<int>("hport", 'h', "hport number", false, 9878, cmdline::range(1, 65535));
+	a.add<int>("lport", 'l', "本地RPC服务器端口", false, __s_lport, cmdline::range(9000, 65535));
+	a.add<int>("rport", 'r', "远程RPC服务器端口", false, __s_rport, cmdline::range(9000, 65535));
+	a.add<int>("hport", 'h', "本地HTTP服务器端口", false, __s_hport, cmdline::range(9000, 65535));
 
 	a.parse_check(argc, argv);
 
-	std::cout << "lport: " << a.get<int>("lport") << std::endl;
-	std::cout << "rport: " << a.get<int>("rport") << std::endl;
-	std::cout << "hport: " << a.get<int>("hport") << std::endl;
+	if (a.exist("lport"))
+	{
+		__s_lport = a.get<int>("lport");
+	}
+	if (a.exist("rport"))
+	{
+		__s_rport = a.get<int>("rport");
+	}if (a.exist("hport"))
+	{
+		__s_hport = a.get<int>("hport");
+	}
+
+	std::cout << "lport: " << __s_lport << std::endl;
+	std::cout << "rport: " << __s_rport << std::endl;
+	std::cout << "hport: " << __s_hport << std::endl;
 
 	event_set_fatal_callback(_event_fatal_cb);
 
-	event_set_log_callback(_write_to_file_cb);
+//	event_set_log_callback(_write_to_file_cb);
 
-	logfile = fopen("error.log", "w");
+//	logfile = fopen("error.log", "w");
 
 	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
 #ifdef WIN32
@@ -182,14 +198,11 @@ int main(int argc, char** argv)
 
 	if (__g_serv.init() == 0)
 	{
-		__g_serv.run(9876, _start_cb, on_socket_recv);
+		__g_serv.run(__s_lport, _start_cb, on_socket_recv);
 	}
 
-	fflush(logfile);
-	fclose(logfile);
-	
-// 	std::thread t(run_server, 9876);
-// 	t.join();
+// 	fflush(logfile);
+// 	fclose(logfile);
 
 	while (1) {}
 

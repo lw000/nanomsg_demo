@@ -54,7 +54,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 		platform::sc_msg_userinfo userinfo;
 		userinfo.ParseFromArray(buf, bufsize);
-		printf(" userid: %d age:%d sex:%d name:%s address:%s\n", userinfo.userid(),
+		printf("userid: %d age:%d sex:%d name:%s address:%s\n", userinfo.userid(),
 			userinfo.age(), userinfo.sex(), userinfo.name().c_str(), userinfo.address().c_str());
 	}break;
 	default:
@@ -138,7 +138,7 @@ static void event_cb(struct bufferevent *bev, short event, void *arg)
 	else if (event & BEV_EVENT_CONNECTED)
 	{
 		item->t = true;
-		printf("远程服务连接成功！\n");
+		printf("远程RPC服务连接成功！\n");
 
 		return;
 	}
@@ -155,16 +155,14 @@ void runClient(lw_short16 port)
 	struct event_base *base = event_base_new();
 	if (NULL != base)
 	{
-		client.bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
-
 		struct sockaddr_in addr;
 		memset(&addr, 0, sizeof(addr));
 		addr.sin_family = AF_INET;
 		addr.sin_port = htons(port);
-		addr.sin_addr.s_addr = inet_addr("192.168.1.169");
+		addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
+		client.bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);	
 		bufferevent_setcb(client.bev, read_cb, NULL, event_cb, (void*)&client);
-
 		int con = bufferevent_socket_connect(client.bev, (struct sockaddr *)&addr, sizeof(addr));
 		if (con >= 0)
 		{
@@ -179,12 +177,14 @@ void runClient(lw_short16 port)
 			event_add(&client.timer, &tv);
 
 			event_base_dispatch(base);
+
 			event_base_free(base);
 		}
 		else
 		{
 			bufferevent_free(client.bev);
 		}
+
 	}
 }
 

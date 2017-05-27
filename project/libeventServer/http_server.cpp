@@ -366,8 +366,7 @@ void __run_http_server(unsigned short port)
 			addr = evutil_inet_ntop(ss.ss_family, inaddr, addrbuf, sizeof(addrbuf));
 			if (addr)
 			{
-				/*printf("httpserver listening on %s:%d\n", addr, got_port);*/
-				printf("本地HTTP SERVER启动成功！ %s:%d\n", addr, got_port);
+				printf("本地HTTP服务启动完成 [http://%s:%d]\n", addr, got_port);
 				evutil_snprintf(uri_root, sizeof(uri_root), "http://%s:%d", addr, got_port);
 			}
 			else
