@@ -44,6 +44,35 @@
 
 static struct event_base* __http_base = NULL;
 
+typedef void(*LW_HTTP_CB)(struct evhttp_request *, void *);
+
+struct HTTP_SING
+{
+	char * _signature;
+	char * _cmd;
+	LW_HTTP_CB _cb;
+
+public:
+	HTTP_SING(char * signature, char* cmd, LW_HTTP_CB cb)
+	{
+		this->_signature = signature;
+		this->_cmd = cmd;
+		this->_cb = cb;
+	}
+};
+
+
+static void http_default_handler(struct evhttp_request *req, void *arg);
+static void post_login_cb(struct evhttp_request *req, void *arg);
+static void get_add_cb(struct evhttp_request *req, void *arg);
+static void get_sub_cb(struct evhttp_request *req, void *arg);
+
+HTTP_SING httpsinge[] = {
+	HTTP_SING("/login", "POST", post_login_cb),
+	HTTP_SING("/add", "GET", get_add_cb),
+	HTTP_SING("/sub", "GET", get_sub_cb),
+};
+
 static void lw_http_reply(struct evhttp_request * req, const char* what)
 {
 	struct evbuffer *buf = evbuffer_new();
@@ -91,7 +120,6 @@ static void post_login_cb(struct evhttp_request *req, void *arg)
 		lw_http_reply(req, "0");
 		return;
 	}
-
 
 	char buff[POST_BUF_MAX] = "\0";
 
@@ -141,7 +169,7 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 {
 	if (evhttp_request_get_command(req) != EVHTTP_REQ_GET) 
 	{
-		lw_http_reply(req, "0");
+		lw_http_reply(req, "{\"code\":0,\"what\":\"please use get method request!\"}");
 		return;
 	}
 
@@ -189,7 +217,65 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 
 		evbuffer_free(buf);
 
-		printf("%d + %d = %d\n", a, b, a + b);
+	} while (0);
+
+	evhttp_clear_headers(&http_query);
+
+	return;
+}
+
+
+static void get_sub_cb(struct evhttp_request *req, void *arg)
+{
+	if (evhttp_request_get_command(req) != EVHTTP_REQ_GET)
+	{
+		lw_http_reply(req, "{\"code\":0,\"what\":\"please use get method request!\"}");
+		return;
+	}
+
+	struct evkeyvalq http_query;
+	do
+	{
+		const char *uri = evhttp_request_get_uri(req);
+		int ret = evhttp_parse_query_str(uri, &http_query);
+		if (ret != 0)
+		{
+			lw_http_reply(req, "paragma is error!");
+			break;
+		}
+
+		//解析URI的参数(即GET方法的参数)
+		struct evkeyvalq params;
+		ret = evhttp_parse_query(uri, &params);
+		if (ret != 0)
+		{
+			lw_http_reply(req, "paragma is error!");
+			break;
+		}
+
+		const char* _a = evhttp_find_header(&params, "a");
+		const char* _b = evhttp_find_header(&params, "b");
+
+		if (_a == NULL)
+		{
+			lw_http_reply(req, "a paragma is error!");
+			break;
+		}
+
+		if (_b == NULL)
+		{
+			lw_http_reply(req, "b paragma is error!");
+			break;
+		}
+
+		int a = std::atoi(_a);
+		int b = std::atoi(_b);
+		struct evbuffer *buf = evbuffer_new();
+		evbuffer_add_printf(buf, "%d - %d = %d", a, b, a - b);
+
+		evhttp_send_reply(req, HTTP_OK, "1", buf);
+
+		evbuffer_free(buf);
 
 	} while (0);
 
@@ -256,15 +342,20 @@ void __run_http_server(unsigned short port)
 	// 设置回调  
 	evhttp_set_gencb(httpServ, http_default_handler, NULL);
 
-	//设置路由 post method
-	{
-		evhttp_set_cb(httpServ, "/login", post_login_cb, httpServ);
-	}
+	////设置路由 post method
+	//{
+	//	evhttp_set_cb(httpServ, "/login", post_login_cb, httpServ);
+	//}
 
-	//设置路由 get method
+	////设置路由 get method
+	//{
+	//	evhttp_set_cb(httpServ, "/add", get_add_cb, httpServ);
+	//}	
+
+	for (size_t i = 0; i < sizeof(httpsinge)/sizeof(httpsinge[0]); i++)
 	{
-		evhttp_set_cb(httpServ, "/add", get_add_cb, httpServ);
-	}	
+		evhttp_set_cb(httpServ, httpsinge[i]._signature, httpsinge[i]._cb, httpServ);
+	}
 
 	/* Extract and display the address we're listening on. */
 	{
