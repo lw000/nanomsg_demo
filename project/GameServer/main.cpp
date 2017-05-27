@@ -23,6 +23,10 @@
 #include "cmdline.h"
 #include "lwutil.h"
 
+
+#include "libproperties.h"
+
+
 using namespace LW;
 
 #define BUF_SIZE	1024
@@ -209,6 +213,33 @@ int main(int argc, char** argv)
 	{
 		rport = a.get<int>("rport");
 
+	}
+
+	Properties p;
+	p.setProperty("sid", "harite");
+	p.setProperty("port", "1521");
+	p.setProperty("userpassword", "12y3_aer65");
+	p.setProperty("host", "127.0.0.1");
+	p.setProperty("username", "system");
+	p.storeToXML("connectsetting.xml");
+	p.clear();
+
+	if (!p.loadFromXML("connectsetting.xml"))
+	{
+		std::cout << "falue" << std::endl;
+	}
+	else
+	{
+		for (Properties::const_iterator it = p.begin() ; it != p.end(); ++it)
+		{
+			cout << (*it).first << "-->" << (*it).second << std::endl;
+		}
+		std::cout << "use getProperty" << std::endl;
+		std::cout << p.getProperty("sid", "") << std::endl;
+		std::cout << p.getProperty("username", "") << std::endl;
+		std::cout << p.getProperty("port", "") << std::endl;
+		std::cout << p.getProperty("notexist", "defaultvalue") << std::endl;
+		p.clear();
 	}
 
 	for (size_t i = 0; i < 1; i++)
