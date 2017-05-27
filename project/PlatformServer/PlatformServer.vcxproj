@@ -13,7 +13,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{28344E32-E503-4267-BE4E-DE976D89F9EF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>libeventdemo</RootNamespace>
+    <RootNamespace>PlatformServer</RootNamespace>
+    <ProjectName>PlatformServer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -89,6 +90,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\lwutil.cpp" />
     <ClCompile Include="..\protocol\game.pb.cc" />
     <ClCompile Include="..\protocol\platform.pb.cc" />
     <ClCompile Include="client_main.cpp" />
@@ -97,11 +99,8 @@
     <ClCompile Include="socket_server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\protobuf_demo\protobuf_demo.vcxproj">
-      <Project>{6c8a6937-1911-49c3-8f2c-f37ff374ac8d}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="..\common\cmdline.h" />
+    <ClInclude Include="..\common\lwutil.h" />
     <ClInclude Include="..\protocol\game.pb.h" />
     <ClInclude Include="..\protocol\platform.pb.h" />
     <ClInclude Include="client_main.h" />

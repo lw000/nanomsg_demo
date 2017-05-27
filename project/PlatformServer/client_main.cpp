@@ -23,11 +23,10 @@ using namespace LW;
 
 
 #ifdef _WIN32
-#define SLEEP(seconds) SleepEx(seconds * 1000, 1);
+#define LW_SLEEP(seconds) SleepEx(seconds * 1000, 1);
 #else
-#define SLEEP(seconds) sleep(seconds);
+#define LW_SLEEP(seconds) sleep(seconds);
 #endif
-
 
 #define BUF_SIZE	1024
 
@@ -40,16 +39,24 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 struct CLIENT
 {
-	struct event timer;
+	lw_int32 fd;
 	struct bufferevent* bev;
-	bool t;
+	bool live;
 };
+
+struct event __g_timer;
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
 	struct bufferevent *bev = (struct bufferevent *)userdata;
 	switch (cmd)
 	{
+	case CMD_HEART_BEAT:
+	{
+		platform::csc_msg_heartbeat msg;
+		msg.ParseFromArray(buf, bufsize);
+		printf("heartbeat: %d\n", msg.time());
+	} break;
 	case CMD_PLATFORM_SC_USERINFO:
 	{
 		platform::sc_msg_userinfo userinfo;
@@ -76,25 +83,27 @@ static lw_int32 send_socket_data(struct bufferevent *bev, lw_int32 cmd, void* ob
 static void time_cb(evutil_socket_t fd, short event, void *arg)
 {
 	struct CLIENT* client = (CLIENT*)arg;
-	if (client->t)
+	if (client->live)
 	{
 		// 设置定时器回调函数 
 		struct timeval tv;
 		evutil_timerclear(&tv);
-		tv.tv_sec = 1;
+		tv.tv_sec = 5;
 		tv.tv_usec = 0;
-		event_add(&client->timer, &tv);
+		event_add(&__g_timer, &tv);
 
 		{
-			platform::sc_msg_request_userinfo msg;
-			msg.set_userid(400001);
+			platform::csc_msg_heartbeat msg;
+			time_t t;
+			t = time(NULL);
+			msg.set_time(t);
 
-			int len = (int)msg.ByteSizeLong();
-			char s[256] = { 0 };
-			bool ret = msg.SerializeToArray(s, len);
+			lw_int32 buf_len = (lw_int32)msg.ByteSizeLong();
+			lw_char8 buf[256] = { 0 };
+			bool ret = msg.SerializeToArray(buf, buf_len);
 			if (ret)
 			{
-				send_socket_data(client->bev, CMD_PLATFORM_CS_USERINFO, s, len);
+				send_socket_data(client->bev, CMD_HEART_BEAT, buf, buf_len);
 			}
 		}
 	}
@@ -137,7 +146,7 @@ static void event_cb(struct bufferevent *bev, short event, void *arg)
 	}
 	else if (event & BEV_EVENT_CONNECTED)
 	{
-		item->t = true;
+		item->live = true;
 		printf("远程RPC服务连接成功！\n");
 
 		return;
@@ -145,16 +154,17 @@ static void event_cb(struct bufferevent *bev, short event, void *arg)
 
 	//这将自动close套接字和free读写缓冲区  
 	bufferevent_free(bev);
-	item->t = false;
+	item->live = false;
 }
 
 void runClient(lw_short16 port)
 {
-	struct CLIENT client = { 0 };
 
 	struct event_base *base = event_base_new();
 	if (NULL != base)
 	{
+		struct CLIENT client;
+
 		struct sockaddr_in addr;
 		memset(&addr, 0, sizeof(addr));
 		addr.sin_family = AF_INET;
@@ -169,12 +179,12 @@ void runClient(lw_short16 port)
 			bufferevent_enable(client.bev, EV_READ | EV_PERSIST);
 
 			// 设置定时器 
-			event_assign(&client.timer, base, -1, 0, time_cb, (void*)&client);
+			event_assign(&__g_timer, base, -1, 0, time_cb, (void*)&client);
 			struct timeval tv;
 			evutil_timerclear(&tv);
-			tv.tv_sec = 1;
+			tv.tv_sec = 5;
 			tv.tv_usec = 0;
-			event_add(&client.timer, &tv);
+			event_add(&__g_timer, &tv);
 
 			event_base_dispatch(base);
 

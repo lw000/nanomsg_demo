@@ -26,8 +26,16 @@ struct CLIENT
 {
 	struct bufferevent* bev;
 	bool live;
+	lw_int32 live_count;
 	char ip[64];
 	char port[8];
+
+public:
+	CLIENT() : bev(NULL), live(false), live_count(0)
+	{
+		memset(ip, 0x00, sizeof(ip));
+		memset(port, 0x00, sizeof(port));
+	}
 };
 
 static void listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
@@ -45,26 +53,26 @@ static void time_cb(evutil_socket_t fd, short event, void *arg)
 
 static void listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
 {
-	SocketServer * sev = (SocketServer*)user_data;
-	sev->listenerCB(listener, fd, sa, socklen, user_data);
+	SocketServer * server = (SocketServer*)user_data;
+	server->listenerCB(listener, fd, sa, socklen);
 }
 
 static void bufferread_cb(struct bufferevent *bev, void *user_data)
 {
-	SocketServer * sev = (SocketServer*)user_data;
-	sev->bufferreadCB(bev, user_data);
+	SocketServer * server = (SocketServer*)user_data;
+	server->bufferreadCB(bev);
 }
 
 static void bufferwrite_cb(struct bufferevent *bev, void *user_data)
 {
-	SocketServer * sev = (SocketServer*)user_data;
-	sev->bufferwriteCB(bev, user_data);
+	SocketServer * server = (SocketServer*)user_data;
+	server->bufferwriteCB(bev);
 }
 
 static void bufferevent_cb(struct bufferevent *bev, short event, void *user_data)
 {
-	SocketServer * sev = (SocketServer*)user_data;
-	sev->buffereventCB(bev, event, user_data);
+	SocketServer * server = (SocketServer*)user_data;
+	server->buffereventCB(bev, event);
 }
 
 static void accept_error_cb(struct evconnlistener * listener, void * userdata)
@@ -144,50 +152,41 @@ void SocketServer::timeCB(evutil_socket_t fd, short event, void *arg)
 	}
 }
 
-void SocketServer::bufferwriteCB(struct bufferevent *bev, void *user_data)
+void SocketServer::bufferwriteCB(struct bufferevent *bev)
 {
-	CLIENT* pClient = (CLIENT*)user_data;
-
 	struct evbuffer *output = bufferevent_get_output(bev);
 	if (evbuffer_get_length(output) == 0)
 	{
-		//printf("flushed answer \n");
 
-		//bufferevent_free(bev);
 	}
 }
 
 // 从客户端读取数据
-void SocketServer::bufferreadCB(struct bufferevent *bev, void *user_data)
+void SocketServer::bufferreadCB(struct bufferevent *bev)
 {
-	CLIENT* pClient = (CLIENT*)user_data;
+	struct evbuffer *input;
+	input = bufferevent_get_input(bev);
+	size_t input_len = evbuffer_get_length(input);
+
+	char *read_buf = (char*)malloc(input_len);
+
+	size_t read_len = bufferevent_read(bev, read_buf, input_len);
+
+	if (read_len == input_len)
 	{
-		struct evbuffer *input;
-		input = bufferevent_get_input(bev);
-		size_t input_len = evbuffer_get_length(input);
-
-		char *read_buf = (char*)malloc(input_len);
-		
-		size_t read_len = bufferevent_read(bev, read_buf, input_len);
-
-		if (read_len == input_len)
+		if (lw_parse_socket_data(read_buf, read_len, _on_recv_func, bev) == 0)
 		{
-			if (lw_parse_socket_data(read_buf, read_len, _on_recv_func, bev) == 0)
-			{
 
-			}
 		}
-
-		free(read_buf);
 	}
+
+	free(read_buf);
 }
 
-void SocketServer::buffereventCB(struct bufferevent *bev, short event, void *user_data)
+void SocketServer::buffereventCB(struct bufferevent *bev, short event)
 {
 	evutil_socket_t fd = bufferevent_getfd(bev);
 	
-	CLIENT* pClient = (CLIENT*)user_data;
-
 	if (event & BEV_EVENT_READING)
 	{
 		printf("[%d]: EVENT_READING\n", fd);
@@ -226,7 +225,7 @@ void SocketServer::buffereventCB(struct bufferevent *bev, short event, void *use
 	bufferevent_free(bev);
 }
 
-void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
+void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen)
 {
 	struct event_base *base = evconnlistener_get_base(listener);
 
@@ -249,6 +248,8 @@ void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t f
 		strcpy(pClient->ip, hbuf);
 		strcpy(pClient->port, sbuf);
 		vtClients.push_back(pClient);
+
+		evutil_socket_t fd = bufferevent_getfd(bev);
 	}
 	else
 	{

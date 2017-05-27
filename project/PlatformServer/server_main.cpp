@@ -53,25 +53,15 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 	case CMD_HEART_BEAT:
 	{
-		//{
-		//	platform::csc_msg_heartbeat msg;
-		//	msg.ParseFromArray(buf, bufsize);
-		//	printf(" order: %d\n", msg.time());
-		//}
-		//
-		{
-			platform::csc_msg_heartbeat msg;
-			time_t t;
-			t = time(NULL);
-			msg.set_time(t);
+		platform::csc_msg_heartbeat msg;
+		msg.set_time(time(NULL));
 
-			lw_int32 len = (lw_int32)msg.ByteSizeLong();
-			lw_char8 s[256] = { 0 };
-			lw_bool ret = msg.SerializeToArray(s, len);
-			if (ret)
-			{
-				__g_serv.sendData(bev, CMD_HEART_BEAT, s, len);
-			}
+		lw_int32 len = (lw_int32)msg.ByteSizeLong();
+		lw_char8 s[256] = { 0 };
+		lw_bool ret = msg.SerializeToArray(s, len);
+		if (ret)
+		{
+			__g_serv.sendData(bev, CMD_HEART_BEAT, s, len);
 		}
 
 	} break;
@@ -104,7 +94,8 @@ static void _write_to_file_cb(int severity, const char *msg)
 	const char *s;
 	if (!logfile)
 		return;
-	switch (severity) {
+	switch (severity)
+	{
 	case _EVENT_LOG_DEBUG: s = "debug"; break;
 	case _EVENT_LOG_MSG:   s = "msg";   break;
 	case _EVENT_LOG_WARN:  s = "warn";  break;
@@ -121,7 +112,7 @@ static void _event_fatal_cb(int err)
 
 static void _start_cb(int what)
 {
-	printf("RPC服务启动完成！\n");
+	printf("RPC服务启动完成 [%d]！\n", __s_lport);
 
 	run_rpc_client("127.0.0.1", __s_rport);
 	run_http_server(__s_hport);
@@ -171,17 +162,16 @@ int main(int argc, char** argv)
 	{
 		__s_lport = a.get<int>("lport");
 	}
+
 	if (a.exist("rport"))
 	{
 		__s_rport = a.get<int>("rport");
-	}if (a.exist("hport"))
+	}
+
+	if (a.exist("hport"))
 	{
 		__s_hport = a.get<int>("hport");
 	}
-
-	std::cout << "lport: " << __s_lport << std::endl;
-	std::cout << "rport: " << __s_rport << std::endl;
-	std::cout << "hport: " << __s_hport << std::endl;
 
 	event_set_fatal_callback(_event_fatal_cb);
 

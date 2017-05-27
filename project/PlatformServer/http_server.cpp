@@ -27,11 +27,8 @@
 #include <event2/event.h>
 #include <event2/event-config.h>
 #include <event2/event_struct.h>
-//#include <event2/event_compat.h>
 #include <event2/buffer.h>
-//#include <event2/buffer_compat.h>
 #include <event2/http.h>
-//#include <event2/http_compat.h>
 #include <event2/http_struct.h>
 #include <event2/util.h>
 
@@ -39,72 +36,13 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 
+#include "lwutil.h"
 
 #define MYHTTPD_SIGNATURE   "myhttpd v 0.0.1"
 
 #define POST_BUF_MAX			1024*4
 
 static struct event_base* __http_base = NULL;
-
-static char * lw_strtok_r(char *s, const char *delim, char **state) {
-	char *cp, *start;
-	start = cp = s ? s : *state;
-	if (!cp)
-		return NULL;
-	while (*cp && !strchr(delim, *cp))
-		++cp;
-	if (!*cp) {
-		if (cp == start)
-			return NULL;
-		*state = NULL;
-		return start;
-	}
-	else {
-		*cp++ = '\0';
-		*state = cp;
-		return start;
-	}
-}
-
-static std::vector<std::string> split(const char* str, const char* pattern)
-{
-	char *p = NULL;
-	char *p1 = NULL;
-	p = lw_strtok_r(const_cast<char*>(str), pattern, &p1);
-	std::vector<std::string> s;
-	while (p != NULL)
-	{
-		s.push_back(p);
-		p = lw_strtok_r(NULL, pattern, &p1);
-	}
-	return s;
-}
-
-static std::unordered_map<std::string, std::string> split_url_pragma_data(const char* str)
-{
-	std::unordered_map<std::string, std::string> s;
-
-	char *p = NULL;
-	char *p1 = NULL;
-	p = lw_strtok_r(const_cast<char*>(str), "&", &p1);
-	while (p != NULL)
-	{
-		{
-			char *q = NULL;
-			char *q1 = NULL;
-			std::string q2;
-			std::string q3;
-
-			q = lw_strtok_r(const_cast<char*>(p), "=", &q1);
-			q2 = q;
-			q = lw_strtok_r(NULL, "=", &q1);
-			q3 = q;
-			s[q2] = q3;
-		}
-		p = lw_strtok_r(NULL, "&", &p1);
-	}
-	return s;
-}
 
 static void lw_http_reply(struct evhttp_request * req, const char* what)
 {
