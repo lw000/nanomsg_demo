@@ -36,6 +36,9 @@
     <ClCompile Include="..\common\lwutil.cpp">
       <Filter>common</Filter>
     </ClCompile>
+    <ClCompile Include="client_http.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protocol\game.pb.h">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="..\common\lwutil.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="client_http.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

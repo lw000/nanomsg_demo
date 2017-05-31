@@ -34,6 +34,7 @@
 #include "client_main.h"
 
 #include "cmdline.h"
+#include "libproperties.h"
 
 using namespace LW;
 
@@ -42,7 +43,7 @@ FILE *logfile = NULL;
 
 static lw_int32 __s_lport = 9876;
 static lw_int32 __s_rport = 9876;
-static lw_int32 __s_hport = 9878;
+static lw_int32 __s_hport = 9877;
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
 
@@ -152,11 +153,18 @@ int main(int argc, char** argv)
 	}*/
 
 	cmdline::parser a;
+	a.add<std::string>("config", 'c', "配置文件");
 	a.add<int>("lport", 'l', "本地RPC服务器端口", false, __s_lport, cmdline::range(9000, 65535));
 	a.add<int>("rport", 'r', "远程RPC服务器端口", false, __s_rport, cmdline::range(9000, 65535));
 	a.add<int>("hport", 'h', "本地HTTP服务器端口", false, __s_hport, cmdline::range(9000, 65535));
 
 	a.parse_check(argc, argv);
+
+	std::string config;
+	if (a.exist("config"))
+	{
+		config = a.get<std::string>("config");
+	}
 
 	if (a.exist("lport"))
 	{
@@ -171,6 +179,27 @@ int main(int argc, char** argv)
 	if (a.exist("hport"))
 	{
 		__s_hport = a.get<int>("hport");
+	}
+
+	Properties p;
+	p.clear();
+
+	if (!p.loadFromXML(config))
+	{
+		std::cout << "falue" << std::endl;
+	}
+	else
+	{
+		for (Properties::const_iterator it = p.begin(); it != p.end(); ++it)
+		{
+			cout << (*it).first << "-->" << (*it).second << std::endl;
+		}
+		std::cout << "use getProperty" << std::endl;
+		std::cout << p.getProperty("lport", "9876") << std::endl;
+		std::cout << p.getProperty("rport", "9876") << std::endl;
+		std::cout << p.getProperty("hport", "9877") << std::endl;
+		std::cout << p.getProperty("rmote_host", "127.0.0.1") << std::endl;
+		p.clear();
 	}
 
 	event_set_fatal_callback(_event_fatal_cb);

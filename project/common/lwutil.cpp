@@ -22,6 +22,86 @@ char * lw_strtok_r(char *s, const char *delim, char **state) {
 	}
 }
 
+KVPragma::KVPragma()
+{
+	_kv.clear();
+}
+
+KVPragma::~KVPragma()
+{
+	std::vector<KV*>::iterator iter = _kv.begin();
+	for (; iter != _kv.end(); iter++)
+	{
+		KV *_pkv = *iter;
+		free(_pkv->k);
+		free(_pkv->v);
+		free(_pkv);
+	}
+}
+
+int KVPragma::parse_url(const char* data)
+{
+	_kv.clear();
+
+	char *p = const_cast<char*>(data);
+	char *p0 = NULL;
+	char *p1 = NULL;
+	p0 = lw_strtok_r(p, "&", &p1);
+	if (p0 == NULL)
+	{
+		return NULL;
+	}
+
+	while (p0 != NULL)
+	{
+		{
+			char *q = NULL;
+			char *q1 = NULL;
+
+			std::string k;
+			std::string v;
+
+			q = lw_strtok_r(const_cast<char*>(p0), "=", &q1);
+			k = q;
+			q = lw_strtok_r(NULL, "=", &q1);
+			v = q;
+
+			KV *_pkv = (KV*)malloc(sizeof(KV));
+			_pkv->k = (char*)::malloc(k.size() + 1);
+			_pkv->v = (char*)::malloc(v.size() + 1);
+			strcpy(_pkv->k, k.c_str());
+			strcpy(_pkv->v, v.c_str());
+			_kv.push_back(_pkv);
+		}
+		p0 = lw_strtok_r(NULL, "&", &p1);
+	}
+	return 0;
+}
+
+char* KVPragma::find_value(const char* key)
+{
+	std::vector<KV*>::iterator iter = _kv.begin();
+	for (; iter != _kv.end(); iter++)
+	{
+		KV *_pkv = *iter;
+		if (strcmp(_pkv->k, key) == 0)
+		{
+			return _pkv->v; break;
+		}
+	}
+	return NULL;
+}
+
+void KVPragma::printf(std::function<void(KV*)> func)
+{
+	std::vector<KV*>::iterator iter = _kv.begin();
+	for (; iter != _kv.end(); iter++)
+	{
+		KV *_pkv = *iter;
+		func(_pkv);
+	}
+}
+
 std::vector<std::string> split(const char* str, const char* pattern)
 {
 	char *p = NULL;
@@ -38,27 +118,31 @@ std::vector<std::string> split(const char* str, const char* pattern)
 
 std::unordered_map<std::string, std::string> split_url_pragma_data(const char* str)
 {
-	std::unordered_map<std::string, std::string> s;
-
-	char *p = NULL;
+	char *p = const_cast<char*>(str);
+	char *p0 = NULL;
 	char *p1 = NULL;
-	p = lw_strtok_r(const_cast<char*>(str), "&", &p1);
-	while (p != NULL)
+	p0 = lw_strtok_r(p, "&", &p1);
+	if (p0 == NULL)
+	{
+		return std::unordered_map<std::string, std::string>();
+	}
+
+	std::unordered_map<std::string, std::string> s;
+	while (p0 != NULL)
 	{
 		{
 			char *q = NULL;
 			char *q1 = NULL;
-			std::string q2;
-			std::string q3;
+			std::string k;
+			std::string v;
 
-			q = lw_strtok_r(const_cast<char*>(p), "=", &q1);
-			q2 = q;
+			q = lw_strtok_r(const_cast<char*>(p0), "=", &q1);
+			k = q;
 			q = lw_strtok_r(NULL, "=", &q1);
-			q3 = q;
-			s[q2] = q3;
+			v = q;
+			s[k] = v;
 		}
-		p = lw_strtok_r(NULL, "&", &p1);
+		p0 = lw_strtok_r(NULL, "&", &p1);
 	}
 	return s;
 }
-

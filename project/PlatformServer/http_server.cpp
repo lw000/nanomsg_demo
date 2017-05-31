@@ -46,14 +46,14 @@ static struct event_base* __http_base = NULL;
 
 typedef void(*LW_HTTP_CB)(struct evhttp_request *, void *);
 
-struct HTTP_SING
+struct HTTP_BUSINESS_SIGNATURE
 {
 	char * _signature;
 	char * _cmd;
 	LW_HTTP_CB _cb;
 
 public:
-	HTTP_SING(char * signature, char* cmd, LW_HTTP_CB cb)
+	HTTP_BUSINESS_SIGNATURE(char * signature, char* cmd, LW_HTTP_CB cb)
 	{
 		this->_signature = signature;
 		this->_cmd = cmd;
@@ -67,23 +67,21 @@ static void post_login_cb(struct evhttp_request *req, void *arg);
 static void get_add_cb(struct evhttp_request *req, void *arg);
 static void get_sub_cb(struct evhttp_request *req, void *arg);
 
-HTTP_SING httpsinge[] = {
-	HTTP_SING("/login", "POST", post_login_cb),
-	HTTP_SING("/add", "GET", get_add_cb),
-	HTTP_SING("/sub", "GET", get_sub_cb),
+HTTP_BUSINESS_SIGNATURE httpgignature[] =
+{
+	HTTP_BUSINESS_SIGNATURE("/login", "POST", post_login_cb),
+	HTTP_BUSINESS_SIGNATURE("/add", "GET", get_add_cb),
+	HTTP_BUSINESS_SIGNATURE("/sub", "GET", get_sub_cb),
 };
 
-static void lw_http_reply(struct evhttp_request * req, const char* what)
+static void lw_http_send_reply(struct evhttp_request * req, const char* what)
 {
 	struct evbuffer *buf = evbuffer_new();
 // 	evhttp_add_header(req->output_headers, "Server", MYHTTPD_SIGNATURE);
 // 	evhttp_add_header(req->output_headers, "Content-Type", "text/plain; charset=UTF-8");
 // 	evhttp_add_header(req->output_headers, "Connection", "close");
-
 	evbuffer_add_printf(buf, what);
-
 	evhttp_send_reply(req, HTTP_OK, "Client", buf);
-	
 	evbuffer_free(buf);
 }
 
@@ -117,25 +115,32 @@ static void post_login_cb(struct evhttp_request *req, void *arg)
 {
 	if (evhttp_request_get_command(req) != EVHTTP_REQ_POST)
 	{
-		lw_http_reply(req, "0");
+		lw_http_send_reply(req, "{\"code\":0,\"what\":\"please use post method request!\"}");
 		return;
 	}
 
 	char buff[POST_BUF_MAX] = "\0";
 
-	int data_len = evbuffer_get_length(req->input_buffer);
-	char *data = (char *)evbuffer_pullup(req->input_buffer, -1);
+	struct evbuffer *evbuf; 
+	evbuf = evhttp_request_get_input_buffer(req);
 
-	std::string out;
+	int data_len = evbuffer_get_length(evbuf);
+	char *data = (char *)evbuffer_pullup(evbuf, data_len);
 
-	if (data_len > 0)
-	{
-		size_t copy_len = data_len > POST_BUF_MAX ? POST_BUF_MAX : data_len;
-		memcpy(buff, data, copy_len);
-		out.assign(buff, copy_len);
-	}
+	if (data_len <= 0) return;
+	if (data == NULL) return;
+		
+	size_t copy_len = data_len > POST_BUF_MAX ? POST_BUF_MAX : data_len;
+	memcpy(buff, data, copy_len);
 
-	std::unordered_map<std::string, std::string> urldata = split_url_pragma_data(buff);
+	evbuffer_drain(evbuf, data_len);
+	
+	KVPragma kv;
+	kv.parse_url(buff);
+	const char* _a = kv.find_value("a");
+	const char* _b = kv.find_value("b");
+	const char* _c = kv.find_value("c");
+	const char* _d = kv.find_value("d");
 
 	{
 		const char* host = evhttp_request_get_host(req);
@@ -144,22 +149,21 @@ static void post_login_cb(struct evhttp_request *req, void *arg)
 		doc.SetObject();
 		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 		doc.AddMember("host", host, allocator);
-		doc.AddMember("length", out.size(), allocator);
-		
-		for (auto d : urldata)
+
+		kv.printf([&doc, &allocator](KV* pkv)
 		{
-			const char* k = d.first.c_str();
-			const char* v = d.second.c_str();
+			const char* k = pkv->k;
+			const char* v = pkv->v;
 
 			doc.AddMember(k, v, allocator);
-		}
+		});
 
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer< rapidjson::StringBuffer > writer(buffer);
 		doc.Accept(writer);
 
 		const char* str = buffer.GetString();
-		lw_http_reply(req, str);
+		lw_http_send_reply(req, str);
 	}
 
 	return;
@@ -169,7 +173,7 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 {
 	if (evhttp_request_get_command(req) != EVHTTP_REQ_GET) 
 	{
-		lw_http_reply(req, "{\"code\":0,\"what\":\"please use get method request!\"}");
+		lw_http_send_reply(req, "{\"code\":0,\"what\":\"please use get method request!\"}");
 		return;
 	}
 
@@ -180,7 +184,7 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 		int ret = evhttp_parse_query_str(uri, &http_query);
 		if (ret != 0)
 		{
-			lw_http_reply(req, "paragma is error!");
+			lw_http_send_reply(req, "paragma is error!");
 			break;
 		}
 
@@ -189,32 +193,25 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 		ret = evhttp_parse_query(uri, &params);
 		if (ret != 0)
 		{
-			lw_http_reply(req, "paragma is error!");
+			lw_http_send_reply(req, "paragma is error!");
 			break;
 		}
 
 		const char* _a = evhttp_find_header(&params, "a");
 		const char* _b = evhttp_find_header(&params, "b");
 
-		if (_a == NULL)
+		if (_a == NULL || _b == NULL)
 		{
-			lw_http_reply(req, "a paragma is error!");
-			break;
-		}
-
-		if (_b == NULL)
-		{
-			lw_http_reply(req, "b paragma is error!");
+			lw_http_send_reply(req, "paragma is error!");
 			break;
 		}
 
 		int a = std::atoi(_a);
 		int b = std::atoi(_b);
+		
 		struct evbuffer *buf = evbuffer_new();
 		evbuffer_add_printf(buf, "%d + %d = %d", a, b, a + b);
-		
-		evhttp_send_reply(req, HTTP_OK, "1", buf);
-
+		evhttp_send_reply(req, HTTP_OK, NULL, buf);
 		evbuffer_free(buf);
 
 	} while (0);
@@ -229,7 +226,7 @@ static void get_sub_cb(struct evhttp_request *req, void *arg)
 {
 	if (evhttp_request_get_command(req) != EVHTTP_REQ_GET)
 	{
-		lw_http_reply(req, "{\"code\":0,\"what\":\"please use get method request!\"}");
+		lw_http_send_reply(req, "{\"code\":0,\"what\":\"please use get method request!\"}");
 		return;
 	}
 
@@ -240,7 +237,7 @@ static void get_sub_cb(struct evhttp_request *req, void *arg)
 		int ret = evhttp_parse_query_str(uri, &http_query);
 		if (ret != 0)
 		{
-			lw_http_reply(req, "paragma is error!");
+			lw_http_send_reply(req, "paragma is error!");
 			break;
 		}
 
@@ -249,22 +246,16 @@ static void get_sub_cb(struct evhttp_request *req, void *arg)
 		ret = evhttp_parse_query(uri, &params);
 		if (ret != 0)
 		{
-			lw_http_reply(req, "paragma is error!");
+			lw_http_send_reply(req, "paragma is error!");
 			break;
 		}
 
 		const char* _a = evhttp_find_header(&params, "a");
 		const char* _b = evhttp_find_header(&params, "b");
 
-		if (_a == NULL)
+		if (_a == NULL || _b == NULL)
 		{
-			lw_http_reply(req, "a paragma is error!");
-			break;
-		}
-
-		if (_b == NULL)
-		{
-			lw_http_reply(req, "b paragma is error!");
+			lw_http_send_reply(req, "paragma is error!");
 			break;
 		}
 
@@ -273,7 +264,7 @@ static void get_sub_cb(struct evhttp_request *req, void *arg)
 		struct evbuffer *buf = evbuffer_new();
 		evbuffer_add_printf(buf, "%d - %d = %d", a, b, a - b);
 
-		evhttp_send_reply(req, HTTP_OK, "1", buf);
+		evhttp_send_reply(req, HTTP_OK, NULL, buf);
 
 		evbuffer_free(buf);
 
@@ -352,9 +343,9 @@ void __run_http_server(unsigned short port)
 	//	evhttp_set_cb(httpServ, "/add", get_add_cb, httpServ);
 	//}	
 
-	for (size_t i = 0; i < sizeof(httpsinge)/sizeof(httpsinge[0]); i++)
+	for (size_t i = 0; i < sizeof(httpgignature)/sizeof(httpgignature[0]); i++)
 	{
-		evhttp_set_cb(httpServ, httpsinge[i]._signature, httpsinge[i]._cb, httpServ);
+		evhttp_set_cb(httpServ, httpgignature[i]._signature, httpgignature[i]._cb, httpServ);
 	}
 
 	/* Extract and display the address we're listening on. */

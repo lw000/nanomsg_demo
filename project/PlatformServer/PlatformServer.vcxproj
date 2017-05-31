@@ -94,7 +94,7 @@
     <ClCompile Include="..\protocol\game.pb.cc" />
     <ClCompile Include="..\protocol\platform.pb.cc" />
     <ClCompile Include="client_main.cpp" />
-    <ClCompile Include="server_main.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="socket_server.cpp" />
   </ItemGroup>

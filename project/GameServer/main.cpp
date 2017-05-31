@@ -23,9 +23,8 @@
 #include "cmdline.h"
 #include "lwutil.h"
 
-
 #include "libproperties.h"
-
+#include "client_http.h"
 
 using namespace LW;
 
@@ -216,29 +215,28 @@ int main(int argc, char** argv)
 	}
 
 	Properties p;
-	p.setProperty("sid", "harite");
-	p.setProperty("port", "1521");
-	p.setProperty("userpassword", "12y3_aer65");
-	p.setProperty("host", "127.0.0.1");
-	p.setProperty("username", "system");
-	p.storeToXML("connectsetting.xml");
+	//p.setProperty("lport", "harite");
+	//p.setProperty("rport", "1521");
+	//p.setProperty("hport", "12y3_aer65");
+	//p.setProperty("rport_host", "127.0.0.1");
+	//p.storeToXML("config.xml");
 	p.clear();
 
-	if (!p.loadFromXML("connectsetting.xml"))
+	if (!p.loadFromXML("config.xml"))
 	{
 		std::cout << "falue" << std::endl;
 	}
 	else
 	{
-		for (Properties::const_iterator it = p.begin() ; it != p.end(); ++it)
+		for (Properties::const_iterator it = p.begin(); it != p.end(); ++it)
 		{
 			cout << (*it).first << "-->" << (*it).second << std::endl;
 		}
 		std::cout << "use getProperty" << std::endl;
-		std::cout << p.getProperty("sid", "") << std::endl;
-		std::cout << p.getProperty("username", "") << std::endl;
-		std::cout << p.getProperty("port", "") << std::endl;
-		std::cout << p.getProperty("notexist", "defaultvalue") << std::endl;
+		std::cout << p.getProperty("lport", "9876") << std::endl;
+		std::cout << p.getProperty("rport", "9876") << std::endl;
+		std::cout << p.getProperty("hport", "9877") << std::endl;
+		std::cout << p.getProperty("rmote_host", "127.0.0.1") << std::endl;
 		p.clear();
 	}
 
@@ -248,6 +246,8 @@ int main(int argc, char** argv)
 		t.detach();
 		lw_sleep(0.1);
 	}
+
+	client_http_main();
 
 	int ch = getchar();
 

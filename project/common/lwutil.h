@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <list>
 
 #ifdef _WIN32
 #include <process.h>
@@ -11,11 +12,34 @@
 #include <unistd.h>
 #endif
 
+#include <functional>
+
 #ifdef _WIN32
 #define lw_sleep(seconds) SleepEx(seconds * 1000, 1);
 #else
 #define lw_sleep(seconds) sleep(seconds);
 #endif
+
+struct KV
+{
+	char *k;
+	char *v;
+};
+
+class KVPragma
+{
+public:
+	KVPragma();
+	~KVPragma();
+
+public:
+	int parse_url(const char* data);
+	char* find_value(const char* key);
+	void printf(std::function<void(KV*)> func);
+
+private:
+	std::vector<KV*> _kv;
+};
 
 char * lw_strtok_r(char *s, const char *delim, char **state);
 
