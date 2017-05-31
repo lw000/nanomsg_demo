@@ -45,10 +45,12 @@ distribution.
 * Project: http://code.google.com/p/libproperties
 */
 
-#include <map>
+//#include <map>
+#include <unordered_map>
 #include <string>
 
-using std::map;
+//using std::map;
+using std::unordered_map;
 using std::string;
 
 /*
@@ -108,8 +110,11 @@ class LIBPROPERTIES_DLLIMPORT Properties
 {
 public:
 
-	typedef map<string, string>::iterator iterator;
-	typedef map<string, string>::const_iterator const_iterator;
+// 	typedef map<string, string>::iterator iterator;
+// 	typedef map<string, string>::const_iterator const_iterator;
+
+	typedef unordered_map<string, string>::iterator iterator;
+	typedef unordered_map<string, string>::const_iterator const_iterator;
 
 	Properties(void)
 	{
@@ -299,7 +304,8 @@ private:
 	/**
 	* stl中的map，盛放键值对
 	*/
-	map<string, string> key_value;
+//	map<string, string> key_value;
+	unordered_map<string, string> key_value;
 
 	/**
 	* 临界区
