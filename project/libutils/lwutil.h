@@ -47,4 +47,8 @@ std::vector<std::string> split(const char* str, const char* pattern);
 
 std::unordered_map<std::string, std::string> split_url_pragma_data(const char* str);
 
+void trim(char* src, char* dest);
+void trim_l(char* src, char* dest);
+void trim_r(char* src, char* dest);
+
 #endif // !__LW_UTIL_H__

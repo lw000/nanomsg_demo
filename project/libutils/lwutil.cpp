@@ -144,3 +144,53 @@ std::unordered_map<std::string, std::string> split_url_pragma_data(const char* s
 	}
 	return s;
 }
+
+void trim(char* src, char* dest)
+{
+	char* ps = src;
+	char* pe = src + strlen(src) - 1;
+
+	while (*ps == ' ') { ++ps;}
+
+	while (*pe == ' ') { --pe;}
+
+	char* p = dest;
+	while (ps <= pe)
+	{
+		*p++ = *ps++;
+	}
+
+	*p = '\0';
+}
+
+void trim_l(char* src, char* dest)
+{
+	char* ps = src;
+	char* pe = src + strlen(src) - 1;
+
+	while (*ps == ' ') { ++ps; }
+
+	char* p = dest;
+	while (ps <= pe)
+	{
+		*p++ = *ps++;
+	}
+
+	*p = '\0';
+}
+
+void trim_r(char* src, char* dest)
+{
+	char* ps = src;
+	char* pe = src + strlen(src) - 1;
+
+	while (*pe == ' ') { --pe; }
+
+	char* p = dest;
+	while (ps <= pe)
+	{
+		*p++ = *ps++;
+	}
+
+	*p = '\0';
+}
