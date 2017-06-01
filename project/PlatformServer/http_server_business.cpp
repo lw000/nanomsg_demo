@@ -1,4 +1,6 @@
-﻿#include <stdio.h>
+﻿#include "http_server_business.h"
+
+#include <stdio.h>
 #include <signal.h>
 #include <string>
 #include <vector>
@@ -21,9 +23,6 @@
 #include <dirent.h>
 #endif
 
-#include <thread>
-#include <unordered_map>
-
 #include <event2/event.h>
 #include <event2/event-config.h>
 #include <event2/event_struct.h>
@@ -38,52 +37,25 @@
 
 #include "lwutil.h"
 
-#define MYHTTPD_SIGNATURE   "myhttpd v 0.0.1"
+#include "http_server.h"
+
+HttpServer __g_http_serv;
 
 #define POST_BUF_MAX			1024*4
 
-static struct event_base* __http_base = NULL;
-
-typedef void(*LW_HTTP_CB)(struct evhttp_request *, void *);
-
-struct HTTP_BUSINESS_SIGNATURE
-{
-	char * _signature;
-	char * _cmd;
-	LW_HTTP_CB _cb;
-
-public:
-	HTTP_BUSINESS_SIGNATURE(char * signature, char* cmd, LW_HTTP_CB cb)
-	{
-		this->_signature = signature;
-		this->_cmd = cmd;
-		this->_cb = cb;
-	}
-};
-
-
 static void http_default_handler(struct evhttp_request *req, void *arg);
-static void post_login_cb(struct evhttp_request *req, void *arg);
-static void get_add_cb(struct evhttp_request *req, void *arg);
-static void get_sub_cb(struct evhttp_request *req, void *arg);
+static const char* lw_get_command(struct evhttp_request * req);
+static void lw_http_send_reply(struct evhttp_request * req, const char* what);
+static void login_cb(struct evhttp_request *req, void *arg);
+static void add_cb(struct evhttp_request *req, void *arg);
+static void sub_cb(struct evhttp_request *req, void *arg);
 
-HTTP_BUSINESS_SIGNATURE httpgignature[] =
+HTTP_BUSINESS_SIGNATURE __g_httpsignature[] =
 {
-	HTTP_BUSINESS_SIGNATURE("/login", "POST", post_login_cb),
-	HTTP_BUSINESS_SIGNATURE("/add", "GET", get_add_cb),
-	HTTP_BUSINESS_SIGNATURE("/sub", "GET", get_sub_cb),
+	HTTP_BUSINESS_SIGNATURE("/login", "POST", login_cb),
+	HTTP_BUSINESS_SIGNATURE("/add", "GET", add_cb),
+	HTTP_BUSINESS_SIGNATURE("/sub", "GET", sub_cb),
 };
-
-static void lw_http_send_reply(struct evhttp_request * req, const char* what)
-{
-	struct evbuffer *buf = evbuffer_new();
-// 	evhttp_add_header(req->output_headers, "Server", MYHTTPD_SIGNATURE);
-// 	evhttp_add_header(req->output_headers, "Content-Type", "text/plain; charset=UTF-8");
-// 	evhttp_add_header(req->output_headers, "Connection", "close");
-	evbuffer_add_printf(buf, what);
-	evhttp_send_reply(req, HTTP_OK, "Client", buf);
-	evbuffer_free(buf);
-}
 
 static const char* lw_get_command(struct evhttp_request * req)
 {
@@ -105,13 +77,24 @@ static const char* lw_get_command(struct evhttp_request * req)
 	return cmd;
 }
 
+static void lw_http_send_reply(struct evhttp_request * req, const char* what)
+{
+	struct evbuffer *buf = evbuffer_new();
+	// 	evhttp_add_header(req->output_headers, "Server", MYHTTPD_SIGNATURE);
+	// 	evhttp_add_header(req->output_headers, "Content-Type", "text/plain; charset=UTF-8");
+	// 	evhttp_add_header(req->output_headers, "Connection", "close");
+	evbuffer_add_printf(buf, what);
+	evhttp_send_reply(req, HTTP_OK, "Client", buf);
+	evbuffer_free(buf);
+}
+
 static void http_default_handler(struct evhttp_request *req, void *arg)
 {
 	evhttp_send_error(req, HTTP_BADREQUEST, "sorry，你走错地方了！");
 	return;
 }
 
-static void post_login_cb(struct evhttp_request *req, void *arg)
+static void login_cb(struct evhttp_request *req, void *arg)
 {
 	if (evhttp_request_get_command(req) != EVHTTP_REQ_POST)
 	{
@@ -176,7 +159,7 @@ static void post_login_cb(struct evhttp_request *req, void *arg)
 	return;
 }
 
-static void get_add_cb(struct evhttp_request *req, void *arg)
+static void add_cb(struct evhttp_request *req, void *arg)
 {
 	if (evhttp_request_get_command(req) != EVHTTP_REQ_GET) 
 	{
@@ -254,7 +237,7 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 }
 
 
-static void get_sub_cb(struct evhttp_request *req, void *arg)
+static void sub_cb(struct evhttp_request *req, void *arg)
 {
 	if (evhttp_request_get_command(req) != EVHTTP_REQ_GET)
 	{
@@ -307,150 +290,18 @@ static void get_sub_cb(struct evhttp_request *req, void *arg)
 	return;
 }
 
-//当向进程发出SIGTERM/SIGHUP/SIGINT/SIGQUIT的时候，终止event的事件侦听循环
-// void signal_handler(evutil_socket_t fd, short event, void *user_data)
-// {
-// 	switch (sig)
-// 	{
-// 	case SIGINT:
-// 	case SIGILL:
-// 	case SIGFPE:
-// 	case SIGSEGV:
-// 	case SIGTERM:
-// 	case SIGBREAK:
-// 	case SIGABRT:
-// 		event_base_loopbreak(__http_base);
-// 		break;
-// 	}
-// }
-
-void __run_http_server(unsigned short port)
+void __init_http_business(lw_int32 port)
 {
-	char uri_root[512];
-
-	const char *addr = "127.0.0.1";
-	struct evhttp *httpServ = NULL;
-	struct evhttp_bound_socket *handle = NULL;
-
-	struct event_config *cfg = event_config_new();
-	event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
-	if (cfg)
+	// 设置回调函数
+	__g_http_serv.start_listener("127.0.0.1", port, [](HttpServer* server) -> lw_int32
 	{
-		__http_base = event_base_new_with_config(cfg);
-		event_config_free(cfg);
-	}
+		// 设置标准接口回调函数
+		server->set_gen_cb(http_default_handler, NULL);
 
-	httpServ = evhttp_new(__http_base);
-	if (!httpServ)
-	{
-		fprintf(stderr, "couldn't create evhttp. Exiting.\n");
-
-		event_base_free(__http_base);
-
-		return;
-	}
-
-	handle = evhttp_bind_socket_with_handle(httpServ, addr, port);
-	if (!handle) {
-		fprintf(stderr, "couldn't bind to port %d. exiting.\n", (int)port);
-		
-		evhttp_free(httpServ);
-
-		return;
-	}
-
-	// 设置超时
-	evhttp_set_timeout(httpServ, 120);
-
-	// 设置回调  
-	evhttp_set_gencb(httpServ, http_default_handler, NULL);
-
-	////设置路由 post method
-	//{
-	//	evhttp_set_cb(httpServ, "/login", post_login_cb, httpServ);
-	//}
-
-	////设置路由 get method
-	//{
-	//	evhttp_set_cb(httpServ, "/add", get_add_cb, httpServ);
-	//}	
-
-	for (size_t i = 0; i < sizeof(httpgignature)/sizeof(httpgignature[0]); i++)
-	{
-		evhttp_set_cb(httpServ, httpgignature[i]._signature, httpgignature[i]._cb, httpServ);
-	}
-
-	/* Extract and display the address we're listening on. */
-	{
-		struct sockaddr_storage ss;
-		evutil_socket_t fd;
-		ev_socklen_t socklen = sizeof(ss);
-		char addrbuf[128];
-		void *inaddr;
-		const char *addr;
-		int got_port = -1;
-		fd = evhttp_bound_socket_get_fd(handle);
-		memset(&ss, 0, sizeof(ss));
-		do
+		for (size_t i = 0; i < sizeof(__g_httpsignature) / sizeof(__g_httpsignature[0]); i++)
 		{
-			if (getsockname(fd, (struct sockaddr *)&ss, &socklen))
-			{
-				perror("getsockname() failed");
-				break;
-			}
-
-			if (ss.ss_family == AF_INET)
-			{
-				got_port = ntohs(((struct sockaddr_in*)&ss)->sin_port);
-				inaddr = &((struct sockaddr_in*)&ss)->sin_addr;
-			}
-			else if (ss.ss_family == AF_INET6)
-			{
-				got_port = ntohs(((struct sockaddr_in6*)&ss)->sin6_port);
-				inaddr = &((struct sockaddr_in6*)&ss)->sin6_addr;
-			}
-			else
-			{
-				fprintf(stderr, "weird address family %d\n", ss.ss_family);
-				break;
-			}
-
-			addr = evutil_inet_ntop(ss.ss_family, inaddr, addrbuf, sizeof(addrbuf));
-			if (addr)
-			{
-				printf("本地HTTP服务启动完成 [http://%s:%d]\n", addr, got_port);
-				evutil_snprintf(uri_root, sizeof(uri_root), "http://%s:%d", addr, got_port);
-			}
-			else
-			{
-				fprintf(stderr, "evutil_inet_ntop failed\n");
-				break;
-			}
-
-		} while (0);
-		
-	}
-
-	int ret = event_base_dispatch(__http_base);
-
-	evhttp_free(httpServ);
-
-	event_base_free(__http_base);
-}
-
-int run_http_server(unsigned short port)
-{
-	//自定义信号处理函数
-// 	signal(SIGINT, signal_handler);
-// 	signal(SIGILL, signal_handler);
-// 	signal(SIGFPE, signal_handler);
-// 	signal(SIGSEGV, signal_handler);
-// 	signal(SIGTERM, signal_handler);
-// 	signal(SIGBREAK, signal_handler);
-// 	signal(SIGABRT, signal_handler);
-
-	std::thread t(__run_http_server, port);
-	t.detach();
-
-	return 0;
+			server->set_cb(__g_httpsignature[i]._signature, __g_httpsignature[i]._cb, server);
+		}
+		return 0;
+	});
 }

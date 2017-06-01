@@ -35,6 +35,7 @@
 
 #include "cmdline.h"
 #include "libproperties.h"
+#include "http_server_business.h"
 
 using namespace LW;
 
@@ -116,7 +117,8 @@ static void _start_cb(int what)
 	printf("RPC服务启动完成 [%d]！\n", __s_lport);
 
 	run_rpc_client("127.0.0.1", __s_rport);
-	run_http_server(__s_hport);
+
+	__init_http_business(__s_hport);
 }
 
 int main(int argc, char** argv)
@@ -181,25 +183,25 @@ int main(int argc, char** argv)
 		__s_hport = a.get<int>("hport");
 	}
 
-	Properties p;
-	p.clear();
-
-	if (!p.loadFromXML(config))
-	{
-		std::cout << "falue" << std::endl;
-	}
-	else
-	{
-		for (Properties::const_iterator it = p.begin(); it != p.end(); ++it)
-		{
-			cout << (*it).first << "-->" << (*it).second << std::endl;
-		}
-		std::cout << p.getProperty("lport", "9876") << std::endl;
-		std::cout << p.getProperty("rport", "9876") << std::endl;
-		std::cout << p.getProperty("hport", "9877") << std::endl;
-		std::cout << p.getProperty("rmote_host", "127.0.0.1") << std::endl;
-		p.clear();
-	}
+// 	Properties p;
+// 	p.clear();
+// 
+// 	if (!p.loadFromXML(config))
+// 	{
+// 		std::cout << "falue" << std::endl;
+// 	}
+// 	else
+// 	{
+// 		for (Properties::const_iterator it = p.begin(); it != p.end(); ++it)
+// 		{
+// 			cout << (*it).first << "-->" << (*it).second << std::endl;
+// 		}
+// 		std::cout << p.getProperty("lport", "9876") << std::endl;
+// 		std::cout << p.getProperty("rport", "9876") << std::endl;
+// 		std::cout << p.getProperty("hport", "9877") << std::endl;
+// 		std::cout << p.getProperty("rmote_host", "127.0.0.1") << std::endl;
+// 		p.clear();
+// 	}
 
 	event_set_fatal_callback(_event_fatal_cb);
 

@@ -30,17 +30,14 @@
     <ClCompile Include="..\protocol\platform.pb.cc">
       <Filter>通讯协议</Filter>
     </ClCompile>
-    <ClCompile Include="http_server.cpp">
-      <Filter>server</Filter>
-    </ClCompile>
-    <ClCompile Include="socket_server.cpp">
-      <Filter>server</Filter>
-    </ClCompile>
     <ClCompile Include="client_main.cpp">
       <Filter>server</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="http_server_business.cpp">
+      <Filter>server</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,12 +47,6 @@
     <ClInclude Include="..\protocol\platform.pb.h">
       <Filter>通讯协议</Filter>
     </ClInclude>
-    <ClInclude Include="http_server.h">
-      <Filter>server</Filter>
-    </ClInclude>
-    <ClInclude Include="socket_server.h">
-      <Filter>server</Filter>
-    </ClInclude>
     <ClInclude Include="client_main.h">
       <Filter>server</Filter>
     </ClInclude>
@@ -64,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="..\protocol\command.h">
       <Filter>通讯协议</Filter>
+    </ClInclude>
+    <ClInclude Include="http_server_business.h">
+      <Filter>server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

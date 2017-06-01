@@ -54,14 +54,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;USE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\libutils;..\json;..\libproperties-1.0\include;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\protobuf\protobuf\include;..\protocol;..\business;..\business\common;..\..\..\..\pcLib\protobuf\protobuf-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libnet;..\libutils;..\json;..\libproperties-1.0\include;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\protobuf\protobuf\include;..\protocol;..\business;..\business\common;..\..\..\..\pcLib\protobuf\protobuf-vs2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Debug;..\..\..\nanomsg\builds\vs2015\Debug;..\..\..\..\pcLib\protobuf\protobuf-vs2015\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;libevent.lib;libevent_core.lib;libevent_extras.lib;libprotobufd.lib;libprotocd.lib;business.lib;libproperties.lib;libutils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;libevent.lib;libevent_core.lib;libevent_extras.lib;libprotobufd.lib;libprotocd.lib;business.lib;libproperties.lib;libutils.lib;libnet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -93,9 +93,8 @@
     <ClCompile Include="..\protocol\game.pb.cc" />
     <ClCompile Include="..\protocol\platform.pb.cc" />
     <ClCompile Include="client_main.cpp" />
+    <ClCompile Include="http_server_business.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="http_server.cpp" />
-    <ClCompile Include="socket_server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protocol\game.pb.h" />
@@ -103,8 +102,7 @@
     <ClInclude Include="..\protocol\command.h" />
     <ClInclude Include="..\protocol\platform.pb.h" />
     <ClInclude Include="client_main.h" />
-    <ClInclude Include="http_server.h" />
-    <ClInclude Include="socket_server.h" />
+    <ClInclude Include="http_server_business.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\protocol\game.proto" />
