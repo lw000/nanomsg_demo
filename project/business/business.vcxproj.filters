@@ -36,9 +36,6 @@
     <ClInclude Include="NetMessage.h">
       <Filter>网络层模块</Filter>
     </ClInclude>
-    <ClInclude Include="ProtocolData.h">
-      <Filter>网络层模块</Filter>
-    </ClInclude>
     <ClInclude Include="business.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -51,9 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NetMessage.cpp">
-      <Filter>网络层模块</Filter>
-    </ClCompile>
-    <ClCompile Include="ProtocolData.cpp">
       <Filter>网络层模块</Filter>
     </ClCompile>
     <ClCompile Include="business.cpp">

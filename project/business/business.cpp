@@ -7,7 +7,6 @@
 
 #include "base_type.h"
 #include "common_marco.h"
-#include "ProtocolData.h"
 #include "CacheQueueT.h"
 #include "NetMessage.h"
 
@@ -24,7 +23,7 @@ std::mutex			__g_cache_mutex;
 
 static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
 
-lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_DATA_CALLFUNC func, void* userdata)
+lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata)
 {
 	if (bufSize <= 0) return -1;
 	if (NULL == buf) return -2;
@@ -52,20 +51,17 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 					break;
 				}
 
-				char* data = __g_cache_queue.front() + C_NET_HEAD_SIZE;
+				lw_char8* data = __g_cache_queue.front() + C_NET_HEAD_SIZE;
 				lw_int32 data_len = phead->size - C_NET_HEAD_SIZE;
 
-				NetMessage* msg = NetMessage::createNetMessage();
+				NetMessage* msg = NetMessage::createNetMessage(phead);
 				if (nullptr != msg)
 				{
-					msg->setMessage(phead, data, data_len, msgStatus_RECV);
-
+					msg->setMessage(data, data_len, msgStatus_RECV);
 					//__g_msg_queue.push_back(smsg);
-
 					{
-						func(msg->messageHead.cmd, msg->message, msg->messageSize, userdata);
+						func(msg->getHead()->cmd, msg->getBuff(), msg->getBuffSize(), userdata);
 					}
-
 					NetMessage::releaseNetMessage(msg);
 				}
 				__g_cache_queue.pop(phead->size);
@@ -104,23 +100,21 @@ void lw_get_message(std::function<void(NetMessage* smsg)> func)
 	//Director::getInstance()->getScheduler()->pauseTarget(this);
 }
 
-LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, void* object, lw_int32 objectSize)
+LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, lw_void* object, lw_int32 objectSize)
 {
-	ProtocolData protocolData;
-	protocolData.createPackage(cmd, object, objectSize);
+	NetMessage *msg = NetMessage::createNetMessage(cmd, object, objectSize);
 
 	LW_NET_MESSAGE * p = (LW_NET_MESSAGE*)malloc(sizeof(LW_NET_MESSAGE));
-
-	p->size = protocolData.getContentSize();
-
+	p->size = msg->getBuffSize();
 	p->buf = (lw_char8*)malloc(p->size * sizeof(lw_char8));
-	memcpy(p->buf, protocolData.getContent(), p->size);
-	
+	memcpy(p->buf, msg->getBuff(), msg->getBuffSize());
+
+	NetMessage::releaseNetMessage(msg);
 
 	return p;
 }
 
-void lw_free_net_message(LW_NET_MESSAGE* p)
+lw_void lw_free_net_message(LW_NET_MESSAGE* p)
 {
 	free(p->buf);
 	free(p);

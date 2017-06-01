@@ -1,6 +1,8 @@
 ﻿#ifndef __BaseType_H__
 #define __BaseType_H__
 
+typedef		void					lw_void;
+
 typedef		bool					lw_bool;
 
 typedef		char					lw_char8;

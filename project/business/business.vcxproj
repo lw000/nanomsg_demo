@@ -76,7 +76,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;-----------LW_ENABLE_POOL_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\business;.\protocol;.\common;..\..\..\nanomsg\src;..\..\..\cppnanomsg</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -142,12 +142,10 @@
     <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="NetHead.h" />
     <ClInclude Include="NetMessage.h" />
-    <ClInclude Include="ProtocolData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="business.cpp" />
     <ClCompile Include="NetMessage.cpp" />
-    <ClCompile Include="ProtocolData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MemoryPool.tcc" />

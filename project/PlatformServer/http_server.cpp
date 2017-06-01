@@ -115,7 +115,7 @@ static void post_login_cb(struct evhttp_request *req, void *arg)
 {
 	if (evhttp_request_get_command(req) != EVHTTP_REQ_POST)
 	{
-		lw_http_send_reply(req, "{\"code\":0,\"what\":\"please use post method request!\"}");
+		lw_http_send_reply(req, "{\"code\":0,\"what\":\"The requested resource does not support http method 'GET'.""}");
 		return;
 	}
 
@@ -135,13 +135,19 @@ static void post_login_cb(struct evhttp_request *req, void *arg)
 
 	evbuffer_drain(evbuf, data_len);
 	
-	KVPragma kv;
-	kv.parse_url(buff);
-	const char* _a = kv.find_value("a");
-	const char* _b = kv.find_value("b");
-	const char* _c = kv.find_value("c");
-	const char* _d = kv.find_value("d");
+	{
 
+		struct evkeyvalq params;
+		int ret = evhttp_parse_query_str(buff, &params);
+
+		const char* _a = evhttp_find_header(&params, "a");
+		const char* _b = evhttp_find_header(&params, "b");
+		const char* _c = evhttp_find_header(&params, "c");
+		const char* _d = evhttp_find_header(&params, "d");
+
+	}
+
+	
 	{
 		const char* host = evhttp_request_get_host(req);
 
@@ -149,7 +155,8 @@ static void post_login_cb(struct evhttp_request *req, void *arg)
 		doc.SetObject();
 		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 		doc.AddMember("host", host, allocator);
-
+		KVPragma kv;
+		kv.parse_url(buff);
 		kv.printf([&doc, &allocator](KV* pkv)
 		{
 			const char* k = pkv->k;
@@ -173,9 +180,34 @@ static void get_add_cb(struct evhttp_request *req, void *arg)
 {
 	if (evhttp_request_get_command(req) != EVHTTP_REQ_GET) 
 	{
-		lw_http_send_reply(req, "{\"code\":0,\"what\":\"please use get method request!\"}");
+		lw_http_send_reply(req, "{\"code\":0,\"what\":\"The requested resource does not support http method 'POST'.""}");
 		return;
 	}
+
+// 	{
+// 		char buff[POST_BUF_MAX] = "\0";
+// 
+// 		struct evbuffer *evbuf;
+// 		evbuf = evhttp_request_get_input_buffer(req);
+// 
+// 		int data_len = evbuffer_get_length(evbuf);
+// 		char *data = (char *)evbuffer_pullup(evbuf, data_len);
+// 
+// 		if (data_len <= 0) return;
+// 		if (data == NULL) return;
+// 
+// 		size_t copy_len = data_len > POST_BUF_MAX ? POST_BUF_MAX : data_len;
+// 		memcpy(buff, data, copy_len);
+// 
+// 		evbuffer_drain(evbuf, data_len);
+// 
+// 		KVPragma kv;
+// 		kv.parse_url(buff);
+// 		const char* _a = kv.find_value("a");
+// 		const char* _b = kv.find_value("b");
+// 		const char* _c = kv.find_value("c");
+// 		const char* _d = kv.find_value("d");
+// 	}
 
 	struct evkeyvalq http_query;
 	do

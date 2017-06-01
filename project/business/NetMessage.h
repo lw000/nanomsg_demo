@@ -2,7 +2,9 @@
 #define __SocketMessage_H__
 
 #include <functional>
+
 #include "NetHead.h"
+#include "base_type.h"
 
 namespace LW 
 {
@@ -14,16 +16,30 @@ namespace LW
 
 	class NetMessage 
 	{
-		public:
-			static NetMessage* createNetMessage();
-			static void releaseNetMessage(NetMessage* message);
+	public:
+		static NetMessage* createNetMessage();
+		static NetMessage* createNetMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize);
+		static NetMessage* createNetMessage(const NetHead* head);
 
-		public:
-			void setMessage(const NetHead* head, lw_char8* msg, lw_int32 msgsize, enMsgStatus Status);
-		
-		private:
-			NetMessage();
-			~NetMessage();
+		static lw_void releaseNetMessage(NetMessage* message);
+
+	public:
+		lw_void setMessage(lw_char8* msg, lw_int32 msgsize, enMsgStatus Status);
+		lw_int32 setMessage(lw_int32 cmd, lw_void* object, lw_int32 objectSize);
+		lw_char8* getBuff() const;
+		lw_int32 getBuffSize();
+		const NetHead* getHead();
+
+		lw_void debug();
+
+	private:
+		NetMessage(lw_int32 cmd, lw_void* msg = nullptr, lw_int32 msgsize = 0);
+		NetMessage(const NetHead* head);
+		NetMessage();
+		~NetMessage();
+
+	private:
+		lw_void setHead(const NetHead* head);
 
 #ifdef LW_ENABLE_POOL_
 	private:
@@ -31,36 +47,16 @@ namespace LW
 		void operator delete(void *ptrObject);
 #endif
 
-		public:
-			NetHead messageHead;
-			lw_uint32 messageSize;// message size
+	private:
+		NetHead _msgHead;
+		lw_uint32 _buff_size;
 
 #ifdef LW_ENABLE_POOL_
-			lw_char8 message[8 * 1024];
+		lw_char8 _buff[8 * 1024];
 #else
-			lw_char8 *message;
+		lw_char8 *_buff;
 #endif        
-			lw_ullong64 ullKey;
-
-	private:
-		enMsgStatus Status;
-	};
-
-	class NetMessageSelectorItem
-	{
-	public:
-		NetMessageSelectorItem(SEL_NetMessage selector) : _selector(selector)
-		{
-		}
-
-	public:
-		bool doCallSelector(NetMessage* socketMessage)
-		{ 
-			return (_selector)(socketMessage);
-		}
-
-	private:
-		SEL_NetMessage	_selector;
+		enMsgStatus _status;
 	};
 };
 

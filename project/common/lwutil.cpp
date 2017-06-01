@@ -47,32 +47,30 @@ int KVPragma::parse_url(const char* data)
 	char *p0 = NULL;
 	char *p1 = NULL;
 	p0 = lw_strtok_r(p, "&", &p1);
-	if (p0 == NULL)
-	{
-		return NULL;
-	}
-
+	if (p0 == NULL) return -1;
 	while (p0 != NULL)
 	{
-		{
-			char *q = NULL;
-			char *q1 = NULL;
+		char *q = NULL;
+		char *q1 = NULL;
 
-			std::string k;
-			std::string v;
+		std::string k;
+		std::string v;
 
-			q = lw_strtok_r(const_cast<char*>(p0), "=", &q1);
-			k = q;
-			q = lw_strtok_r(NULL, "=", &q1);
-			v = q;
+		q = lw_strtok_r(const_cast<char*>(p0), "=", &q1);
+		if (q == NULL) return -1;
+		k = q;
+		q = lw_strtok_r(NULL, "=", &q1);
+		if (q == NULL) return -1;
+		v = q;
 
-			KV *_pkv = (KV*)malloc(sizeof(KV));
-			_pkv->k = (char*)::malloc(k.size() + 1);
-			_pkv->v = (char*)::malloc(v.size() + 1);
-			strcpy(_pkv->k, k.c_str());
-			strcpy(_pkv->v, v.c_str());
-			_kv.push_back(_pkv);
-		}
+		KV *_pkv = (KV*)malloc(sizeof(KV));
+		_pkv->k = (char*)::malloc(k.size() + 1);
+		_pkv->v = (char*)::malloc(v.size() + 1);
+		strcpy(_pkv->k, k.c_str());
+		strcpy(_pkv->v, v.c_str());
+
+		_kv.push_back(_pkv);
+
 		p0 = lw_strtok_r(NULL, "&", &p1);
 	}
 	return 0;

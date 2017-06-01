@@ -202,8 +202,10 @@ int main(int argc, char** argv)
 #endif
 
 	lw_int32 rport = 0;
+	lw_int32 exe_times = 1;
 
 	cmdline::parser a;
+	a.add<int>("exe_times", 'c', "执行测试", false, 1, cmdline::range(1, 1));
 	a.add<int>("rport", 'r', "远程RPC服务器端口", false, 9876, cmdline::range(9000, 65535));
 
 	a.parse_check(argc, argv);
@@ -211,7 +213,11 @@ int main(int argc, char** argv)
 	if (a.exist("rport"))
 	{
 		rport = a.get<int>("rport");
+	}
 
+	if (a.exist("exe_times"))
+	{
+		exe_times = a.get<int>("exe_times");
 	}
 
 	Properties p;
@@ -247,7 +253,7 @@ int main(int argc, char** argv)
 		lw_sleep(0.1);
 	}
 
-	client_http_main();
+	client_http_main(exe_times);
 
 	int ch = getchar();
 
