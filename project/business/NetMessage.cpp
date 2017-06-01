@@ -42,9 +42,9 @@ namespace LW
 		SAFE_DELETE(message);
 	}
 	
-	NetMessage::NetMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize) : NetMessage()
+	NetMessage::NetMessage(lw_int32 command, lw_void* msg, lw_int32 msgsize) : NetMessage()
 	{
-		this->setMessage(cmd, msg, msgsize);
+		this->setMessage(command, msg, msgsize);
 	}
 
 	NetMessage::NetMessage(const NetHead* head) : NetMessage()
@@ -113,34 +113,29 @@ namespace LW
 		this->_status = Status;
 	}
 
-	lw_int32 NetMessage::setMessage(lw_int32 cmd, void* object, lw_int32 objectSize)
+	lw_int32 NetMessage::setMessage(lw_int32 command, lw_void* msg, lw_int32 msgsize)
 	{
+		if (msgsize < 0) return -1;
+
 		lw_int32 ret = 0;
 
 		do
 		{
-			if (objectSize <= 0)
-			{
-				ret = -1;
-				break;
-			}
-
-			_buff_size = sizeof(NetHead) + objectSize;
+			_buff_size = sizeof(NetHead) + msgsize;
 
 			_msgHead.size = _buff_size;
-			_msgHead.cmd = cmd;
+			_msgHead.cmd = command;
 			lw_uint32 create_time = (lw_int32)time(NULL);
 			_msgHead.create_time = htonl(create_time);
 
 #if !defined(LW_ENABLE_POOL_)
 			_buff = (lw_char8*)malloc(_buff_size * sizeof(lw_char8));
 #endif 
-
 			::memcpy(_buff, &_msgHead, sizeof(NetHead));
 
-			if (nullptr != object)
+			if (nullptr != msg && msgsize > 0)
 			{
-				::memcpy(_buff + sizeof(NetHead), (void*)object, objectSize);
+				::memcpy(_buff + sizeof(NetHead), (void*)msg, msgsize);
 			}
 
 		} while (0);
@@ -161,7 +156,7 @@ namespace LW
 #endif	//_DEBUG || DEBUG
 	}
 
-	lw_char8* NetMessage::getBuff() const
+	char* NetMessage::getBuff() const
 	{
 		return _buff;
 	}

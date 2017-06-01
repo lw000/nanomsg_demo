@@ -19,9 +19,6 @@
     <Filter Include="server">
       <UniqueIdentifier>{168627d2-653a-4e2b-b5fd-77bbc666bc73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="common">
-      <UniqueIdentifier>{ff9356c0-d3f6-40cb-8fe7-7e3df1822367}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -41,9 +38,6 @@
     </ClCompile>
     <ClCompile Include="client_main.cpp">
       <Filter>server</Filter>
-    </ClCompile>
-    <ClCompile Include="..\common\lwutil.cpp">
-      <Filter>common</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
@@ -65,11 +59,11 @@
     <ClInclude Include="client_main.h">
       <Filter>server</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\cmdline.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\protocol\Message.h">
+      <Filter>通讯协议</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\lwutil.h">
-      <Filter>common</Filter>
+    <ClInclude Include="..\protocol\command.h">
+      <Filter>通讯协议</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

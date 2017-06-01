@@ -22,7 +22,7 @@
 struct connect_base
 {
 	struct evhttp_connection *evcon;
-	struct evhttp_uri *host_url;
+	struct evhttp_uri *host;
 };
 
 static void get_cb(struct evhttp_request *req, void *arg)
@@ -50,7 +50,7 @@ static void connect_cb(struct evhttp_request *proxy_req, void *arg)
 
 	struct connect_base *base = (struct connect_base *)arg;
 	struct evhttp_connection *evcon = base->evcon;
-	struct evhttp_uri *host_url = base->host_url;
+	struct evhttp_uri *host_url = base->host;
 
 	VERIFY(proxy_req);
 	if (evcon)
@@ -69,7 +69,7 @@ void __run_http_client()
 
 	char buffer[URL_MAX];
 
-	struct evhttp_uri *host_url;
+	struct evhttp_uri *host;
 
 	struct event_base *base;
 	struct evhttp_connection *evcon;
@@ -77,32 +77,32 @@ void __run_http_client()
 
 	struct connect_base connect_base;
 
-	host_url = evhttp_uri_parse(argv[0]);
+	host = evhttp_uri_parse(argv[0]);
 
-	VERIFY(evhttp_uri_get_host(host_url));
-	VERIFY(evhttp_uri_get_port(host_url) > 0);
+	VERIFY(evhttp_uri_get_host(host));
+	VERIFY(evhttp_uri_get_port(host) > 0);
 
 	VERIFY(base = event_base_new());
 
 	VERIFY(evcon = evhttp_connection_base_new(base, NULL,
-		evhttp_uri_get_host(host_url), evhttp_uri_get_port(host_url)));
+		evhttp_uri_get_host(host), evhttp_uri_get_port(host)));
 
 	connect_base.evcon = evcon;
-	connect_base.host_url = host_url;
+	connect_base.host = host;
 
 	VERIFY(req = evhttp_request_new(connect_cb, &connect_base));
 
 	evhttp_add_header(req->output_headers, "Connection", "keep-alive");
 	evhttp_add_header(req->output_headers, "Proxy-Connection", "keep-alive");
 	evutil_snprintf(buffer, URL_MAX, "%s:%d",
-		evhttp_uri_get_host(host_url), evhttp_uri_get_port(host_url));
+		evhttp_uri_get_host(host), evhttp_uri_get_port(host));
 	evhttp_make_request(evcon, req, EVHTTP_REQ_CONNECT, buffer);
 
 	event_base_dispatch(base);
 
 	evhttp_connection_free(evcon);
 	event_base_free(base);
-	evhttp_uri_free(host_url);
+	evhttp_uri_free(host);
 }
 
 int client_http_main(lw_int32 exe_times)

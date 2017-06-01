@@ -24,7 +24,7 @@
 
 #include <NetMessage.h>
 
-#include "NetCmd.h"
+#include "command.h"
 #include "Message.h"
 #include "platform.pb.h"
 
@@ -194,7 +194,6 @@ int main(int argc, char** argv)
 		{
 			cout << (*it).first << "-->" << (*it).second << std::endl;
 		}
-		std::cout << "use getProperty" << std::endl;
 		std::cout << p.getProperty("lport", "9876") << std::endl;
 		std::cout << p.getProperty("rport", "9876") << std::endl;
 		std::cout << p.getProperty("hport", "9877") << std::endl;

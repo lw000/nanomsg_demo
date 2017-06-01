@@ -97,12 +97,22 @@ void lw_get_message(std::function<void(NetMessage* smsg)> func)
 			NetMessage::releaseNetMessage(smsg);
 		}
 	} while (queue_size > 0);
-	//Director::getInstance()->getScheduler()->pauseTarget(this);
 }
 
-LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, lw_void* object, lw_int32 objectSize)
+lw_int32 lw_send_socket_data(lw_int32 command, void* object, lw_int32 objectSize, std::function<lw_int32(LW_NET_MESSAGE* p)> func)
 {
-	NetMessage *msg = NetMessage::createNetMessage(cmd, object, objectSize);
+	lw_int32 result = 0;
+	{
+		LW_NET_MESSAGE* p = lw_create_net_message(command, object, objectSize);
+		result = func(p);
+		lw_free_net_message(p);
+	}
+	return result;
+}
+
+LW_NET_MESSAGE* lw_create_net_message(lw_int32 command, lw_void* object, lw_int32 objectSize)
+{
+	NetMessage *msg = NetMessage::createNetMessage(command, object, objectSize);
 
 	LW_NET_MESSAGE * p = (LW_NET_MESSAGE*)malloc(sizeof(LW_NET_MESSAGE));
 	p->size = msg->getBuffSize();

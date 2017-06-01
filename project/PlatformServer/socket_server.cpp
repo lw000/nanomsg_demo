@@ -140,7 +140,6 @@ lw_int32 SocketServer::sendData(struct bufferevent *bev, lw_int32 cmd, void* obj
 		result = bufferevent_write(bev, p->buf, p->size);
 		lw_free_net_message(p);
 	}
-
 	return result;
 }
 

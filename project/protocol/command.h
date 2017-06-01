@@ -1,5 +1,5 @@
-﻿#ifndef __NetCmd_H_
-#define __NetCmd_H_
+﻿#ifndef __command_H__
+#define __command_H__
 
 namespace LW 
 {
@@ -36,4 +36,4 @@ namespace LW
 	};
 }
 
-#endif // !__NetCmd_H_
+#endif // !__command_H__

@@ -18,14 +18,16 @@ namespace LW
 	{
 	public:
 		static NetMessage* createNetMessage();
-		static NetMessage* createNetMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize);
+		static NetMessage* createNetMessage(lw_int32 command, lw_void* msg, lw_int32 msgsize);
 		static NetMessage* createNetMessage(const NetHead* head);
 
 		static lw_void releaseNetMessage(NetMessage* message);
 
 	public:
 		lw_void setMessage(lw_char8* msg, lw_int32 msgsize, enMsgStatus Status);
-		lw_int32 setMessage(lw_int32 cmd, lw_void* object, lw_int32 objectSize);
+		lw_int32 setMessage(lw_int32 command, lw_void* msg, lw_int32 msgsize);
+
+	public:
 		lw_char8* getBuff() const;
 		lw_int32 getBuffSize();
 		const NetHead* getHead();

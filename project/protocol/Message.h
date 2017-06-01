@@ -22,7 +22,6 @@ namespace LW
 			printf("sex = %d, age = %d, name = %s address = %s\n", sex, age, name, address);
 # endif
 		}
-
 	} sc_userinfo;
 
 #pragma pack()

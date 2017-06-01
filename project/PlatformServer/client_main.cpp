@@ -14,7 +14,7 @@
 
 #include "business.h"
 
-#include "NetCmd.h"
+#include "command.h"
 #include "Message.h"
 #include "platform.pb.h"
 #include <thread>

@@ -16,7 +16,8 @@
 
 #include "business.h"
 
-#include "NetCmd.h"
+
+#include "command.h"
 #include "Message.h"
 #include "platform.pb.h"
 
@@ -41,9 +42,8 @@ struct CLIENT
 {
 	struct bufferevent* bev;
 	bool live;
+	struct event timer;
 };
-
-struct event __g_timer;
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
@@ -62,17 +62,6 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	}
 }
 
-static lw_int32 send_socket_data(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
-{
-	lw_int32 result = 0;
-	{
-		LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
-		result = bufferevent_write(bev, p->buf, p->size);
-		lw_free_net_message(p);
-	}
-	return result;
-}
-
 static void time_cb(evutil_socket_t fd, short event, void *arg)
 {
 	struct CLIENT* client = (CLIENT*)arg;
@@ -83,7 +72,7 @@ static void time_cb(evutil_socket_t fd, short event, void *arg)
 		evutil_timerclear(&tv);
 		tv.tv_sec = 1;
 		tv.tv_usec = 0;
-		event_add(&__g_timer, &tv);
+		event_add(&client->timer, &tv);
 
 		{
 			platform::sc_msg_request_userinfo msg;
@@ -94,7 +83,10 @@ static void time_cb(evutil_socket_t fd, short event, void *arg)
 			bool ret = msg.SerializeToArray(s, len);
 			if (ret)
 			{
-				send_socket_data(client->bev, CMD_PLATFORM_CS_USERINFO, s, len);
+				lw_send_socket_data(CMD_PLATFORM_CS_USERINFO, s, len, [&client](LW_NET_MESSAGE * p) -> lw_int32
+				{
+					return bufferevent_write(client->bev, p->buf, p->size);
+				});
 			}
 		}
 	}
@@ -170,13 +162,13 @@ void runClient(lw_int32 port)
 			bufferevent_enable(client.bev, EV_READ | EV_PERSIST);
 
 			// 设置定时器
-			event_assign(&__g_timer, base, -1, 0, time_cb, (void*)&client); //EV_PERSIST
+			event_assign(&client.timer, base, -1, 0, time_cb, (void*)&client); //EV_PERSIST
 
 			struct timeval tv;
 			evutil_timerclear(&tv);
 			tv.tv_sec = 1;
 			tv.tv_usec = 0;
-			event_add(&__g_timer, &tv);
+			event_add(&client.timer, &tv);
 
 			event_base_dispatch(base);
 
@@ -202,11 +194,13 @@ int main(int argc, char** argv)
 #endif
 
 	lw_int32 rport = 0;
-	lw_int32 exe_times = 1;
+	lw_int32 exec_times = 1;
+	lw_int32 rpc_client_times = 1;
 
 	cmdline::parser a;
-	a.add<int>("exe_times", 'c', "执行测试", false, 1, cmdline::range(1, 1));
-	a.add<int>("rport", 'r', "远程RPC服务器端口", false, 9876, cmdline::range(9000, 65535));
+	a.add<int>("rpc_client_times", 'C', "rpc client times.");
+	a.add<int>("exec_times", 'c', "http exec times.");
+	a.add<int>("rport", 'r', "remote rpc server port.", false, 9876, cmdline::range(9000, 65535));
 
 	a.parse_check(argc, argv);
 
@@ -215,29 +209,23 @@ int main(int argc, char** argv)
 		rport = a.get<int>("rport");
 	}
 
-	if (a.exist("exe_times"))
+	if (a.exist("exec_times"))
 	{
-		exe_times = a.get<int>("exe_times");
+		exec_times = a.get<int>("exec_times");
+	}
+
+	if (a.exist("rpc_client_times"))
+	{
+		rpc_client_times = a.get<int>("rpc_client_times");
 	}
 
 	Properties p;
-	//p.setProperty("lport", "harite");
-	//p.setProperty("rport", "1521");
-	//p.setProperty("hport", "12y3_aer65");
-	//p.setProperty("rport_host", "127.0.0.1");
-	//p.storeToXML("config.xml");
-	p.clear();
-
 	if (!p.loadFromXML("config.xml"))
 	{
 		std::cout << "falue" << std::endl;
 	}
 	else
 	{
-		for (Properties::const_iterator it = p.begin(); it != p.end(); ++it)
-		{
-			cout << (*it).first << "-->" << (*it).second << std::endl;
-		}
 		std::cout << "use getProperty" << std::endl;
 		std::cout << p.getProperty("lport", "9876") << std::endl;
 		std::cout << p.getProperty("rport", "9876") << std::endl;
@@ -246,14 +234,14 @@ int main(int argc, char** argv)
 		p.clear();
 	}
 
-	for (size_t i = 0; i < 1; i++)
+	for (size_t i = 0; i < rpc_client_times; i++)
 	{
 		std::thread t(runClient, rport);
 		t.detach();
 		lw_sleep(0.1);
 	}
 
-	client_http_main(exe_times);
+	client_http_main(exec_times);
 
 	int ch = getchar();
 
