@@ -52,12 +52,7 @@ namespace LW
 	private:
 		NetHead _msgHead;
 		lw_uint32 _buff_size;
-
-#ifdef LW_ENABLE_POOL_
-		lw_char8 _buff[8 * 1024];
-#else
 		lw_char8 *_buff;
-#endif        
 		enMsgStatus _status;
 	};
 };
