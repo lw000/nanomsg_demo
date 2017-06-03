@@ -26,7 +26,7 @@ public:
 	void unInit();
 
 public:
-	lw_int32 sendData(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize);
+	lw_int32 send_data(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize);
 	lw_int32 run(u_short port, LW_SERVER_START_COMPLETE start_func, LW_PARSE_DATA_CALLFUNC func);
 
 public:

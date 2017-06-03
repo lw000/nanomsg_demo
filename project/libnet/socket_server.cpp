@@ -132,7 +132,7 @@ void SocketServer::unInit()
 	event_base_free(_base);
 }
 
-lw_int32 SocketServer::sendData(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
+lw_int32 SocketServer::send_data(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
 	lw_int32 result = 0;
 	{
@@ -167,7 +167,7 @@ void SocketServer::bufferreadCB(struct bufferevent *bev)
 	input = bufferevent_get_input(bev);
 	size_t input_len = evbuffer_get_length(input);
 
-	char *read_buf = (char*)malloc(input_len);
+	lw_char8 *read_buf = (lw_char8*)malloc(input_len);
 
 	size_t read_len = bufferevent_read(bev, read_buf, input_len);
 
@@ -204,8 +204,6 @@ void SocketServer::buffereventCB(struct bufferevent *bev, short event)
 	}
 	else if (event & BEV_EVENT_ERROR)
 	{
-//		printf("got an error on the connection: %s\n", strerror(errno));/*XXX win32*/
-
 		VTCLIENT::iterator iter = vtClients.begin();
 		for (iter; iter != vtClients.end(); ++iter)
 		{
@@ -259,7 +257,8 @@ void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t f
 
 lw_int32 SocketServer::run(u_short port, LW_SERVER_START_COMPLETE start_func, LW_PARSE_DATA_CALLFUNC func)
 {
-	if (!func) return -1;
+	if (NULL == func) return -1;
+	if (NULL == start_func) return -1;
 
 	if (func != _on_recv_func)
 	{
@@ -270,6 +269,7 @@ lw_int32 SocketServer::run(u_short port, LW_SERVER_START_COMPLETE start_func, LW
 	{
 		_on_start = start_func;
 	}
+
 	if (_port != port)
 	{
 		_port = port;
