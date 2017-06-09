@@ -293,7 +293,7 @@ static void sub_cb(struct evhttp_request *req, void *arg)
 void __init_http_business(lw_int32 port)
 {
 	// 设置回调函数
-	__g_http_serv.start_listener("127.0.0.1", port, [](HttpServer* server) -> lw_int32
+	__g_http_serv.start_listener("172.16.1.61", port, [](HttpServer* server) -> lw_int32
 	{
 		// 设置标准接口回调函数
 		server->set_gen_cb(http_default_handler, NULL);

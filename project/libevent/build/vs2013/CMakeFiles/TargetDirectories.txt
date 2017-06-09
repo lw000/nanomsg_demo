@@ -1,0 +1,9 @@
+E:/lw000/nanomsg_demo/project/libevent/build/vs2013/CMakeFiles/event_core_static.dir
+E:/lw000/nanomsg_demo/project/libevent/build/vs2013/CMakeFiles/event_core_shared.dir
+E:/lw000/nanomsg_demo/project/libevent/build/vs2013/CMakeFiles/event_shared.dir
+E:/lw000/nanomsg_demo/project/libevent/build/vs2013/CMakeFiles/event_extra_static.dir
+E:/lw000/nanomsg_demo/project/libevent/build/vs2013/CMakeFiles/event_extra_shared.dir
+E:/lw000/nanomsg_demo/project/libevent/build/vs2013/CMakeFiles/event_static.dir
+E:/lw000/nanomsg_demo/project/libevent/build/vs2013/CMakeFiles/INSTALL.dir
+E:/lw000/nanomsg_demo/project/libevent/build/vs2013/CMakeFiles/ALL_BUILD.dir
+E:/lw000/nanomsg_demo/project/libevent/build/vs2013/CMakeFiles/ZERO_CHECK.dir

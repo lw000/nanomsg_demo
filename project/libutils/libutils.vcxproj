@@ -77,7 +77,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\business;.\protocol;.\common;..\..\..\nanomsg\src;..\..\..\cppnanomsg</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\business;..\protocol;..\common;..\lib\pthreads\Pre-built.2\include;..\..\..\nanomsg\src;..\..\..\cppnanomsg</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

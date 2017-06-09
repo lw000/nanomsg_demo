@@ -63,7 +63,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		lw_bool ret = msg.SerializeToArray(s, len);
 		if (ret)
 		{
-			__g_serv.sendData(bev, CMD_HEART_BEAT, s, len);
+			__g_serv.send_data(bev, CMD_HEART_BEAT, s, len);
 		}
 
 	} break;
@@ -83,7 +83,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		char s[256] = { 0 };
 		bool ret = userinfo.SerializePartialToArray(s, sizeof(s));
 
-		__g_serv.sendData(bev, CMD_PLATFORM_SC_USERINFO, s, strlen(s));
+		__g_serv.send_data(bev, CMD_PLATFORM_SC_USERINFO, s, strlen(s));
 
 	} break;
 	default:
