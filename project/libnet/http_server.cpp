@@ -48,7 +48,7 @@ lw_int32 HttpServer::init(const char* addr, lw_uint32 port)
 	this->_addr = addr;
 	this->port = port;
 
-	char uri_root[512];
+// 	char uri_root[512];
 
 	struct evhttp_bound_socket *handle = NULL;
 

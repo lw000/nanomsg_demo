@@ -9,9 +9,11 @@
   <ItemGroup>
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="socket_server.cpp" />
+    <ClCompile Include="socket_client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
     <ClInclude Include="socket_server.h" />
+    <ClInclude Include="socket_client.h" />
   </ItemGroup>
 </Project>

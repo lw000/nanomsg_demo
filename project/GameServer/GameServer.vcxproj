@@ -54,14 +54,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;USE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\libutils;..\libproperties-1.0\include;..\protocol;..\business;..\business\common;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protobuf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libutils;..\libproperties-1.0\include;..\protocol;..\business;..\business\common;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protobuf\include;..\libnet;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Debug;..\nanomsg\build\vs2013\Debug;..\protobuf\lib;..\libevent\build\vs2013\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobufd.lib;libprotocd.lib;business.lib;libproperties.lib;libutils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobufd.lib;libprotocd.lib;business.lib;libproperties.lib;libutils.lib;libnet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>

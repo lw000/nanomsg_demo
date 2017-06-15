@@ -173,7 +173,7 @@ void SocketServer::bufferreadCB(struct bufferevent *bev)
 
 	if (read_len == input_len)
 	{
-		if (lw_parse_socket_data(read_buf, read_len, _on_recv_func, bev) == 0)
+		if (lw_parse_socket_data(read_buf, read_len, this->_on_recv_func, bev) == 0)
 		{
 
 		}
