@@ -58,15 +58,16 @@ public:
 	~HttpServer();
 
 public:
-	void start_listener(const char* addr, lw_uint32 port, std::function<lw_int32(HttpServer* server)> func);
-	void set_cb(const char * path, LW_HTTP_CB cb, void * cb_arg);
-	void set_gen_cb(LW_HTTP_CB cb, void * cb_arg);
+	lw_int32 init(const char* addr, lw_uint32 port);
+	void start();
+	void set_http_hook(const char * path, LW_HTTP_CB cb, void * cb_arg);
+	void set_http_gen_hook(LW_HTTP_CB cb, void * cb_arg);
 
 private:
 	void __run();
 
 private:
-	struct event_base* _http_base;
+	struct event_base* _base;
 	struct evhttp *_httpServ;
 	std::string _addr;
 	lw_uint32 port;

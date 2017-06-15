@@ -1,5 +1,5 @@
-#ifndef __Server_H__
-#define __Server_H__
+#ifndef __SocketServer_H__
+#define __SocketServer_H__
 
 #include "event2/event.h"
 #include <event2/event_struct.h>
@@ -48,4 +48,4 @@ private:
 	MAP_CLIENT mapClients;
 };
 
-#endif // !__Server_H__
+#endif // !__SocketServer_H__

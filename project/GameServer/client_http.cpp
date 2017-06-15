@@ -64,7 +64,7 @@ static void connect_cb(struct evhttp_request *proxy_req, void *arg)
 void __run_http_client()
 {
 	char argv[][256] = {
-		"http://127.0.0.1:9878/add?a=111&b=2222",
+		"http://127.0.0.1:9877/add?a=111&b=2222",
 	};
 
 	char buffer[URL_MAX];
@@ -105,7 +105,7 @@ void __run_http_client()
 	evhttp_uri_free(host);
 }
 
-int client_http_main(lw_int32 exe_times)
+int run_client_http(lw_int32 exe_times)
 {
 	for (size_t i = 0; i < exe_times; i++)
 	{

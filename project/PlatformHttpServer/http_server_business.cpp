@@ -293,15 +293,16 @@ static void sub_cb(struct evhttp_request *req, void *arg)
 void __init_http_business(lw_int32 port)
 {
 	// 设置回调函数
-	__g_http_serv.start_listener("172.16.1.61", port, [](HttpServer* server) -> lw_int32
+	int ret = __g_http_serv.init("127.0.0.1", port);
+	if (ret == 0)
 	{
 		// 设置标准接口回调函数
-		server->set_gen_cb(http_default_handler, NULL);
+		__g_http_serv.set_http_gen_hook(http_default_handler, NULL);
 
 		for (size_t i = 0; i < sizeof(__g_httpsignature) / sizeof(__g_httpsignature[0]); i++)
 		{
-			server->set_cb(__g_httpsignature[i]._signature, __g_httpsignature[i]._cb, server);
+			__g_http_serv.set_http_hook(__g_httpsignature[i]._signature, __g_httpsignature[i]._cb, NULL);
 		}
-		return 0;
-	});
+		__g_http_serv.start();
+	}
 }

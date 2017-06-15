@@ -36,9 +36,6 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="http_server_business.cpp">
-      <Filter>server</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protocol\game.pb.h">
@@ -55,9 +52,6 @@
     </ClInclude>
     <ClInclude Include="..\protocol\command.h">
       <Filter>通讯协议</Filter>
-    </ClInclude>
-    <ClInclude Include="http_server_business.h">
-      <Filter>server</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

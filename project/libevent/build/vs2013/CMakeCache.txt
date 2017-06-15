@@ -14,6 +14,12 @@
 # EXTERNAL cache entries
 ########################
 
+//Build the testing tree.
+BUILD_TESTING:BOOL=ON
+
+//Path to a program.
+BZRCOMMAND:FILEPATH=BZRCOMMAND-NOTFOUND
+
 //Set build type to Debug o Release (default Release)
 CMAKE_BUILD_TYPE:STRING=Release
 
@@ -127,6 +133,28 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=OFF
 
+//Path to the coverage program that CTest uses for performing coverage
+// inspection
+COVERAGE_COMMAND:FILEPATH=COVERAGE_COMMAND-NOTFOUND
+
+//Extra command line flags to pass to the coverage tool
+COVERAGE_EXTRA_FLAGS:STRING=-l
+
+//How many times to retry timed-out CTest submissions.
+CTEST_SUBMIT_RETRY_COUNT:STRING=3
+
+//How long to wait between timed-out CTest submissions.
+CTEST_SUBMIT_RETRY_DELAY:STRING=5
+
+//Path to a program.
+CVSCOMMAND:FILEPATH=CVSCOMMAND-NOTFOUND
+
+//Options passed to the cvs update command.
+CVS_UPDATE_OPTIONS:STRING=-d -A -P
+
+//Maximum time allowed before CTest will kill the test.
+DART_TESTING_TIMEOUT:STRING=1500
+
 //Installation directory for CMake files
 EVENT_INSTALL_CMAKE_DIR:PATH=C:/Program Files (x86)/libevent/cmake
 
@@ -154,10 +182,10 @@ EVENT__DISABLE_OPENSSL:BOOL=ON
 EVENT__DISABLE_REGRESS:BOOL=ON
 
 //Disable sample files
-EVENT__DISABLE_SAMPLES:BOOL=ON
+EVENT__DISABLE_SAMPLES:BOOL=OFF
 
 //If tests should be compiled or not
-EVENT__DISABLE_TESTS:BOOL=ON
+EVENT__DISABLE_TESTS:BOOL=OFF
 
 //Define if libevent should not be compiled with thread support
 EVENT__DISABLE_THREAD_SUPPORT:BOOL=OFF
@@ -172,8 +200,14 @@ EVENT__ENABLE_VERBOSE_DEBUG:BOOL=OFF
 // for more details
 EVENT__FORCE_KQUEUE_CHECK:BOOL=OFF
 
+//Path to a program.
+GITCOMMAND:FILEPATH=D:/Program Files/Git/cmd/git.exe
+
 //git command line client
 GIT_EXECUTABLE:FILEPATH=D:/Program Files/Git/cmd/git.exe
+
+//Path to a program.
+HGCOMMAND:FILEPATH=HGCOMMAND-NOTFOUND
 
 //Libevent include directories
 LIBEVENT_INCLUDE_DIRS:PATH=E:/lw000/nanomsg_demo/project/libevent/include;E:/lw000/nanomsg_demo/project/libevent/build/vs2013/include
@@ -190,8 +224,33 @@ LIB_EAY_LIBRARY_RELEASE:FILEPATH=LIB_EAY_LIBRARY_RELEASE-NOTFOUND
 //Path to a library.
 LIB_EAY_RELEASE:FILEPATH=LIB_EAY_RELEASE-NOTFOUND
 
+//Command to build the project
+MAKECOMMAND:STRING=D:\software\cmake-3.6.0-win64-x64\bin\cmake.exe --build . --config "${CTEST_CONFIGURATION_TYPE}"
+
+//Path to the memory checking command, used for memory error detection.
+MEMORYCHECK_COMMAND:FILEPATH=MEMORYCHECK_COMMAND-NOTFOUND
+
+//File that contains suppressions for the memory checker
+MEMORYCHECK_SUPPRESSIONS_FILE:FILEPATH=
+
 //Path to a file.
 OPENSSL_INCLUDE_DIR:PATH=OPENSSL_INCLUDE_DIR-NOTFOUND
+
+//Path to a program.
+P4COMMAND:FILEPATH=P4COMMAND-NOTFOUND
+
+//Path to scp command, used by CTest for submitting results to
+// a Dart server
+SCPCOMMAND:FILEPATH=SCPCOMMAND-NOTFOUND
+
+//Name of the computer/site where compile is being run
+SITE:STRING=WINDOWS-V4MGRCQ
+
+//Path to the SLURM sbatch executable
+SLURM_SBATCH_COMMAND:FILEPATH=SLURM_SBATCH_COMMAND-NOTFOUND
+
+//Path to the SLURM srun executable
+SLURM_SRUN_COMMAND:FILEPATH=SLURM_SRUN_COMMAND-NOTFOUND
 
 //Path to a library.
 SSL_EAY_DEBUG:FILEPATH=SSL_EAY_DEBUG-NOTFOUND
@@ -204,6 +263,18 @@ SSL_EAY_LIBRARY_RELEASE:FILEPATH=SSL_EAY_LIBRARY_RELEASE-NOTFOUND
 
 //Path to a library.
 SSL_EAY_RELEASE:FILEPATH=SSL_EAY_RELEASE-NOTFOUND
+
+//Path to a program.
+SVNCOMMAND:FILEPATH=D:/Program Files/TortoiseSVN/bin/svn.exe
+
+//Path to a file.
+ZLIB_INCLUDE_DIR:PATH=ZLIB_INCLUDE_DIR-NOTFOUND
+
+//Path to a library.
+ZLIB_LIBRARY_DEBUG:FILEPATH=ZLIB_LIBRARY_DEBUG-NOTFOUND
+
+//Path to a library.
+ZLIB_LIBRARY_RELEASE:FILEPATH=ZLIB_LIBRARY_RELEASE-NOTFOUND
 
 //Dependencies for the target
 event_core_shared_LIB_DEPENDS:STATIC=general;ws2_32;
@@ -234,6 +305,8 @@ libevent_SOURCE_DIR:STATIC=E:/lw000/nanomsg_demo/project/libevent
 # INTERNAL cache entries
 ########################
 
+//ADVANCED property for variable: BZRCOMMAND
+BZRCOMMAND-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
 CMAKE_CACHEFILE_DIR:INTERNAL=e:/lw000/nanomsg_demo/project/libevent/build/vs2013
 //Major version of cmake used to create the current loaded cache
@@ -246,6 +319,8 @@ CMAKE_CACHE_PATCH_VERSION:INTERNAL=0
 CMAKE_COMMAND:INTERNAL=D:/software/cmake-3.6.0-win64-x64/bin/cmake.exe
 //Path to cpack program executable.
 CMAKE_CPACK_COMMAND:INTERNAL=D:/software/cmake-3.6.0-win64-x64/bin/cpack.exe
+//ADVANCED property for variable: CMAKE_CTEST_COMMAND
+CMAKE_CTEST_COMMAND-ADVANCED:INTERNAL=1
 //Path to ctest program executable.
 CMAKE_CTEST_COMMAND:INTERNAL=D:/software/cmake-3.6.0-win64-x64/bin/ctest.exe
 //ADVANCED property for variable: CMAKE_C_FLAGS
@@ -330,6 +405,20 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: COVERAGE_COMMAND
+COVERAGE_COMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: COVERAGE_EXTRA_FLAGS
+COVERAGE_EXTRA_FLAGS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CTEST_SUBMIT_RETRY_COUNT
+CTEST_SUBMIT_RETRY_COUNT-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CTEST_SUBMIT_RETRY_DELAY
+CTEST_SUBMIT_RETRY_DELAY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CVSCOMMAND
+CVSCOMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CVS_UPDATE_OPTIONS
+CVS_UPDATE_OPTIONS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: DART_TESTING_TIMEOUT
+DART_TESTING_TIMEOUT-ADVANCED:INTERNAL=1
 //Have function accept4
 EVENT__HAVE_ACCEPT4:INTERNAL=
 //Have function arc4random
@@ -598,6 +687,8 @@ EVENT___POSIX_1_SOURCE:INTERNAL=
 EVENT___POSIX_SOURCE:INTERNAL=
 //Details about finding Git
 FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[D:/Program Files/Git/cmd/git.exe][v()]
+//ADVANCED property for variable: GITCOMMAND
+GITCOMMAND-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: GIT_EXECUTABLE
 GIT_EXECUTABLE-ADVANCED:INTERNAL=1
 //Result of TRY_COMPILE
@@ -660,14 +751,40 @@ HAVE_STDDEF_H:INTERNAL=1
 HAVE_STDINT_H:INTERNAL=1
 //Have include sys/types.h
 HAVE_SYS_TYPES_H:INTERNAL=1
+//ADVANCED property for variable: HGCOMMAND
+HGCOMMAND-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: LIB_EAY_LIBRARY_DEBUG
 LIB_EAY_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: LIB_EAY_LIBRARY_RELEASE
 LIB_EAY_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: MAKECOMMAND
+MAKECOMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: MEMORYCHECK_COMMAND
+MEMORYCHECK_COMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: MEMORYCHECK_SUPPRESSIONS_FILE
+MEMORYCHECK_SUPPRESSIONS_FILE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: P4COMMAND
+P4COMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: SCPCOMMAND
+SCPCOMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: SITE
+SITE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: SLURM_SBATCH_COMMAND
+SLURM_SBATCH_COMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: SLURM_SRUN_COMMAND
+SLURM_SRUN_COMMAND-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: SSL_EAY_LIBRARY_DEBUG
 SSL_EAY_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: SSL_EAY_LIBRARY_RELEASE
 SSL_EAY_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: SVNCOMMAND
+SVNCOMMAND-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: ZLIB_INCLUDE_DIR
+ZLIB_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: ZLIB_LIBRARY_DEBUG
+ZLIB_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: ZLIB_LIBRARY_RELEASE
+ZLIB_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 //Have symbol _GNU_SOURCE
 _GNU_SOURCE:INTERNAL=
 

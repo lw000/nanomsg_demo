@@ -35,16 +35,22 @@
 
 #include "cmdline.h"
 #include "libproperties.h"
-#include "http_server_business.h"
 
 using namespace LW;
 
+
+#ifdef _WIN32
+#define LW_SLEEP(seconds) SleepEx(seconds * 1000, 1);
+#else
+#define LW_SLEEP(seconds) sleep(seconds);
+#endif
+
+
 SocketServer __g_serv;
-FILE *logfile = NULL;
+FILE * logfile;
 
 static lw_int32 __s_lport = 9876;
 static lw_int32 __s_rport = 9876;
-static lw_int32 __s_hport = 9877;
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
 
@@ -116,28 +122,36 @@ static void _start_cb(int what)
 {
 	printf("RPC服务启动完成 [%d]！\n", __s_lport);
 
-	run_rpc_client("127.0.0.1", __s_rport);
+//	run_rpc_client("127.0.0.1", __s_rport);
 
-	__init_http_business(__s_hport);
 }
 
 int main(int argc, char** argv)
 {
+	if (argc < 2) return 0;
+
 #if defined(WIN32) || defined(_WIN32)
 	{
 		WORD wVersionRequested;
 		WSADATA wsaData;
-		int err;
-
 		wVersionRequested = MAKEWORD(2, 2);
-
-		err = WSAStartup(wVersionRequested, &wsaData);
-		if (err != 0) {
+		int err = WSAStartup(wVersionRequested, &wsaData);
+		if (err != 0)
+		{
 			printf("WSAStartup failed with error: %d\n", err);
 			return 0;
 		}
 	}
 #endif
+
+	event_set_fatal_callback(_event_fatal_cb);
+
+	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
+#ifdef WIN32
+	evthread_use_windows_threads();
+#endif
+
+	event_enable_debug_mode();
 	
 	/*int create_times = 10000000;
 	{
@@ -154,77 +168,48 @@ int main(int argc, char** argv)
 		printf("NetMessage create[%d] : %f \n", create_times, ((double)t1 - t) / CLOCKS_PER_SEC);
 	}*/
 
-	cmdline::parser a;
-	a.add<std::string>("config", 'c', "配置文件");
-	a.add<int>("lport", 'l', "本地RPC服务器端口", false, __s_lport, cmdline::range(9000, 65535));
-	a.add<int>("rport", 'r', "远程RPC服务器端口", false, __s_rport, cmdline::range(9000, 65535));
-	a.add<int>("hport", 'h', "本地HTTP服务器端口", false, __s_hport, cmdline::range(9000, 65535));
-
-	a.parse_check(argc, argv);
-
-	std::string config;
-	if (a.exist("config"))
-	{
-		config = a.get<std::string>("config");
-	}
-
-	if (a.exist("lport"))
-	{
-		__s_lport = a.get<int>("lport");
-	}
-
-	if (a.exist("rport"))
-	{
-		__s_rport = a.get<int>("rport");
-	}
-
-	if (a.exist("hport"))
-	{
-		__s_hport = a.get<int>("hport");
-	}
-
-// 	Properties p;
-// 	p.clear();
+// 	cmdline::parser a;
+// 	a.add<std::string>("config", 'c', "配置文件");
+// 	a.add<int>("lport", 'l', "本地RPC服务器端口", false, __s_lport, cmdline::range(9000, 65535));
+// 	a.add<int>("rport", 'r', "远程RPC服务器端口", false, __s_rport, cmdline::range(9000, 65535));
+// 	a.parse_check(argc, argv);
 // 
-// 	if (!p.loadFromXML(config))
+// 	std::string config;
+// 	if (a.exist("config"))
 // 	{
-// 		std::cout << "falue" << std::endl;
+// 		config = a.get<std::string>("config");
 // 	}
-// 	else
+// 
+// 	if (a.exist("lport"))
 // 	{
-// 		for (Properties::const_iterator it = p.begin(); it != p.end(); ++it)
-// 		{
-// 			cout << (*it).first << "-->" << (*it).second << std::endl;
-// 		}
-// 		std::cout << p.getProperty("lport", "9876") << std::endl;
-// 		std::cout << p.getProperty("rport", "9876") << std::endl;
-// 		std::cout << p.getProperty("hport", "9877") << std::endl;
-// 		std::cout << p.getProperty("rmote_host", "127.0.0.1") << std::endl;
-// 		p.clear();
+// 		__s_lport = a.get<int>("lport");
+// 	}
+// 
+// 	if (a.exist("rport"))
+// 	{
+// 		__s_rport = a.get<int>("rport");
 // 	}
 
-	event_set_fatal_callback(_event_fatal_cb);
-
-//	event_set_log_callback(_write_to_file_cb);
-
-//	logfile = fopen("error.log", "w");
-
-	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
-#ifdef WIN32
-	evthread_use_windows_threads();
-#endif
-
-	event_enable_debug_mode();
-
-	if (__g_serv.init() == 0)
+	Properties Pro;
+	if (Pro.loadFromXML(argv[1]))
 	{
-		__g_serv.run(__s_lport, _start_cb, on_socket_recv);
+		std::string srport = Pro.getProperty("remote_port", "9876");
+		std::string slport = Pro.getProperty("local_port", "9876");
+
+		__s_lport = std::atoi(slport.c_str());
+		__s_rport = std::atoi(srport.c_str());
+
+		if (__g_serv.init() == 0)
+		{
+			__g_serv.run(__s_lport, _start_cb, on_socket_recv);
+		}
+
+		while (1) { LW_SLEEP(1); }
 	}
-
-// 	fflush(logfile);
-// 	fclose(logfile);
-
-	while (1) {}
+	else
+	{
+		std::cout << "falue" << std::endl;
+	}
 
 #if defined(WIN32) || defined(_WIN32)
 	WSACleanup();

@@ -141,7 +141,7 @@ static void event_cb(struct bufferevent *bev, short event, void *arg)
 
 }
 
-void runClient(lw_int32 port)
+void run_rpc_client(lw_int32 port)
 {
 	struct CLIENT client = { 0 };
 
@@ -193,55 +193,56 @@ int main(int argc, char** argv)
 	}
 #endif
 
-	lw_int32 rport = 0;
-	lw_int32 exec_times = 1;
-	lw_int32 rpc_client_times = 1;
+	lw_int32 port = 0;
+	lw_int32 rpc_times = 1;
+	lw_int32 http_times = 1;
 
-	cmdline::parser a;
-	a.add<int>("rpc_client_times", 'C', "rpc client times.");
-	a.add<int>("exec_times", 'c', "http exec times.");
-	a.add<int>("rport", 'r', "remote rpc server port.", false, 9876, cmdline::range(9000, 65535));
+// 	cmdline::parser a;
+// 	a.add<int>("http_client_times", 'C', "http_client_times ...");
+// 	a.add<int>("rpc_exec_times", 'c', "rpc exec times ....");
+// 	a.add<int>("port", 'r', "remote server port.", false, 9876, cmdline::range(9000, 65535));
+// 
+// 	a.parse_check(argc, argv);
+// 
+// 	if (a.exist("port"))
+// 	{
+// 		port = a.get<int>("port");
+// 	}
+// 
+// 	if (a.exist("rpc_times"))
+// 	{
+// 		rpc_times = a.get<int>("rpc_times");
+// 	}
+// 
+// 	if (a.exist("http_times"))
+// 	{
+// 		http_times = a.get<int>("http_times");
+// 	}
 
-	a.parse_check(argc, argv);
-
-	if (a.exist("rport"))
+	Properties Pro;
+	if (Pro.loadFromXML(argv[1]))
 	{
-		rport = a.get<int>("rport");
-	}
+		std::string sport = Pro.getProperty("port", "9876");
+		std::string shttp_times = Pro.getProperty("http_times", "1");
+		std::string srpc_times = Pro.getProperty("rpc_times", "1");
 
-	if (a.exist("exec_times"))
-	{
-		exec_times = a.get<int>("exec_times");
-	}
+		port = std::atoi(sport.c_str());
+		rpc_times = std::atoi(shttp_times.c_str());
+		http_times = std::atoi(srpc_times.c_str());
+		
+		for (size_t i = 0; i < rpc_times; i++)
+		{
+			std::thread t(run_rpc_client, port);
+			t.detach();
+			lw_sleep(0.1);
+		}
 
-	if (a.exist("rpc_client_times"))
-	{
-		rpc_client_times = a.get<int>("rpc_client_times");
-	}
-
-	Properties p;
-	if (!p.loadFromXML("config.xml"))
-	{
-		std::cout << "falue" << std::endl;
+		run_client_http(http_times);
 	}
 	else
 	{
-		std::cout << "use getProperty" << std::endl;
-		std::cout << p.getProperty("lport", "9876") << std::endl;
-		std::cout << p.getProperty("rport", "9876") << std::endl;
-		std::cout << p.getProperty("hport", "9877") << std::endl;
-		std::cout << p.getProperty("rmote_host", "127.0.0.1") << std::endl;
-		p.clear();
+		std::cout << "falue" << std::endl;
 	}
-
-	for (size_t i = 0; i < rpc_client_times; i++)
-	{
-		std::thread t(runClient, rport);
-		t.detach();
-		lw_sleep(0.1);
-	}
-
-	client_http_main(exec_times);
 
 	int ch = getchar();
 

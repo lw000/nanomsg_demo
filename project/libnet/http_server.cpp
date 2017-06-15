@@ -43,66 +43,43 @@ HttpServer::~HttpServer()
 {
 }
 
-void HttpServer::start_listener(const char* addr, lw_uint32 port, std::function<lw_int32(HttpServer* server)> func)
+lw_int32 HttpServer::init(const char* addr, lw_uint32 port)
 {
 	this->_addr = addr;
-	this->_func = func;
 	this->port = port;
 
-	std::thread t(std::bind(&HttpServer::__run, this));
-	t.detach();
-}
-
-// 设置回调 
-void HttpServer::set_gen_cb(LW_HTTP_CB cb, void * cb_arg)
-{
-	evhttp_set_gencb(this->_httpServ, cb, this);
-}
-
-void HttpServer::set_cb(const char *path, LW_HTTP_CB cb, void *cb_arg)
-{
-	evhttp_set_cb(this->_httpServ, path, cb, cb_arg);
-}
-
-void HttpServer::__run()
-{
 	char uri_root[512];
 
-	const char *addr = this->_addr.c_str();
 	struct evhttp_bound_socket *handle = NULL;
 
 	struct event_config *cfg = event_config_new();
-	event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
+	//event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
 	if (cfg)
 	{
-		_http_base = event_base_new_with_config(cfg);
+		_base = event_base_new_with_config(cfg);
 		event_config_free(cfg);
 	}
 
-	_httpServ = evhttp_new(_http_base);
+	_httpServ = evhttp_new(_base);
 	if (!_httpServ)
 	{
-		fprintf(stderr, "couldn't create evhttp. Exiting.\n");
-		event_base_free(_http_base);
-		return;
+		fprintf(stderr, "couldn't?create?evhttp.?Exiting.\n");
+		event_base_free(_base);
+		return -1;
 	}
 
-	handle = evhttp_bind_socket_with_handle(_httpServ, addr, port);
+	handle = evhttp_bind_socket_with_handle(_httpServ, this->_addr.c_str(), port);
 	if (!handle)
 	{
-		fprintf(stderr, "couldn't bind to port %d. exiting.\n", (int)port);
+		fprintf(stderr, "couldn't?bind?to?port?%d.?exiting.\n", (int)port);
 		evhttp_free(_httpServ);
-
-		return;
+		event_base_free(_base);
+		return -1;
 	}
 
 	// 设置超时
-	evhttp_set_timeout(_httpServ, 120);
+	evhttp_set_timeout(_httpServ, 60);
 
-	{
-		this->_func(this);
-	}
-	
 	/* Extract and display the address we're listening on. */
 	{
 		struct sockaddr_storage ss;
@@ -137,11 +114,12 @@ void HttpServer::__run()
 				fprintf(stderr, "weird address family %d\n", ss.ss_family);
 				break;
 			}
+
 			addr = evutil_inet_ntop(ss.ss_family, inaddr, addrbuf, sizeof(addrbuf));
 			if (addr)
 			{
-				printf("本地HTTP服务启动完成 [http://%s:%d]\n", addr, got_port);
-				evutil_snprintf(uri_root, sizeof(uri_root), "http://%s:%d", addr, got_port);
+				printf("HTTP服务启动完成 [http://%s:%d]\n", addr, got_port);
+// 				evutil_snprintf(uri_root, sizeof(uri_root), "http://%s:%d", addr, got_port);
 			}
 			else
 			{
@@ -152,12 +130,35 @@ void HttpServer::__run()
 		} while (0);
 	}
 
-	int ret = event_base_dispatch(_http_base);
+	return 0;
+}
+
+void HttpServer::start()
+{
+	std::thread t(std::bind(&HttpServer::__run, this));
+	t.detach();
+}
+
+// 设置回调 
+void HttpServer::set_http_gen_hook(LW_HTTP_CB cb, void * cb_arg)
+{
+	evhttp_set_gencb(this->_httpServ, cb, this);
+}
+
+void HttpServer::set_http_hook(const char *path, LW_HTTP_CB cb, void *cb_arg)
+{
+	evhttp_set_cb(this->_httpServ, path, cb, cb_arg);
+}
+
+void HttpServer::__run()
+{
+	int ret = event_base_dispatch(_base);
 
 	evhttp_free(_httpServ);
 
-	event_base_free(_http_base);
+	event_base_free(_base);
+
 
 	_httpServ = NULL;
-	_http_base = NULL;
+	_base = NULL;
 }

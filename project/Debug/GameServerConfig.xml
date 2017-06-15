@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<!--This file is created by libproperties-->
+<!--read more from http://code.google.com/p/libproperties-->
+<properties>
+    <entry key="port">9866</entry>
+    <entry key="http_times">1</entry>
+    <entry key="rpc_times">100</entry>
+</properties>

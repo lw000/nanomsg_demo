@@ -3,6 +3,6 @@
 
 #include "base_type.h"
 
-int client_http_main(lw_int32 exe_times);
+int run_client_http(lw_int32 exe_times);
 
 #endif // !__client_http_h__
