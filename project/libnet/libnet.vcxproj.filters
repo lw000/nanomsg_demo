@@ -15,5 +15,6 @@
     <ClInclude Include="http_server.h" />
     <ClInclude Include="socket_server.h" />
     <ClInclude Include="socket_client.h" />
+    <ClInclude Include="net_common.h" />
   </ItemGroup>
 </Project>

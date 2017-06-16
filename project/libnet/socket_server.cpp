@@ -22,26 +22,12 @@
 #include <sys/socket.h>
 #endif // _WIN32
 
-struct CLIENT
-{
-	struct bufferevent* bev;
-	bool live;
-	lw_int32 live_count;
-	char ip[64];
-	char port[8];
-
-public:
-	CLIENT() : bev(NULL), live(false), live_count(0)
-	{
-		memset(ip, 0x00, sizeof(ip));
-		memset(port, 0x00, sizeof(port));
-	}
-};
+#include "net_common.h"
 
 static void listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
-static void bufferread_cb(struct bufferevent *, void *);
-static void bufferwrite_cb(struct bufferevent *, void *);
-static void bufferevent_cb(struct bufferevent *, short, void *);
+static void read_cb(struct bufferevent *, void *);
+static void write_cb(struct bufferevent *, void *);
+static void event_cb(struct bufferevent *, short, void *);
 static void signal_cb(evutil_socket_t, short, void *);
 static void time_cb(evutil_socket_t fd, short event, void *arg);
 
@@ -57,22 +43,22 @@ static void listener_cb(struct evconnlistener *listener, evutil_socket_t fd, str
 	server->listenerCB(listener, fd, sa, socklen);
 }
 
-static void bufferread_cb(struct bufferevent *bev, void *user_data)
+static void read_cb(struct bufferevent *bev, void *user_data)
 {
 	SocketServer * server = (SocketServer*)user_data;
-	server->bufferreadCB(bev);
+	server->readCB(bev);
 }
 
-static void bufferwrite_cb(struct bufferevent *bev, void *user_data)
+static void write_cb(struct bufferevent *bev, void *user_data)
 {
 	SocketServer * server = (SocketServer*)user_data;
-	server->bufferwriteCB(bev);
+	server->writeCB(bev);
 }
 
-static void bufferevent_cb(struct bufferevent *bev, short event, void *user_data)
+static void event_cb(struct bufferevent *bev, short event, void *user_data)
 {
 	SocketServer * server = (SocketServer*)user_data;
-	server->buffereventCB(bev, event);
+	server->eventCB(bev, event);
 }
 
 static void accept_error_cb(struct evconnlistener * listener, void * userdata)
@@ -151,7 +137,7 @@ void SocketServer::timeCB(evutil_socket_t fd, short event, void *arg)
 	}
 }
 
-void SocketServer::bufferwriteCB(struct bufferevent *bev)
+void SocketServer::writeCB(struct bufferevent *bev)
 {
 	struct evbuffer *output = bufferevent_get_output(bev);
 	if (evbuffer_get_length(output) == 0)
@@ -161,7 +147,7 @@ void SocketServer::bufferwriteCB(struct bufferevent *bev)
 }
 
 // 从客户端读取数据
-void SocketServer::bufferreadCB(struct bufferevent *bev)
+void SocketServer::readCB(struct bufferevent *bev)
 {
 	struct evbuffer *input;
 	input = bufferevent_get_input(bev);
@@ -182,7 +168,7 @@ void SocketServer::bufferreadCB(struct bufferevent *bev)
 	free(read_buf);
 }
 
-void SocketServer::buffereventCB(struct bufferevent *bev, short event)
+void SocketServer::eventCB(struct bufferevent *bev, short event)
 {
 	evutil_socket_t fd = bufferevent_getfd(bev);
 	
@@ -209,7 +195,7 @@ void SocketServer::buffereventCB(struct bufferevent *bev, short event)
 		{
 			if ((*iter)->bev == bev)
 			{
-				printf("leave ([%d] host=%s, port=%s)\n", fd, (*iter)->ip, (*iter)->port);
+				printf("leave ([%d] host=%s, port=%s)\n", fd, (*iter)->_addr.c_str(), (*iter)->_port.c_str());
 				delete (*iter);
 				vtClients.erase(iter);
 				break;
@@ -230,20 +216,20 @@ void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t f
 	bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
 	if (NULL != bev)
 	{
-		bufferevent_setcb(bev, ::bufferread_cb, ::bufferwrite_cb, ::bufferevent_cb, this);
+		bufferevent_setcb(bev, ::read_cb, ::write_cb, ::event_cb, this);
 		bufferevent_enable(bev, EV_WRITE | EV_READ);
 
 		char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
 
 		getnameinfo(sa, socklen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
 		
-		//printf("join (host = %s, port = %s)\n", hbuf, sbuf);
+		printf("join (host = %s, port = %s)\n", hbuf, sbuf);
 
 		CLIENT* pClient = new CLIENT();
 		pClient->bev = bev;
-		pClient->live = true;
-		strcpy(pClient->ip, hbuf);
-		strcpy(pClient->port, sbuf);
+		pClient->connected = true;
+		pClient->_addr.assign(hbuf);
+		pClient->_port.assign(sbuf);
 		vtClients.push_back(pClient);
 
 		evutil_socket_t fd = bufferevent_getfd(bev);

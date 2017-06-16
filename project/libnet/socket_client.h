@@ -35,9 +35,9 @@ private:
 	void __run();
 
 private:
+	struct event_base* _base;
 	struct event _timer;
 	struct bufferevent* _bev;
-	struct event_base* _base;
 	int _port;
 	bool connected;
 	std::string _addr;

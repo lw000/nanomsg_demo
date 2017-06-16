@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
+    <ClInclude Include="net_common.h" />
     <ClInclude Include="socket_client.h" />
     <ClInclude Include="socket_server.h" />
   </ItemGroup>
