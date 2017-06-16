@@ -41,7 +41,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	struct bufferevent *bev = (struct bufferevent *)userdata;
 	switch (cmd)
 	{
-	case CMD_PLATFORM_SC_USERINFO:
+	case cmd_platform_sc_userinfo:
 	{
 		platform::sc_msg_userinfo userinfo;
 		userinfo.ParseFromArray(buf, bufsize);
@@ -70,14 +70,7 @@ void run_rpc_client(lw_int32 port)
 			bool ret = msg.SerializeToArray(s, len);
 			if (ret)
 			{
-				client->sendData(CMD_PLATFORM_CS_USERINFO, s, len);
-
-// 				lw_send_socket_data(CMD_PLATFORM_CS_USERINFO, s, len, [bev](LW_NET_MESSAGE * p) -> lw_int32
-// 				{
-// 					int c = bufferevent_write(bev, p->buf, p->size);
-// 
-// 					return true;
-// 				});
+				client->sendData(cmd_platform_cs_userinfo, s, len);
 			}
 
 			return false;
@@ -86,7 +79,6 @@ void run_rpc_client(lw_int32 port)
 		int ret = client->start("127.0.0.1", port);
 	}
 }
-
 
 // 当向进程发出SIGTERM/SIGHUP/SIGINT/SIGQUIT的时候，终止event的事件侦听循环
 void signal_handler(int sig)

@@ -57,7 +57,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	struct bufferevent *bev = (struct bufferevent *)userdata;
 	switch (cmd)
 	{
-	case CMD_HEART_BEAT:
+	case cmd_heart_beat:
 	{
 		platform::csc_msg_heartbeat msg;
 		msg.set_time(time(NULL));
@@ -67,10 +67,10 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		lw_bool ret = msg.SerializeToArray(s, len);
 		if (ret)
 		{
-			__g_serv.sendData(bev, CMD_HEART_BEAT, s, len);
+			__g_serv.sendData(bev, cmd_heart_beat, s, len);
 		}
 	} break;
-	case CMD_PLATFORM_CS_USERINFO:
+	case cmd_platform_cs_userinfo:
 	{
 		platform::sc_msg_request_userinfo client_userinfo;
 		client_userinfo.ParseFromArray(buf, bufsize);
@@ -85,7 +85,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 		char s[256] = { 0 };
 		bool ret = userinfo.SerializePartialToArray(s, sizeof(s));
-		__g_serv.sendData(bev, CMD_PLATFORM_SC_USERINFO, s, strlen(s));
+		__g_serv.sendData(bev, cmd_platform_sc_userinfo, s, strlen(s));
 	} break;
 	default:
 		break;

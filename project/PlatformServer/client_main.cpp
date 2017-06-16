@@ -35,13 +35,13 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	struct bufferevent *bev = (struct bufferevent *)userdata;
 	switch (cmd)
 	{
-	case CMD_HEART_BEAT:
+	case cmd_heart_beat:
 	{
 		platform::csc_msg_heartbeat msg;
 		msg.ParseFromArray(buf, bufsize);
 		printf("heartBeat[%d]\n", msg.time());
 	} break;
-	case CMD_PLATFORM_SC_USERINFO:
+	case cmd_platform_sc_userinfo:
 	{
 		platform::sc_msg_userinfo msg;
 		msg.ParseFromArray(buf, bufsize);
@@ -68,7 +68,7 @@ void run_rpc_client(lw_int32 port)
 			lw_bool ret = msg.SerializeToArray(s, len);
 			if (ret)
 			{
-				__g_client.sendData(CMD_HEART_BEAT, s, len);
+				__g_client.sendData(cmd_heart_beat, s, len);
 			}
 			return true;
 		});
