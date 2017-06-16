@@ -3,7 +3,7 @@
 <!--This file is created by libproperties-->
 <!--read more from http://code.google.com/p/libproperties-->
 <properties>
-    <entry key="port">9866</entry>
+    <entry key="port">19801</entry>
     <entry key="http_times">1</entry>
-    <entry key="rpc_times">100</entry>
+    <entry key="rpc_times">1</entry>
 </properties>

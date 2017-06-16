@@ -132,7 +132,7 @@ void SocketServer::unInit()
 	event_base_free(_base);
 }
 
-lw_int32 SocketServer::send_data(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
+lw_int32 SocketServer::sendData(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
 	lw_int32 result = 0;
 	{

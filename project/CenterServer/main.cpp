@@ -28,15 +28,12 @@
 #include "Message.h"
 #include "platform.pb.h"
 
-#include "http_server.h"
 #include "socket_server.h"
-#include "client_main.h"
 
 #include "cmdline.h"
 #include "libproperties.h"
 
 using namespace LW;
-
 
 #ifdef _WIN32
 #define LW_SLEEP(seconds) SleepEx(seconds * 1000, 1);
@@ -47,8 +44,6 @@ using namespace LW;
 
 SocketServer __g_serv;
 FILE * logfile;
-
-lw_int32 __s_rport = 19800;
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
 
@@ -69,23 +64,6 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		{
 			__g_serv.sendData(bev, CMD_HEART_BEAT, s, len);
 		}
-	} break;
-	case CMD_PLATFORM_CS_USERINFO:
-	{
-		platform::sc_msg_request_userinfo client_userinfo;
-		client_userinfo.ParseFromArray(buf, bufsize);
-		//printf(" userid: %d\n", client_userinfo.userid());
-
-		platform::sc_msg_userinfo userinfo;
-		userinfo.set_userid(client_userinfo.userid());
-		userinfo.set_age(30);
-		userinfo.set_sex(1);
-		userinfo.set_name("liwei");
-		userinfo.set_address("guangdong");
-
-		char s[256] = { 0 };
-		bool ret = userinfo.SerializePartialToArray(s, sizeof(s));
-		__g_serv.sendData(bev, CMD_PLATFORM_SC_USERINFO, s, strlen(s));
 	} break;
 	default:
 		break;
@@ -115,9 +93,7 @@ static void _event_fatal_cb(int err)
 
 static void _start_cb(int what)
 {
-	printf("RPC服务启动完成 [%d]！\n", __g_serv.getPort());
-
-	__run_rpc_client("127.0.0.1", __s_rport);
+	printf("中心服务器服务启动完成 [%d]！\n", __g_serv.getPort());
 }
 
 int main(int argc, char** argv)
@@ -197,10 +173,8 @@ int main(int argc, char** argv)
 		Properties Pro;
 		if (Pro.loadFromXML(argv[1]))
 		{
-			std::string sport = Pro.getProperty("port", "19901");
-			std::string scport = Pro.getProperty("center_server_port", "19800");
+			std::string sport = Pro.getProperty("port", "19800");
 
-			__s_rport = std::atoi(scport.c_str());
 			lw_int32 port = std::atoi(sport.c_str());
 
 			if (__g_serv.init() == 0)

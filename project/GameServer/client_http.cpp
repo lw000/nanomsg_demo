@@ -27,12 +27,12 @@ struct connect_base
 
 static void get_cb(struct evhttp_request *req, void *arg)
 {
+	VERIFY(req);
+	if (req == NULL) return;
+
 	struct evbuffer *evbuf;
 
-	VERIFY(req);
-
 	char buf[1024];
-
 	evbuf = evhttp_request_get_input_buffer(req);
 	ev_ssize_t len = evbuffer_get_length(evbuf);
 	buf[len] = '\0';
@@ -63,7 +63,7 @@ static void connect_cb(struct evhttp_request *proxy_req, void *arg)
 
 void __run_http_client()
 {
-	char argv[][256] = {
+	char hosts[][256] = {
 		"http://127.0.0.1:9877/add?a=111&b=2222",
 	};
 
@@ -77,9 +77,10 @@ void __run_http_client()
 
 	struct connect_base connect_base;
 
-	host = evhttp_uri_parse(argv[0]);
+	host = evhttp_uri_parse(hosts[0]);
 
 	VERIFY(evhttp_uri_get_host(host));
+
 	VERIFY(evhttp_uri_get_port(host) > 0);
 
 	VERIFY(base = event_base_new());
@@ -94,8 +95,8 @@ void __run_http_client()
 
 	evhttp_add_header(req->output_headers, "Connection", "keep-alive");
 	evhttp_add_header(req->output_headers, "Proxy-Connection", "keep-alive");
-	evutil_snprintf(buffer, URL_MAX, "%s:%d",
-		evhttp_uri_get_host(host), evhttp_uri_get_port(host));
+	evutil_snprintf(buffer, URL_MAX, "%s:%d", evhttp_uri_get_host(host), evhttp_uri_get_port(host));
+	
 	evhttp_make_request(evcon, req, EVHTTP_REQ_CONNECT, buffer);
 
 	event_base_dispatch(base);

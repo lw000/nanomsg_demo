@@ -1,7 +1,10 @@
-// libeventClient.cpp : 定义控制台应用程序的入口点。
+// GameServer.cpp : 定义控制台应用程序的入口点。
 //
 
+#if defined(WIN32) || defined(_WIN32)
 #include <winsock2.h>
+#endif // WIN32
+
 #include <stdio.h>
 #include <iostream>
 #include <signal.h>
@@ -67,7 +70,7 @@ void run_rpc_client(lw_int32 port)
 			bool ret = msg.SerializeToArray(s, len);
 			if (ret)
 			{
-				client->send_data(CMD_PLATFORM_CS_USERINFO, s, len);
+				client->sendData(CMD_PLATFORM_CS_USERINFO, s, len);
 
 // 				lw_send_socket_data(CMD_PLATFORM_CS_USERINFO, s, len, [bev](LW_NET_MESSAGE * p) -> lw_int32
 // 				{
@@ -90,9 +93,10 @@ void signal_handler(int sig)
 {
 	switch (sig)
 	{
-	case SIGINT:
-//	case SIGBREAK:
-	case SIGABRT:
+	case SIGTERM:
+	case SIGINT:	//通常是CTRL+C或者DELETE
+	case SIGBREAK:
+	case SIGABRT:	
 		//event_base_loopbreak(__http_base);
 		break;
 	}
@@ -100,7 +104,10 @@ void signal_handler(int sig)
 
 int main(int argc, char** argv)
 {
-	signal(SIGINT | SIGABRT /* | SIGBREAK*/, signal_handler);
+	signal(SIGINT, signal_handler);
+	signal(SIGABRT, signal_handler);
+	signal(SIGBREAK, signal_handler);
+	signal(SIGTERM, signal_handler);
 
 #if defined(WIN32) || defined(_WIN32)
 	WSADATA WSAData;
@@ -138,32 +145,46 @@ int main(int argc, char** argv)
 // 		http_times = a.get<int>("http_times");
 // 	}
 
-	Properties Pro;
-	if (Pro.loadFromXML(argv[1]))
+	do 
 	{
-		std::string sport = Pro.getProperty("port", "9876");
-		std::string shttp_times = Pro.getProperty("http_times", "1");
-		std::string srpc_times = Pro.getProperty("rpc_times", "1");
-
-		port = std::atoi(sport.c_str());
-		rpc_times = std::atoi(srpc_times.c_str());
-		http_times = std::atoi(shttp_times.c_str());
-		
-		for (size_t i = 0; i < rpc_times; i++)
+		std::string config(argv[1]);
+		transform(config.begin(), config.end(), config.begin(), ::tolower);
+		config = config.substr(config.size() - 4, 4);
+		if (config.compare(".xml") != 0)
 		{
-			std::thread t(run_rpc_client, port);
-			t.detach();
-			lw_sleep(0.1);
+			break;
 		}
 
-		run_client_http(http_times);
-	}
-	else
-	{
-		std::cout << "falue" << std::endl;
-	}
+		Properties Pro;
+		if (Pro.loadFromXML(argv[1]))
+		{
+			std::string sport = Pro.getProperty("port", "19801");
+			std::string shttp_times = Pro.getProperty("http_times", "1");
+			std::string srpc_times = Pro.getProperty("rpc_times", "1");
 
-	int ch = getchar();
+			port = std::atoi(sport.c_str());
+			rpc_times = std::atoi(srpc_times.c_str());
+			http_times = std::atoi(shttp_times.c_str());
+
+			for (size_t i = 0; i < rpc_times; i++)
+			{
+				std::thread t(run_rpc_client, port);
+				t.detach();
+				lw_sleep(0.1);
+			}
+
+			run_client_http(http_times);
+		}
+		else
+		{
+			std::cout << "falue" << std::endl;
+		}
+
+		while (1)
+		{
+			;
+		}
+	} while (0);
 
 #if defined(WIN32) || defined(_WIN32)
 	WSACleanup();
