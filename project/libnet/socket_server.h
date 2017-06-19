@@ -6,6 +6,7 @@
 #include "business.h"
 
 #include <vector>
+#include <list>
 #include <unordered_map>
 
 struct CLIENT;
@@ -14,7 +15,7 @@ typedef void(*LW_SERVER_START_COMPLETE)(lw_int32 what);
 
 class SocketServer final
 {
-	typedef std::vector<CLIENT*> VTCLIENT;
+	typedef std::list<CLIENT*> VTCLIENT;
 	typedef std::unordered_map<lw_int32, CLIENT*> MAP_CLIENT;
 
 public:

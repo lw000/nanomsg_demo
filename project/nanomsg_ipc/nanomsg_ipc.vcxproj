@@ -152,7 +152,7 @@
   <ItemGroup>
     <ClCompile Include="..\protocol\game.pb.cc" />
     <ClCompile Include="..\protocol\platform.pb.cc" />
-    <ClCompile Include="nanomsg_ipc.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protocol\game.pb.h" />

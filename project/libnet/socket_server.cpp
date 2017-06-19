@@ -288,14 +288,27 @@ void SocketServer::__run()
 
 	evconnlistener_set_error_cb(listener, accept_error_cb);
 
-	// 设置定时器 
-	struct event evtimer;
-	event_assign(&evtimer, _base, 0, 0, time_cb, this);
-	struct timeval tv;
-	evutil_timerclear(&tv);
-	tv.tv_sec = 1;
-	tv.tv_usec = 0;
-	event_add(&evtimer, &tv);
+	// 初始化完成定时器 
+	{
+		struct event evtimer;
+		event_assign(&evtimer, _base, 0, 0, time_cb, this);
+		struct timeval tv;
+		evutil_timerclear(&tv);
+		tv.tv_sec = 1;
+		tv.tv_usec = 0;
+		event_add(&evtimer, &tv);
+	}
+	
+	// 客户端存活检测定时器
+// 	{
+// 		struct event _client_live_timer;
+// 		event_assign(&_client_live_timer, _base, 0, 0, time_cb, this);
+// 		struct timeval tv;
+// 		evutil_timerclear(&tv);
+// 		tv.tv_sec = 1;
+// 		tv.tv_usec = 0;
+// 		event_add(&_client_live_timer, &tv);
+// 	}
 
 	int ret = event_base_dispatch(_base);
 
