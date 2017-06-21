@@ -9,6 +9,7 @@ namespace LW
 
 	typedef struct tag_sc_userinfo
 	{
+		lw_int32 id;
 		lw_int32 age;
 		lw_int32 sex;
 		lw_char8 name[32];

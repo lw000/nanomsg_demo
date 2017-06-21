@@ -4,22 +4,15 @@
 #include <string.h>
 #include <assert.h>
 
-
 #include <nn.h>
 #include <bus.h>
 
-#include <windows.h>
+#include "lwutil.h"
 
 #define NODE0_SOCKET_ADDR "ipc:///tmp/node0.ipc"
 #define NODE1_SOCKET_ADDR "ipc:///tmp/node1.ipc"
 #define NODE2_SOCKET_ADDR "ipc:///tmp/node2.ipc"
 #define NODE3_SOCKET_ADDR "ipc:///tmp/node3.ipc"
-
-#ifdef _WIN32
-#define SLEEP(seconds) SleepEx(seconds * 1000, 1);
-#else
-#define SLEEP(seconds) sleep(seconds);
-#endif
 
 int node0(void)
 {
@@ -27,11 +20,11 @@ int node0(void)
 
 	assert(sock >= 0);
 	assert(nn_bind(sock, NODE0_SOCKET_ADDR) >= 0);
-	SLEEP(1); /* wait for connections */
+	lw_sleep(1); /* wait for connections */
 
 	assert(nn_connect(sock, NODE1_SOCKET_ADDR) >= 0);
 	assert(nn_connect(sock, NODE2_SOCKET_ADDR) >= 0);
-	SLEEP(1); /* wait for connections */
+	lw_sleep(1); /* wait for connections */
 
 	return sock;
 }
@@ -42,11 +35,11 @@ int node1(void)
 
 	assert(sock >= 0);
 	assert(nn_bind(sock, NODE1_SOCKET_ADDR) >= 0);
-	SLEEP(1); /* wait for connections */
+	lw_sleep(1); /* wait for connections */
 
 	assert(nn_connect(sock, NODE2_SOCKET_ADDR) >= 0);
 	assert(nn_connect(sock, NODE3_SOCKET_ADDR) >= 0);
-	SLEEP(1); /* wait for connections */
+	lw_sleep(1); /* wait for connections */
 
 	return sock;
 }
@@ -57,10 +50,10 @@ int node2(void)
 
 	assert(sock >= 0);
 	assert(nn_bind(sock, NODE2_SOCKET_ADDR) >= 0);
-	SLEEP(1); /* wait for connections */
+	lw_sleep(1); /* wait for connections */
 
 	assert(nn_connect(sock, NODE3_SOCKET_ADDR) >= 0);
-	SLEEP(1); /* wait for connections */
+	lw_sleep(1); /* wait for connections */
 
 	return sock;
 }
@@ -71,10 +64,10 @@ int node3(void)
 
 	assert(sock >= 0);
 	assert(nn_bind(sock, NODE3_SOCKET_ADDR) >= 0);
-	SLEEP(1); /* wait for connections */
+	lw_sleep(1); /* wait for connections */
 
 	assert(nn_connect(sock, NODE0_SOCKET_ADDR) >= 0);
-	SLEEP(1); /* wait for connections */
+	lw_sleep(1); /* wait for connections */
 
 	return sock;
 }
@@ -106,16 +99,16 @@ int node(const char *name)
 {
 	int sock;
 
-	if (!strcmp(name, "node0")) {
+	if (strcmp(name, "node0") == 0) {
 		sock = node0();
 	}
-	else if (!strcmp(name, "node1")) {
+	else if (strcmp(name, "node1") == 0) {
 		sock = node1();
 	}
-	else if (!strcmp(name, "node2")) {
+	else if (strcmp(name, "node2") == 0) {
 		sock = node2();
 	}
-	else if (!strcmp(name, "node3")) {
+	else if (strcmp(name, "node3") == 0) {
 		sock = node3();
 	}
 	else {

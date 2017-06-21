@@ -7,6 +7,7 @@
 #include <list>
 
 #ifdef _WIN32
+#include <windows.h>
 #include <process.h>
 #else
 #include <unistd.h>

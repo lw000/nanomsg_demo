@@ -3,7 +3,7 @@
 
 #include "base_type.h"
 
-int __run_rpc_client(const lw_char8* addr, lw_short16 port);
+int __connect_center_server(const lw_char8* addr, const lw_char8* sport);
 
 #endif // __CLIENT_MAIN_H__
 

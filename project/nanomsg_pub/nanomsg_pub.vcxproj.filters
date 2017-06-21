@@ -27,10 +27,10 @@
     <ClCompile Include="..\protocol\platform.pb.cc">
       <Filter>通讯协议</Filter>
     </ClCompile>
-    <ClCompile Include="nanomsg_pub.cpp">
+    <ClCompile Include="nanomsg_reqrep.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="nanomsg_reqrep.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

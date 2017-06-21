@@ -4,5 +4,6 @@
 <!--read more from http://code.google.com/p/libproperties-->
 <properties>
 	<entry key="port">19801</entry>
+	<entry key="center_server_addr">127.0.0.1</entry>
 	<entry key="center_server_port">19800</entry>
 </properties>

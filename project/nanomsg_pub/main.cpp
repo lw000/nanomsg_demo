@@ -99,18 +99,14 @@ For example:
 #else
 #include <unistd.h>
 #endif
+
 #include "business.h"
 
 #include "Message.h"
 #include "platform.pb.h"
+#include "..\libutils\lwutil.h"
 
 using namespace LW;
-
-#ifdef _WIN32
-#define SLEEP(seconds) SleepEx(seconds * 1000, 1);
-#else
-#define SLEEP(seconds) sleep(seconds);
-#endif
 
 static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize);
 static lw_int32 recv_socket_data(lw_int32 sock);
@@ -144,22 +140,22 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
-	lw_int32 result = 0;
+	lw_int32 c = 0;
 	{
 		LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
-		result = nn_send(sock, p->buf, p->size, 0);
+		c = nn_send(sock, p->buf, p->size, 0);
 		lw_free_net_message(p);
 	}
-	return result;
+	return c;
 }
 
 static lw_int32 recv_socket_data(lw_int32 sock)
 {
     char *buf = NULL;
-    lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
-    if (result > 0)
+    lw_int32 c = nn_recv(sock, &buf, NN_MSG, 0);
+    if (c > 0)
     {
-		lw_parse_socket_data(buf, result, on_socket_recv, NULL);
+		lw_parse_socket_data(buf, c, on_socket_recv, NULL);
         
         nn_freemsg(buf);
     }
@@ -168,7 +164,7 @@ static lw_int32 recv_socket_data(lw_int32 sock)
         
     }
     
-    return result;
+    return c;
 }
 
 
@@ -177,25 +173,15 @@ static lw_int32 recv_socket_data(lw_int32 sock)
 int pub_server(const char *url)
 {
 	int fd;
-
-	/*  Create the socket. */
-
 	fd = nn_socket(AF_SP, NN_PUB);
-
-	if (fd < 0) {
-
+	if (fd < 0) 
+	{
 		fprintf(stderr, "nn_socket: %s\n", nn_strerror(nn_errno()));
-
 		return (-1);
 	}
 
-	/*  Bind to the URL.  This will bind to the address and listen
-
-	synchronously; new clients will be accepted asynchronously
-
-	without further action from the calling program. */
-
-	if (nn_bind(fd, url) < 0) {
+	if (nn_bind(fd, url) < 0)
+	{
 		fprintf(stderr, "nn_bind: %s\n", nn_strerror(nn_errno()));
 		nn_close(fd);
 		return (-1);
@@ -203,49 +189,50 @@ int pub_server(const char *url)
 
 	printf("pub server start ...\n");
 
-	/*  Now we can just publish results.  Note that there is no explicit
-
-	accept required.  We just start writing the information. */
-
 	for (;;)
     {
-        int i = rand() % 3;
-        switch (i) {
-            case 0:
-            {
-				sc_userinfo userinfo;
-                userinfo.age = 30;
-                userinfo.sex = 1;
-                strcpy(userinfo.name, "liwei");
-                strcpy(userinfo.address, "shanxi");
-                send_socket_data(fd, 10000, &userinfo, sizeof(userinfo));
-            } break;
-            case 1:
-            {
-                platform::sc_msg_userinfo msg;
-                msg.set_age(40);
-                msg.set_sex(0);
-                msg.set_name("heshanshan");
-                msg.set_address("guangdong");
-                
-                int len = (int)msg.ByteSizeLong();
-                char s[256] = { 0 };
-                bool ret = msg.SerializeToArray(s, len);
-                if (ret) {
-					send_socket_data(fd, 10001, s, len);
-                }
-            } break;
-            case 2:
-            {
-                platform::sc_msg_servertime sertime;
-                time_t secs = time(NULL);
-                sertime.set_time((lw_int32)secs);
-            } break;
-            default:
-                break;
-        }
-        
-//		SLEEP(1);
+		int i = rand() % 3;
+		switch (i)
+		{
+		case 0:
+		{
+			sc_userinfo userinfo;
+			userinfo.id = 4000001;
+			userinfo.age = 30;
+			userinfo.sex = 1;
+			strcpy(userinfo.name, "liwei");
+			strcpy(userinfo.address, "shanxi");
+			send_socket_data(fd, 10000, &userinfo, sizeof(userinfo));
+		} break;
+		case 1:
+		{
+			platform::sc_msg_userinfo msg;
+			msg.set_userid(4000001);
+			msg.set_age(30);
+			msg.set_sex(1);
+			msg.set_name("heshanshan");
+			msg.set_address("shenzhen");
+
+			int len = (int)msg.ByteSizeLong();
+			char s[256] = { 0 };
+			bool ret = msg.SerializeToArray(s, len);
+			//bool ret = msg.SerializePartialToArray(s, len);
+			if (ret)
+			{
+				send_socket_data(fd, 10001, s, len);
+			}
+		} break;
+		case 2:
+		{
+			platform::sc_msg_servertime sertime;
+			time_t secs = time(NULL);
+			sertime.set_time((lw_int32)secs);
+		} break;
+		default:
+			break;
+		}
+/*		lw_sleep(1);*/
+
 	}
 	/* NOTREACHED */
 
@@ -256,8 +243,10 @@ int pub_server(const char *url)
 
 int main(int argc, char **argv)
 {
+	if (argc < 3) return 0;
+
 	int rc;
-	if ((argc == 3) && (strcmp(argv[2], "-s") == 0)) {
+	if (strcmp(argv[2], "-s") == 0) {
 		rc = pub_server(argv[1]);
 	}
 	else {

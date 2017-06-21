@@ -44,11 +44,11 @@ using namespace LW;
 #define LW_SLEEP(seconds) sleep(seconds);
 #endif
 
-
 SocketServer __g_serv;
 FILE * logfile;
 
-lw_int32 __s_rport = 19800;
+std::string __s_center_server_addr;
+std::string __s_center_server_port("19800");
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
 
@@ -117,7 +117,7 @@ static void _start_cb(int what)
 {
 	printf("RPC服务启动完成 [%d]！\n", __g_serv.getPort());
 
-	__run_rpc_client("127.0.0.1", __s_rport);
+	__connect_center_server(__s_center_server_addr.c_str(), __s_center_server_port.c_str());
 }
 
 int main(int argc, char** argv)
@@ -196,11 +196,16 @@ int main(int argc, char** argv)
 
 		Properties Pro;
 		if (Pro.loadFromXML(argv[1]))
-		{
-			std::string sport = Pro.getProperty("port", "19901");
-			std::string scport = Pro.getProperty("center_server_port", "19800");
+		{		
+			__s_center_server_addr = Pro.getProperty("center_server_addr", "");
+			if (__s_center_server_addr.empty())
+			{
+				break;
+			}
 
-			__s_rport = std::atoi(scport.c_str());
+			__s_center_server_port = Pro.getProperty("center_server_port", "19800");
+			
+			std::string sport = Pro.getProperty("port", "19901");
 			lw_int32 port = std::atoi(sport.c_str());
 
 			if (__g_serv.init() == 0)

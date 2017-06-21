@@ -77,8 +77,9 @@ void run_rpc_client(lw_int32 port)
 	}
 }
 
-int __run_rpc_client(const lw_char8* addr, lw_short16 port)
+int __connect_center_server(const lw_char8* addr, const lw_char8* sport)
 {
+	lw_short16 port = std::atoi(sport);
 	std::thread t(run_rpc_client, port);
 	t.detach();
 

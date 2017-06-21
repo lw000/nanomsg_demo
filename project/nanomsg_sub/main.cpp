@@ -123,19 +123,16 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
         case 10000:
         {
             sc_userinfo *user = (sc_userinfo*)(buf);
-            printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
+            printf("id: %d age:%d sex:%d name:%s address:%s\n", user->id,
                    user->age, user->sex, user->name, user->address);
         } break;
         case 10001:	//
         {
             platform::sc_msg_userinfo msg;
             msg.ParseFromArray(buf, bufsize);
-            printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
-                   msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
-        }break;
-        case 10002:
-        {
-            
+			/*msg.ParsePartialFromArray(buf, bufsize);*/
+			printf("id: %d age:%d sex:%d name:%s address:%s\n", msg.userid(),
+				msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
         }break;
         default:
             break;
