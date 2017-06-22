@@ -35,14 +35,9 @@
 #include "cmdline.h"
 #include "libproperties.h"
 
+#include "lwutil.h"
+
 using namespace LW;
-
-
-#ifdef _WIN32
-#define LW_SLEEP(seconds) SleepEx(seconds * 1000, 1);
-#else
-#define LW_SLEEP(seconds) sleep(seconds);
-#endif
 
 SocketServer __g_serv;
 FILE * logfile;
@@ -213,7 +208,7 @@ int main(int argc, char** argv)
 				__g_serv.run(port, _start_cb, on_socket_recv);
 			}
 
-			while (1) { LW_SLEEP(1); }
+			while (1) { lw_sleep(1); }
 		}
 		else
 		{
