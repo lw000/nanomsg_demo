@@ -1,8 +1,27 @@
 #include "SQLMgr.h"
 
+static std::string __catch_info(sql::SQLException& e)
+{
+	std::string s;
+	{
+		char buf[2048];
+		int c = 0;
+		c = c + sprintf(&buf[c], "# ERR: SQLException in %s \n", __FILE__);
+		c = c + sprintf(&buf[c], "# (%s) on line (%s) \n", __FUNCTION__, __FILE__);
+		c = c + sprintf(&buf[c], "# ERR: (%s) \n", e.what());
+		c = c + sprintf(&buf[c], "# (MySQL error code : %d), SQLState: (%s) \n", e.getErrorCode(), e.getSQLState().c_str());
+
+		printf(buf);
+
+		s.append(buf);
+	}
+
+	return s;
+}
+
 SQLMgr::SQLMgr()
 {
-	_driver = (sql::mysql::MySQL_Driver*)get_driver_instance();
+	_driver = (sql::Driver*)get_driver_instance();
 }
 
 SQLMgr::~SQLMgr()
@@ -18,14 +37,28 @@ bool SQLMgr::connect(const std::string& hostName, const std::string& userName, c
 	}
 	catch (sql::SQLException& e)
 	{
-		char buf[2048];
-		int c = 0;
-		c = c + sprintf(&buf[c], "# ERR: SQLException in %s \n", __FILE__);
-		c = c + sprintf(&buf[c], "# (%s) on line (%s) \n", __FUNCTION__, __FILE__);
-		c = c + sprintf(&buf[c], "# ERR: (%s) \n", e.what());
-		c = c + sprintf(&buf[c], "# (MySQL error code : %d), SQLState: (%s) \n", e.getErrorCode(), e.getSQLState().c_str());
+		__catch_info(e);
+	}
 
-		printf(buf);
+	return _con != NULL;
+}
+
+bool SQLMgr::connect(const std::string& hostName, const std::string& userName, const std::string& password, const std::string& schema)
+{
+	try
+	{
+		sql::ConnectOptionsMap connection_properties;
+		connection_properties["hostName"] = hostName;
+		connection_properties["userName"] = userName;
+		connection_properties["password"] = password;
+		connection_properties["schema"] = schema;
+		connection_properties["port"] = 3306;
+		connection_properties["OPT_RECONNECT"] = true;
+		_con = _driver->connect(connection_properties);
+	}
+	catch (sql::SQLException& e)
+	{
+		__catch_info(e);
 	}
 
 	return _con != NULL;
@@ -37,6 +70,11 @@ void SQLMgr::useSchema(const std::string& schema)
 	if (_con->isClosed()) return;
 	
 	_con->setSchema(schema);
+}
+
+sql::Driver* SQLMgr::getDriver()
+{
+	return _driver;
 }
 
 sql::Connection* SQLMgr::getConnection()
@@ -67,6 +105,7 @@ SQLResult::~SQLResult()
 	
 }
 
+
 bool SQLResult::createStatement()
 {
 	try
@@ -78,19 +117,23 @@ bool SQLResult::createStatement()
 	}
 	catch (sql::SQLException& e)
 	{
-		char buf[2048];
-		int c = 0;
-		c = c + sprintf(&buf[c], "# ERR: SQLException in %s \n", __FILE__);
-		c = c + sprintf(&buf[c], "# (%s) on line (%s) \n", __FUNCTION__, __FILE__);
-		c = c + sprintf(&buf[c], "# ERR: (%s) \n", e.what());
-		c = c + sprintf(&buf[c], "# (MySQL error code : %d), SQLState: (%s) \n", e.getErrorCode(), e.getSQLState().c_str());
+		std::string s = __catch_info(e);
 
-		printf(buf);
-
-		onError(buf);
+		onError(s.c_str());
 	}
 
 	return (_stmt != NULL);
+}
+
+
+bool SQLResult::execute()
+{
+
+}
+
+bool SQLResult::execute(const std::string& sql)
+{
+
 }
 
 bool SQLResult::executeQuery(const std::string& sqlString)
@@ -110,20 +153,14 @@ bool SQLResult::executeQuery(const std::string& sqlString)
 	}
 	catch (sql::SQLException& e)
 	{
-		char buf[2048];
-		int c = 0;
-		c = c + sprintf(&buf[c], "# ERR: SQLException in %s \n", __FILE__);
-		c = c + sprintf(&buf[c], "# (%s) on line (%s) \n", __FUNCTION__, __FILE__);
-		c = c + sprintf(&buf[c], "# ERR: (%s) \n", e.what());
-		c = c + sprintf(&buf[c], "# (MySQL error code : %d), SQLState: (%s) \n", e.getErrorCode(), e.getSQLState().c_str());
+		std::string s = __catch_info(e);
 
-		printf(buf);
-
-		onError(buf);
+		onError(s.c_str());
 	}
 
 	return (_res != NULL);
 }
+
 
 bool SQLResult::prepareStatement(const std::string& sql)
 {
@@ -138,16 +175,9 @@ bool SQLResult::prepareStatement(const std::string& sql)
 	}
 	catch (sql::SQLException& e)
 	{
-		char buf[2048];
-		int c = 0;
-		c = c + sprintf(&buf[c], "# ERR: SQLException in %s \n", __FILE__);
-		c = c + sprintf(&buf[c], "# (%s) on line (%s) \n", __FUNCTION__, __FILE__);
-		c = c + sprintf(&buf[c], "# ERR: (%s) \n", e.what());
-		c = c + sprintf(&buf[c], "# (MySQL error code : %d), SQLState: (%s) \n", e.getErrorCode(), e.getSQLState().c_str());
+		std::string s = __catch_info(e);
 
-		printf(buf);
-
-		onError(buf);
+		onError(s.c_str());
 	}
 
 	return _pstmt != NULL;
@@ -165,16 +195,9 @@ bool SQLResult::executeQuery()
 	}
 	catch (sql::SQLException& e)
 	{
-		char buf[2048];
-		int c = 0;
-		c = c + sprintf(&buf[c], "# ERR: SQLException in %s \n", __FILE__);
-		c = c + sprintf(&buf[c], "# (%s) on line (%s) \n", __FUNCTION__, __FILE__);
-		c = c + sprintf(&buf[c], "# ERR: (%s) \n", e.what());
-		c = c + sprintf(&buf[c], "# (MySQL error code : %d), SQLState: (%s) \n", e.getErrorCode(), e.getSQLState().c_str());
+		std::string s = __catch_info(e);
 
-		printf(buf);
-
-		onError(buf);
+		onError(s.c_str());
 	}
 
 	return (_res != NULL);

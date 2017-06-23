@@ -42,7 +42,7 @@ public:
 
 	virtual void print() override
 	{
-		printf("{proportion : %f, meal_supplement : %f, overtime : %f, finance : %f, work_day : %d}\n",
+		printf("# proportion : %f, meal_supplement : %f, overtime : %f, finance : %f, work_day : %d\n",
 			this->proportion, this->meal_supplement, this->overtime, this->finance, this->work_day);
 	}
 };
@@ -51,12 +51,12 @@ class TableUser : public TableBase
 {
 public:
 	int id;
-	std::string name;
 	int sex;
 	int position;
 	double wages;
 	double average_wages;
 	int department;
+	std::string name;
 
 public:
 	TableUser()
@@ -78,8 +78,8 @@ public:
 
 	virtual void print() override
 	{
-		printf("{id : %f, sex : %d, position : %d, wages : %f, average_wages : %f, department : %d, name : %s}\n",
-			this->id, this->sex, this->position, this->wages, this->average_wages, this->department, this->name.c_str());
+		fprintf(stdout, "# id : %d, name : %s, sex : %d, position : %d, wages : %.2f, average_wages : %.2f, department : %d\n",
+			this->id, this->name.c_str(), this->sex, this->position, this->wages, this->average_wages, this->department);
 	}
 };
 
@@ -108,7 +108,8 @@ public:
 
 	virtual void print() override
 	{
-
+		fprintf(stdout, "# name : %d, sale_name : %s, quotation_number : %s, create_time : %s\n",
+			this->name.c_str(), this->sale_name.c_str(), this->quotation_number.c_str(), this->create_time.c_str());
 	}
 };
 
@@ -138,6 +139,8 @@ public:
 		uint32_t  c2 = res->findColumn("overtime");
 		uint32_t  c3 = res->findColumn("finance");
 		uint32_t  c4 = res->findColumn("work_day");
+
+		int row = res->rowsCount();
 
 		while (res->next())
 		{
@@ -179,6 +182,8 @@ public:
 
 	virtual void onResult(sql::ResultSet* res) override
 	{
+		int row = res->rowsCount();
+
 		while (res->next())
 		{
 			TableUser user;
@@ -225,6 +230,7 @@ public:
 
 	virtual void onResult(sql::ResultSet* res) override
 	{
+		int row = res->rowsCount();
 
 		while (res->next())
 		{

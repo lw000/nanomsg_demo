@@ -38,11 +38,45 @@
 #include "SQLMgr.h"
 #include "SQLTable.h"
 
+#include "pthread.h"
+
+
 using namespace LW;
 
 SocketServer __g_serv;
 SQLMgr		 __g_sqlmgr;
 
+struct st_worker_thread_param {
+	SQLMgr *sqlMgr;
+};
+
+static void* thread_one_action(void *arg);
+
+static void* thread_one_action(void *arg)
+{
+	struct st_worker_thread_param *handles = (struct st_worker_thread_param*) arg;
+
+	std::cout << "Thread 1: driver->threadInit()" << std::endl;
+
+	handles->sqlMgr->getDriver()->threadInit();
+
+	clock_t t = clock();
+	for (size_t i = 0; i < 10; i++)
+	{
+		SQLTableQuotation quotation(handles->sqlMgr);
+		quotation.reset();
+		quotation.createStatement();
+		quotation.executeQuery("SELECT * FROM quotation;");
+	}
+	clock_t t1 = clock();
+	printf("times: %f \n", ((double)t1 - t) / CLOCKS_PER_SEC);
+
+	std::cout << "Thread 1: driver->threadEnd()" << std::endl;
+
+	handles->sqlMgr->getDriver()->threadEnd();
+
+	return NULL;
+}
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
@@ -70,8 +104,6 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 static void _start_cb(int what)
 {
 	printf("数据库服务启动完成 [%d]！\n", __g_serv.getPort());
-
-	
 }
 
 int main(int argc, char** argv)
@@ -91,7 +123,7 @@ int main(int argc, char** argv)
 		}
 	}
 #endif
-
+	
 #ifdef WIN32
 	evthread_use_windows_threads();
 #endif
@@ -101,54 +133,71 @@ int main(int argc, char** argv)
 	{
 		do 
 		{
-			if (__g_sqlmgr.connect("tcp://172.16.1.61:3306", "lw", "qazxsw123"))
+#if 0
+			if (!__g_sqlmgr.connect("172.16.1.61", "lw", "qazxsw123", "app_project")) break;
+#else
+			if (!__g_sqlmgr.connect("tcp://172.16.1.61:3306", "lw", "qazxsw123")) break;
+			__g_sqlmgr.useSchema("app_project");
+#endif
 			{
-				__g_sqlmgr.useSchema("app_project");
+				SQLTableConfig config(&__g_sqlmgr);
+				config.reset();
+				config.createStatement();
+				config.executeQuery("SELECT * FROM config;");
+			}
 
+			{
+				SQLTableUser user(&__g_sqlmgr);
 				{
-					SQLTableConfig config(&__g_sqlmgr);
-					config.reset();
-					config.createStatement();
-					config.executeQuery("SELECT * FROM config;");
+					user.reset();
+					user.createStatement();
+					user.executeQuery("SELECT * FROM user;");
 				}
 
 				{
-					SQLTableUser user(&__g_sqlmgr);
-					{
-						user.reset();
-						user.createStatement();
-						user.executeQuery("SELECT * FROM user;");
-					}
-
-					{
-						user.reset();
-						user.createStatement();
-						user.executeQuery("SELECT * FROM user WHERE id=1;");
-					}
-					
-					{
-						user.reset();
-						user.prepareStatement("SELECT * FROM user WHERE id=?;");
-						user.setInt(1, 2);
-						user.executeQuery();
-					}
-
-					{
-						user.reset();
-						user.prepareStatement("UPDATE user SET sex = ? WHERE id=?;");
-						user.setInt(1, 0);
-						user.setInt(2, 1);
-						user.executeQuery();
-					}
+					user.reset();
+					user.createStatement();
+					user.executeQuery("SELECT * FROM user WHERE id=1;");
 				}
 
 				{
-					SQLTableQuotation quotation(&__g_sqlmgr);
-					quotation.reset();
-					quotation.createStatement();
-					quotation.executeQuery("SELECT * FROM quotation;");
+					user.reset();
+					user.prepareStatement("SELECT * FROM user WHERE id=?;");
+					user.setInt(1, 2);
+					user.executeQuery();
+				}
+
+				{
+					user.reset();
+					user.prepareStatement("UPDATE user \
+												SET sex = ? \
+												WHERE name = ?; \
+										");
+					user.setInt(1, 1);
+					user.setString(2, U2G("宋龙俊"));
+					user.executeQuery();
 				}
 			}
+
+			pthread_t thread_one;
+	
+			struct st_worker_thread_param *param = new st_worker_thread_param;
+			param->sqlMgr = &__g_sqlmgr;
+
+			/*std::thread st(thread_one_action, (void *)param);
+			st.join();*/
+
+			int status;
+			status = pthread_create(&thread_one, NULL, thread_one_action, (void *)param);
+			if (status != 0)
+				throw std::runtime_error("Thread creation has failed");
+
+			status = pthread_join(thread_one, NULL);
+			if (status != 0)
+				throw std::runtime_error("joining thread has failed");
+			
+			delete param;
+
 		} while (0);
 		
 		int c = getchar();

@@ -22,13 +22,14 @@ public:
 
 public:
 	bool connect(const std::string& hostName, const std::string& userName, const std::string& password);
+	bool connect(const std::string& hostName, const std::string& userName, const std::string& password, const std::string& schema);
 	void useSchema(const std::string& schema);
+	sql::Driver* getDriver();
 	sql::Connection* getConnection();
-
 	void print();
 
 private:
-	sql::mysql::MySQL_Driver* _driver;
+	sql::Driver* _driver;
 	sql::Connection* _con;
 };
 
@@ -40,6 +41,10 @@ public:
 
 public:
 	void reset();
+
+public:
+	bool execute();
+	bool execute(const std::string& sql);
 
 public:
 	bool createStatement();
@@ -66,9 +71,6 @@ public:
 	virtual void onReset() = 0;
 	virtual void onResult(sql::ResultSet* res) = 0;
 	virtual void onError(const std::string& error) = 0;
-
-private:
-
 
 private:
 	SQLMgr* _mgr;

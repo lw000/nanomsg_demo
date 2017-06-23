@@ -70,15 +70,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libnet;..\libutils;..\json;..\libproperties-1.0\include;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protocol;..\business;..\business\common;..\protobuf\include;..\mysql-connector-c++-noinstall-1.1.9-win32\include;..\..\..\..\pcLib\boost_1_62_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libnet;..\libutils;..\json;..\libproperties-1.0\include;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protocol;..\business;..\business\common;..\protobuf\include;..\mysql-connector-c++-noinstall-1.1.9-win32\include;..\..\..\..\pcLib\boost_1_62_0;..\prebuilt-dll-2-9-1-release\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\Release;..\libevent\build\vs2013\lib\Release;..\protobuf\lib;..\nanomsg\build\vs2013\Debug;..\mysql-connector-c++-noinstall-1.1.9-win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobuf.lib;libprotoc.lib;libproperties.lib;libutils.lib;libnet.lib;business.lib;mysqlcppconn.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Release;..\libevent\build\vs2013\lib\Release;..\protobuf\lib;..\nanomsg\build\vs2013\Release;..\mysql-connector-c++-noinstall-1.1.9-win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobuf.lib;libprotoc.lib;libproperties.lib;libutils.lib;libnet.lib;business.lib;mysqlcppconn.lib;pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

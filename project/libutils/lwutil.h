@@ -53,8 +53,8 @@ void trim_l(char* src, char* dest);
 void trim_r(char* src, char* dest);
 
 //UTF-8到GB2312转换
-char* U2G(const char* utf8);
 
+char* U2G(const char* utf8);
 //GB2312到UTF-8转换
 char* G2U(const char* gb2312);
 
