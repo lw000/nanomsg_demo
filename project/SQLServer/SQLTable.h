@@ -108,7 +108,7 @@ public:
 
 	virtual void print() override
 	{
-		fprintf(stdout, "# name : %d, sale_name : %s, quotation_number : %s, create_time : %s\n",
+		fprintf(stdout, "# name : %s, sale_name : %s, quotation_number : %s, create_time : %s\n",
 			this->name.c_str(), this->sale_name.c_str(), this->quotation_number.c_str(), this->create_time.c_str());
 	}
 };
@@ -117,6 +117,9 @@ public:
 
 class SQLTableConfig : public SQLResult
 {
+public:
+	TableConfig config;
+
 public:
 	SQLTableConfig(SQLMgr* mgr) : SQLResult(mgr)
 	{
@@ -129,7 +132,7 @@ public:
 public:
 	virtual void onReset() override
 	{
-		_config.reset();
+		config.reset();
 	}
 
 	virtual void onResult(sql::ResultSet* res) override
@@ -144,12 +147,12 @@ public:
 
 		while (res->next())
 		{
-			_config.proportion = res->getDouble(1);
-			_config.meal_supplement = res->getDouble(2);
-			_config.overtime = res->getDouble(3);
-			_config.finance = res->getDouble(4);
-			_config.work_day = res->getInt(5);
-			_config.print();
+			config.proportion = res->getDouble(1);
+			config.meal_supplement = res->getDouble(2);
+			config.overtime = res->getDouble(3);
+			config.finance = res->getDouble(4);
+			config.work_day = res->getInt(5);
+			config.print();
 		}
 	}
 
@@ -158,13 +161,14 @@ public:
 
 	}
 
-private:
-	TableConfig _config;
 };
 
 
 class SQLTableUser : public SQLResult
 {
+public:
+	std::vector<TableUser> vtUser;
+
 public:
 	SQLTableUser(SQLMgr* mgr) : SQLResult(mgr)
 	{
@@ -177,7 +181,7 @@ public:
 public:
 	virtual void onReset() override
 	{
-		_vtUser.clear();
+		vtUser.clear();
 	}
 
 	virtual void onResult(sql::ResultSet* res) override
@@ -198,7 +202,7 @@ public:
 			
 			user.print();
 
-			_vtUser.push_back(user);
+			vtUser.push_back(user);
 		}
 	}
 
@@ -207,12 +211,13 @@ public:
 
 	}
 
-private:
-	std::vector<TableUser> _vtUser;
 };
 
 class SQLTableQuotation : public SQLResult
 {
+public:
+	std::vector<TableQuotation> vtQuotation;
+
 public:
 	SQLTableQuotation(SQLMgr* mgr) : SQLResult(mgr)
 	{
@@ -225,7 +230,7 @@ public:
 public:
 	virtual void onReset() override
 	{
-		_vtQuotation.clear();
+		vtQuotation.clear();
 	}
 
 	virtual void onResult(sql::ResultSet* res) override
@@ -242,7 +247,7 @@ public:
 			
 			quotation.print();
 
-			_vtQuotation.push_back(quotation);
+			vtQuotation.push_back(quotation);
 		}
 	}
 
@@ -251,8 +256,6 @@ public:
 
 	}
 
-private:
-	std::vector<TableQuotation> _vtQuotation;
 };
 
 

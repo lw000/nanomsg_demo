@@ -1,67 +1,67 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package platform;
 
 // 连接消息
 message sc_msg_connected
 {
-	required int32     order = 1;  // ID
+	int32     order = 1;  // ID
 }
 
 // 心跳消息
 message csc_msg_heartbeat
 {
-	required int64     time = 1;  // ID
+	int64     time = 1;  // ID
 }
 
 // 消息
 message cs_msg_recvresult
 {
-	required int32     result = 1;  // ID
+	int32     result = 1;  // ID
 }
 
 message sc_msg_servertime {
-    required int32 time = 1;
+    int32 time = 1;
 }
 
 // 登录消息
 message cs_msg_login
 {
-	required int32		device		= 1;	// ID
-	required string     username	= 2;	// ID
-	required string     userpsd		= 3;	// str
+	int32		device		= 1;	// ID
+	string     username	= 2;	// ID
+	string     userpsd		= 3;	// str
 }
 
 // 登出消息
 message cs_msg_logout
 {
-	required int32		device		= 1;	// ID
-	required int32		from_id		= 2;  // ID
-	required int32		recv_id		= 3;  // str
-	required string		msg			= 4;  // str
+	int32		device		= 1;	// ID
+	int32		from_id		= 2;  // ID
+	int32		recv_id		= 3;  // str
+	string		msg			= 4;  // str
 }
 
 // 聊天消息
 message cs_msg_chat
 {
-	required int32		device		= 1;	// ID
-	required int32		from_id		= 2;  // ID
-	required int32		recv_id		= 3;  // str
-	required string		msg			= 4;  // str
+	int32		device		= 1;	// ID
+	int32		from_id		= 2;  // ID
+	int32		recv_id		= 3;  // str
+	string		msg			= 4;  // str
 }
 
 // 用户信息消息
 message sc_msg_request_userinfo
 {
-	required int32     userid = 1;			// u_id
+	int32     userid = 1;			// u_id
 }
 
 message sc_msg_userinfo
 {
-	required int32     userid = 1;			// u_id
-	required int32     age = 2;			// u_id
-	required int32     sex = 3;			// u_id
-	required string    name = 4;			// u_id
-	required string    address = 5;		// str
+	int32     userid = 1;			// u_id
+	int32     age = 2;			// u_id
+	int32     sex = 3;			// u_id
+	string    name = 4;			// u_id
+	string    address = 5;		// str
 }
 

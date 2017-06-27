@@ -11,11 +11,31 @@
 #include "cppconn/metadata.h"
 #include "cppconn/prepared_statement.h"
 
+#include <functional>
+
 class SQLResult;
 class SQLMgr;
 
 class SQLMgr
 {
+public:
+	class DriverThread
+	{
+	public:
+		DriverThread(SQLMgr* sqlMgr) : _sqlMgr(sqlMgr)
+		{
+			_sqlMgr->_driver->threadInit();
+		}
+
+		~DriverThread() 
+		{
+			_sqlMgr->_driver->threadEnd();
+		} 
+
+	private:
+		SQLMgr* _sqlMgr;
+	};
+
 public:
 	SQLMgr();
 	~SQLMgr();
@@ -24,8 +44,12 @@ public:
 	bool connect(const std::string& hostName, const std::string& userName, const std::string& password);
 	bool connect(const std::string& hostName, const std::string& userName, const std::string& password, const std::string& schema);
 	void useSchema(const std::string& schema);
+
+public:
 	sql::Driver* getDriver();
 	sql::Connection* getConnection();
+
+public:
 	void print();
 
 private:
@@ -43,29 +67,19 @@ public:
 	void reset();
 
 public:
-	bool execute();
-	bool execute(const std::string& sql);
+	sql::ResultSet* getResultSet() const;
+	sql::Statement* getStatement() const;
+	sql::PreparedStatement* getPreparedStatement() const;
 
 public:
 	bool createStatement();
-	bool executeQuery(const std::string& sqlString);
+	bool executeQuery(const std::string& sqlString, std::function<void(sql::ResultSet*)> onResultFunc,
+		std::function<void(const std::string&)> onErrorFunc);
 
 public:
-	bool executeQuery();
-	bool prepareStatement(const std::string& sql);
-
-public:
-	void setBigInt(unsigned int parameterIndex, const std::string& value);
-	void setBlob(unsigned int parameterIndex, std::istream * blob);
-	void setBoolean(unsigned int parameterIndex, bool value);
-	void setDateTime(unsigned int parameterIndex, const std::string& value);
-	void setDouble(unsigned int parameterIndex, double value);
-	void setInt(unsigned int parameterIndex, int32_t value);
-	void setUInt(unsigned int parameterIndex, uint32_t value);
-	void setInt64(unsigned int parameterIndex, int64_t value);
-	void setUInt64(unsigned int parameterIndex, uint64_t value);
-	void setNull(unsigned int parameterIndex, int sqlType);
-	void setString(unsigned int parameterIndex, const std::string& value);
+	bool executeQuery(std::function<void(sql::ResultSet*)> onResultFunc,
+		std::function<void(const std::string&)> onErrorFunc);
+	sql::PreparedStatement* prepareStatement(const std::string& sql);
 
 public:
 	virtual void onReset() = 0;
@@ -77,6 +91,9 @@ private:
 	sql::ResultSet* _res;
 	sql::Statement * _stmt;
 	sql::PreparedStatement *_pstmt;
+
+	std::function<void(sql::ResultSet*)> _onResultFunc;
+	std::function<void(const std::string&)> _onErrorFunc;
 };
 
 

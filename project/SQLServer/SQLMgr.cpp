@@ -95,9 +95,10 @@ void SQLMgr::print()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-SQLResult::SQLResult(SQLMgr* mgr) : _mgr(mgr), _res(NULL), _stmt(NULL), _pstmt(NULL)
+SQLResult::SQLResult(SQLMgr* mgr) : _mgr(mgr), _res(nullptr), _stmt(nullptr), _pstmt(nullptr)
 {
-	
+	this->_onResultFunc = nullptr;
+	this->_onErrorFunc = nullptr;
 }
 
 SQLResult::~SQLResult()
@@ -105,12 +106,26 @@ SQLResult::~SQLResult()
 	
 }
 
+sql::ResultSet* SQLResult::getResultSet() const
+{
+	return _res;
+}
+
+sql::Statement* SQLResult::getStatement() const
+{
+	return _stmt;
+}
+
+sql::PreparedStatement* SQLResult::getPreparedStatement() const
+{
+	return _pstmt;
+}
 
 bool SQLResult::createStatement()
 {
 	try
 	{
-		if (_stmt == NULL)
+		if (_stmt == nullptr)
 		{
 			_stmt = _mgr->getConnection()->createStatement();
 		}
@@ -118,199 +133,127 @@ bool SQLResult::createStatement()
 	catch (sql::SQLException& e)
 	{
 		std::string s = __catch_info(e);
-
 		onError(s.c_str());
 	}
 
-	return (_stmt != NULL);
+	return (_stmt != nullptr);
 }
 
-
-bool SQLResult::execute()
-{
-
-}
-
-bool SQLResult::execute(const std::string& sql)
-{
-
-}
-
-bool SQLResult::executeQuery(const std::string& sqlString)
+bool SQLResult::executeQuery(const std::string& sqlString, std::function<void(sql::ResultSet*)> onResultFunc,
+	std::function<void(const std::string&)> onErrorFunc)
 {
 	try
 	{	
-		if (_stmt == NULL)
+		this->_onResultFunc = onResultFunc;
+		this->_onErrorFunc = onErrorFunc;
+
+		if (_stmt == nullptr)
 		{
 			createStatement();
 		}
 
 		_res = _stmt->executeQuery(sqlString);
 		
-		int row = _res->rowsCount();
+		if (this->_onResultFunc != nullptr)
+		{
+			this->_onResultFunc(_res);
+		}
 
 		onResult(_res);
 	}
 	catch (sql::SQLException& e)
 	{
 		std::string s = __catch_info(e);
+		
+		if (this->_onErrorFunc != NULL)
+		{
+			this->_onErrorFunc(s);
+		}
 
-		onError(s.c_str());
+		onError(s.c_str());	
 	}
 
-	return (_res != NULL);
+	return (_res != nullptr);
 }
 
 
-bool SQLResult::prepareStatement(const std::string& sql)
+sql::PreparedStatement* SQLResult::prepareStatement(const std::string& sql)
 {
 	try
 	{
-		if (_pstmt != NULL)
+
+		if (_pstmt != nullptr)
 		{
 			delete _pstmt;
-			_pstmt = NULL;
+			_pstmt = nullptr;
 		}
 		_pstmt = _mgr->getConnection()->prepareStatement(sql);
 	}
 	catch (sql::SQLException& e)
 	{
 		std::string s = __catch_info(e);
-
 		onError(s.c_str());
 	}
 
-	return _pstmt != NULL;
+	return (_pstmt);
 }
 
-bool SQLResult::executeQuery()
+bool SQLResult::executeQuery(std::function<void(sql::ResultSet*)> onResultFunc,
+	std::function<void(const std::string&)> onErrorFunc)
 {
 	try
 	{
+		this->_onResultFunc = onResultFunc;
+		this->_onErrorFunc = onErrorFunc;
+
 		_res = _pstmt->executeQuery();
 
 		int row = _res->rowsCount();
+
+		if (this->_onResultFunc != nullptr)
+		{
+			this->_onResultFunc(_res);
+		}
 
 		onResult(_res);
 	}
 	catch (sql::SQLException& e)
 	{
 		std::string s = __catch_info(e);
+		
+		if (this->_onErrorFunc != nullptr)
+		{
+			this->_onErrorFunc(s);
+		}
 
 		onError(s.c_str());
 	}
 
-	return (_res != NULL);
+	return (_res != nullptr);
 }
 
 void SQLResult::reset()
 {
-	if (_res != NULL)
+ 	this->_onResultFunc = nullptr;
+ 	this->_onErrorFunc = nullptr;
+
+	if (_res != nullptr)
 	{
 		delete _res;
-		_res = NULL;
+		_res = nullptr;
 	}
 
-	if (_stmt != NULL)
+	if (_stmt != nullptr)
 	{
 		delete _stmt;
-		_stmt = NULL;
+		_stmt = nullptr;
 	}
 
-	if (_pstmt != NULL)
+	if (_pstmt != nullptr)
 	{
 		delete _pstmt;
-		_pstmt = NULL;
+		_pstmt = nullptr;
 	}
 
 	onReset();
 }
-
-void SQLResult::setBigInt(unsigned int parameterIndex, const std::string& value)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setBigInt(parameterIndex, value);
-	}
-}
-
-void SQLResult::setBlob(unsigned int parameterIndex, std::istream * blob)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setBlob(parameterIndex, blob);
-	}
-}
-
-void SQLResult::setBoolean(unsigned int parameterIndex, bool value)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setBoolean(parameterIndex, value);
-	}
-}
-
-void SQLResult::setDateTime(unsigned int parameterIndex, const std::string& value)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setDateTime(parameterIndex, value);
-	}
-}
-
-void SQLResult::setDouble(unsigned int parameterIndex, double value)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setDouble(parameterIndex, value);
-	}
-}
-
-void SQLResult::setInt(unsigned int parameterIndex, int32_t value)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setInt(parameterIndex, value);
-	}
-}
-
-void SQLResult::setUInt(unsigned int parameterIndex, uint32_t value)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setUInt(parameterIndex, value);
-	}
-}
-
-void SQLResult::setInt64(unsigned int parameterIndex, int64_t value)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setInt64(parameterIndex, value);
-	}
-}
-
-void SQLResult::setUInt64(unsigned int parameterIndex, uint64_t value)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setUInt64(parameterIndex, value);
-	}
-}
-
-void SQLResult::setNull(unsigned int parameterIndex, int sqlType)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setNull(parameterIndex, sqlType);
-	}
-}
-
-void SQLResult::setString(unsigned int parameterIndex, const std::string& value)
-{
-	if (_pstmt != NULL)
-	{
-		_pstmt->setString(parameterIndex, value);
-	}
-}
-

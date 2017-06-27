@@ -40,7 +40,6 @@
 
 #include "pthread.h"
 
-
 using namespace LW;
 
 SocketServer __g_serv;
@@ -56,24 +55,41 @@ static void* thread_one_action(void *arg)
 {
 	struct st_worker_thread_param *handles = (struct st_worker_thread_param*) arg;
 
-	std::cout << "Thread 1: driver->threadInit()" << std::endl;
+	SQLMgr::DriverThread driverThread(handles->sqlMgr);
 
-	handles->sqlMgr->getDriver()->threadInit();
+	//handles->sqlMgr->getDriver()->threadInit();
 
 	clock_t t = clock();
-	for (size_t i = 0; i < 10; i++)
+	for (size_t i = 0; i < 1; i++)
 	{
-		SQLTableQuotation quotation(handles->sqlMgr);
-		quotation.reset();
-		quotation.createStatement();
-		quotation.executeQuery("SELECT * FROM quotation;");
+		SQLTableQuotation sqlQuotation(handles->sqlMgr);
+		sqlQuotation.reset();
+		sqlQuotation.createStatement();
+		sqlQuotation.executeQuery("SELECT * FROM quotation;", [&sqlQuotation](sql::ResultSet* res)
+		{
+			int row = res->rowsCount();
+
+			while (res->next())
+			{
+				TableQuotation  quotation;
+				quotation.name = U2G(res->getString("name").c_str());
+				quotation.sale_name = U2G(res->getString("sale_name").c_str());
+				quotation.quotation_number = U2G(res->getString("quotation_number").c_str());
+				quotation.create_time = U2G(res->getString("create_time").c_str());
+
+				quotation.print();
+				sqlQuotation.vtQuotation.push_back(quotation);
+			}
+		},
+			[](const std::string & error)
+		{
+			printf("# error: %s", error.c_str());
+		});
 	}
 	clock_t t1 = clock();
 	printf("times: %f \n", ((double)t1 - t) / CLOCKS_PER_SEC);
 
-	std::cout << "Thread 1: driver->threadEnd()" << std::endl;
-
-	handles->sqlMgr->getDriver()->threadEnd();
+	//handles->sqlMgr->getDriver()->threadEnd();
 
 	return NULL;
 }
@@ -128,10 +144,8 @@ int main(int argc, char** argv)
 	evthread_use_windows_threads();
 #endif
 
-	event_enable_debug_mode();
-
 	{
-		do 
+		do
 		{
 #if 0
 			if (!__g_sqlmgr.connect("172.16.1.61", "lw", "qazxsw123", "app_project")) break;
@@ -140,10 +154,33 @@ int main(int argc, char** argv)
 			__g_sqlmgr.useSchema("app_project");
 #endif
 			{
-				SQLTableConfig config(&__g_sqlmgr);
-				config.reset();
-				config.createStatement();
-				config.executeQuery("SELECT * FROM config;");
+				SQLTableConfig sqlConfig(&__g_sqlmgr);
+				sqlConfig.reset();
+				sqlConfig.createStatement();
+				sqlConfig.executeQuery("SELECT * FROM config;", [&sqlConfig](sql::ResultSet* res)
+				{
+					uint32_t  c0 = res->findColumn("proportion"); 
+					uint32_t  c1 = res->findColumn("meal_supplement");
+					uint32_t  c2 = res->findColumn("overtime");
+					uint32_t  c3 = res->findColumn("finance");
+					uint32_t  c4 = res->findColumn("work_day");
+
+					int row = res->rowsCount();
+
+					while (res->next())
+					{
+						sqlConfig.config.proportion = res->getDouble(1);
+						sqlConfig.config.meal_supplement = res->getDouble(2);
+						sqlConfig.config.overtime = res->getDouble(3);
+						sqlConfig.config.finance = res->getDouble(4);
+						sqlConfig.config.work_day = res->getInt(5);
+						sqlConfig.config.print();
+					}
+				},
+					[](const std::string & error)
+				{
+
+				});
 			}
 
 			{
@@ -151,31 +188,59 @@ int main(int argc, char** argv)
 				{
 					user.reset();
 					user.createStatement();
-					user.executeQuery("SELECT * FROM user;");
+					user.executeQuery("SELECT * FROM user;", [](sql::ResultSet* res)
+					{
+
+					},
+						[](const std::string & error)
+					{
+
+					});
 				}
 
 				{
 					user.reset();
 					user.createStatement();
-					user.executeQuery("SELECT * FROM user WHERE id=1;");
+					user.executeQuery("SELECT * FROM user WHERE id=1;", [](sql::ResultSet* res)
+					{
+
+					},
+					[](const std::string & error)
+					{
+						printf("# error: %s", error.c_str());
+					});
 				}
 
 				{
 					user.reset();
-					user.prepareStatement("SELECT * FROM user WHERE id=?;");
-					user.setInt(1, 2);
-					user.executeQuery();
+					sql::PreparedStatement* pstmt = user.prepareStatement("SELECT * FROM user WHERE id=?;");
+					pstmt->setInt(1, 2);
+					user.executeQuery([](sql::ResultSet* res)
+					{
+
+					},
+						[](const std::string & error)
+					{
+						printf("# error: %s", error.c_str());
+					});
 				}
 
 				{
 					user.reset();
-					user.prepareStatement("UPDATE user \
+					sql::PreparedStatement* pstmt = user.prepareStatement("UPDATE user \
 												SET sex = ? \
-												WHERE name = ?; \
-										");
-					user.setInt(1, 1);
-					user.setString(2, U2G("ËÎÁú¿¡"));
-					user.executeQuery();
+												WHERE name = ?;");
+
+					pstmt->setInt(1, 1);
+					pstmt->setString(2, U2G("ËÎÁú¿¡"));
+					user.executeQuery([](sql::ResultSet* res)
+					{
+
+					},
+						[](const std::string & error)
+					{
+						printf("# error: %s", error.c_str());
+					});
 				}
 			}
 
@@ -207,6 +272,8 @@ int main(int argc, char** argv)
 
 	do
 	{
+		event_enable_debug_mode();
+
 		std::string config(argv[1]);
 		transform(config.begin(), config.end(), config.begin(), ::tolower);
 		config = config.substr(config.size() - 4, 4);
