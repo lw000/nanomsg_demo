@@ -1,10 +1,9 @@
 #ifndef __HTTP_SERVER_H__
 #define __HTTP_SERVER_H__
 
-#include "base_type.h"
-
 #include <functional>
 #include <string>
+#include <unordered_map>
 
 #ifdef WIN32
 #include <winsock2.h>
@@ -32,24 +31,20 @@
 #include <event2/http_struct.h>
 #include <event2/util.h>
 
-typedef void(*LW_HTTP_CB)(struct evhttp_request *, void *);
+#include "base_type.h"
+
+typedef void(*LW_HTTP_CB)(struct evhttp_request *);
 
 class HttpServer;
 
-struct HTTP_BUSINESS_SIGNATURE
+struct HTTP_METHOD_SIGNATURE
 {
-	char * _signature;
-	char * _cmd;
+	std::string _signature;
+	lw_uint32 _cmd;
 	LW_HTTP_CB _cb;
-
-public:
-	HTTP_BUSINESS_SIGNATURE(char * signature, char* cmd, LW_HTTP_CB cb)
-	{
-		this->_signature = signature;
-		this->_cmd = cmd;
-		this->_cb = cb;
-	}
 };
+
+void lw_http_send_reply(struct evhttp_request * req, const char* what);
 
 class HttpServer
 {
@@ -60,8 +55,9 @@ public:
 public:
 	lw_int32 init(const char* addr, lw_uint32 port);
 	void start();
-	void set_http_hook(const char * path, LW_HTTP_CB cb, void * cb_arg);
-	void set_http_gen_hook(LW_HTTP_CB cb, void * cb_arg);
+	void set_http_gen_hook(LW_HTTP_CB cb);
+	void get(const char * path, LW_HTTP_CB cb);
+	void post(const char * path, LW_HTTP_CB cb);
 
 private:
 	void __run();
@@ -71,7 +67,7 @@ private:
 	struct evhttp *_httpServ;
 	std::string _addr;
 	lw_uint32 port;
-	std::function<lw_int32(HttpServer* server)> _func;
+	std::unordered_map<std::string, HTTP_METHOD_SIGNATURE*> _unmap_method;
 };
 
 #endif // !__HTTP_SERVER_H__

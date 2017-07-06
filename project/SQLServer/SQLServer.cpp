@@ -40,6 +40,8 @@
 
 #include "pthread.h"
 
+#include "FastLog.h"
+
 using namespace LW;
 
 SocketServer __g_serv;
@@ -78,7 +80,13 @@ static void* thread_one_action(void *arg)
 				quotation.create_time = U2G(res->getString("create_time").c_str());
 
 				quotation.print();
+
 				sqlQuotation.vtQuotation.push_back(quotation);
+				FASTLOG_DEBUG(__FILE__, __LINE__, U2G(res->getString("name").c_str()));
+				FASTLOG_DEBUG(__FILE__, __LINE__, U2G(res->getString("sale_name").c_str()));
+				FASTLOG_DEBUG(__FILE__, __LINE__, U2G(res->getString("name").c_str()));
+				FASTLOG_DEBUG(__FILE__, __LINE__, U2G(res->getString("quotation_number").c_str()));
+				FASTLOG_DEBUG(__FILE__, __LINE__, U2G(res->getString("create_time").c_str()));
 			}
 		},
 			[](const std::string & error)
@@ -140,6 +148,8 @@ int main(int argc, char** argv)
 	}
 #endif
 	
+	hn_start_fastlog();
+
 #ifdef WIN32
 	evthread_use_windows_threads();
 #endif
@@ -232,7 +242,7 @@ int main(int argc, char** argv)
 												WHERE name = ?;");
 
 					pstmt->setInt(1, 1);
-					pstmt->setString(2, U2G("кнаЗ©║"));
+					pstmt->setString(2, utf8_to_gbk("кнаЗ©║"));
 					user.executeQuery([](sql::ResultSet* res)
 					{
 

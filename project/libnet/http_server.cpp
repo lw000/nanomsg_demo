@@ -12,25 +12,43 @@
 #include "rapidjson/stringbuffer.h"
 
 #include "lwutil.h"
+#include <memory>
 
-#define MYHTTPD_SIGNATURE   "lwstar v2.0.1"
+void lw_http_send_reply(struct evhttp_request * req, const char* what)
+{
+	struct evbuffer *buf = evbuffer_new();
+	// 	evhttp_add_header(req->output_headers, "Server", MYHTTPD_SIGNATURE);
+	// 	evhttp_add_header(req->output_headers, "Content-Type", "text/plain; charset=UTF-8");
+	// 	evhttp_add_header(req->output_headers, "Connection", "close");
+	evbuffer_add_printf(buf, what);
+	evhttp_send_reply(req, HTTP_OK, "Client", buf);
+	evbuffer_free(buf);
+}
 
-//当向进程发出SIGTERM/SIGHUP/SIGINT/SIGQUIT的时候，终止event的事件侦听循环
-// void signal_handler(evutil_socket_t fd, short event, void *user_data)
-// {
-// 	switch (sig)
-// 	{
-// 	case SIGINT:
-// 	case SIGILL:
-// 	case SIGFPE:
-// 	case SIGSEGV:
-// 	case SIGTERM:
-// 	case SIGBREAK:
-// 	case SIGABRT:
-// 		event_base_loopbreak(__http_base);
-// 		break;
-// 	}
-// }
+static void __default_handler(struct evhttp_request *req, void *arg)
+{
+	HTTP_METHOD_SIGNATURE* signature = (HTTP_METHOD_SIGNATURE*)arg;
+	{
+		signature->_cb(req);
+	}
+}
+
+static void __method_handler(struct evhttp_request *req, void *arg)
+{
+	HTTP_METHOD_SIGNATURE* signature = (HTTP_METHOD_SIGNATURE*)arg;
+	
+	switch (evhttp_request_get_command(req))
+	{
+	case EVHTTP_REQ_GET:
+	case EVHTTP_REQ_POST:
+	{
+		signature->_cb(req);
+	}
+	default:
+		lw_http_send_reply(req, "{\"code\":0,\"what\":\"The requested resource does not support http method 'POST' OR 'GET'.""}");
+		break;
+	}
+}
 
 HttpServer::HttpServer()
 {
@@ -139,14 +157,39 @@ void HttpServer::start()
 }
 
 // 设置回调 
-void HttpServer::set_http_gen_hook(LW_HTTP_CB cb, void * cb_arg)
+void HttpServer::set_http_gen_hook(LW_HTTP_CB cb)
 {
-	evhttp_set_gencb(this->_httpServ, cb, this);
+	HTTP_METHOD_SIGNATURE* signature = new HTTP_METHOD_SIGNATURE;
+	signature->_signature = "evhttp_set_gencb";
+	signature->_cmd = 1;
+	signature->_cb = cb;
+	evhttp_set_gencb(this->_httpServ, __default_handler, signature);
 }
 
-void HttpServer::set_http_hook(const char *path, LW_HTTP_CB cb, void *cb_arg)
+void HttpServer::get(const char * path, LW_HTTP_CB cb)
 {
-	evhttp_set_cb(this->_httpServ, path, cb, cb_arg);
+	HTTP_METHOD_SIGNATURE* signature = new HTTP_METHOD_SIGNATURE;
+	signature->_signature = path;
+	signature->_cmd = 1;
+	signature->_cb = cb;
+	int r = evhttp_set_cb(this->_httpServ, path, __method_handler, signature);
+	if (r == 0)
+	{
+		_unmap_method[path] = signature;
+	}
+}
+
+void HttpServer::post(const char * path, LW_HTTP_CB cb)
+{
+	HTTP_METHOD_SIGNATURE* signature = new HTTP_METHOD_SIGNATURE;
+	signature->_signature = path;
+	signature->_cmd = 1;
+	signature->_cb = cb;
+	int r = evhttp_set_cb(this->_httpServ, path, __method_handler, signature);
+	if (r == 0)
+	{
+		_unmap_method[path] = signature;
+	}
 }
 
 void HttpServer::__run()

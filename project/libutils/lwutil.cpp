@@ -6,7 +6,84 @@
 #include <windows.h>
 #endif // __WIN32
 
-char* U2G(const char* utf8)
+#if defined(_WIN32)
+
+std::wstring StringUtf8ToWideChar(const std::string& strUtf8)
+{
+	std::wstring ret;
+	if (!strUtf8.empty())
+	{
+		int nNum = MultiByteToWideChar(CP_UTF8, 0, strUtf8.c_str(), -1, nullptr, 0);
+		if (nNum)
+		{
+			WCHAR* wideCharString = new WCHAR[nNum + 1];
+			wideCharString[0] = 0;
+
+			nNum = MultiByteToWideChar(CP_UTF8, 0, strUtf8.c_str(), -1, wideCharString, nNum + 1);
+
+			ret = wideCharString;
+			delete[] wideCharString;
+		}
+		else
+		{
+			printf("Wrong convert to WideChar code:0x%x", GetLastError());
+		}
+	}
+	return ret;
+}
+
+std::string StringWideCharToUtf8(const std::wstring& strWideChar)
+{
+	std::string ret;
+	if (!strWideChar.empty())
+	{
+		int nNum = WideCharToMultiByte(CP_UTF8, 0, strWideChar.c_str(), -1, nullptr, 0, nullptr, FALSE);
+		if (nNum)
+		{
+			char* utf8String = new char[nNum + 1];
+			utf8String[0] = 0;
+
+			nNum = WideCharToMultiByte(CP_UTF8, 0, strWideChar.c_str(), -1, utf8String, nNum + 1, nullptr, FALSE);
+
+			ret = utf8String;
+			delete[] utf8String;
+		}
+		else
+		{
+			printf("Wrong convert to Utf8 code:0x%x", GetLastError());
+		}
+	}
+
+	return ret;
+}
+
+std::string UTF8StringToMultiByte(const std::string& strUtf8)
+{
+	std::string ret;
+	if (!strUtf8.empty())
+	{
+		std::wstring strWideChar = StringUtf8ToWideChar(strUtf8);
+		int nNum = WideCharToMultiByte(CP_ACP, 0, strWideChar.c_str(), -1, nullptr, 0, nullptr, FALSE);
+		if (nNum)
+		{
+			char* ansiString = new char[nNum + 1];
+			ansiString[0] = 0;
+
+			nNum = WideCharToMultiByte(CP_ACP, 0, strWideChar.c_str(), -1, ansiString, nNum + 1, nullptr, FALSE);
+
+			ret = ansiString;
+			delete[] ansiString;
+		}
+		else
+		{
+			printf("Wrong convert to Ansi code:0x%x", GetLastError());
+		}
+	}
+
+	return ret;
+}
+
+char* utf8_to_gbk(const char* utf8)
 {
 	int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
 	wchar_t* wstr = new wchar_t[len + 1];
@@ -21,7 +98,7 @@ char* U2G(const char* utf8)
 }
 
 //GB2312µ½UTF-8µÄ×ª»»
-char* G2U(const char* gb2312)
+char* gbk_to_utf8(const char* gb2312)
 {
 	int len = MultiByteToWideChar(CP_ACP, 0, gb2312, -1, NULL, 0);
 	wchar_t* wstr = new wchar_t[len + 1];
@@ -34,6 +111,8 @@ char* G2U(const char* gb2312)
 	if (wstr) delete[] wstr;
 	return str;
 }
+
+#endif
 
 char * lw_strtok_r(char *s, const char *delim, char **state) {
 	char *cp, *start;

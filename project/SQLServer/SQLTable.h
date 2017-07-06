@@ -13,7 +13,7 @@ public:
 	virtual void reset() = 0;
 
 public:
-	virtual void  print() { }
+	virtual void print() { }
 };
 
 class TableConfig : public TableBase
@@ -193,7 +193,7 @@ public:
 			TableUser user;
 
 			user.id = res->getInt("id");
-			user.name = U2G(res->getString("name").c_str());
+			user.name = utf8_to_gbk(res->getString("name").c_str());
 			user.sex = res->getInt("sex");
 			user.position = res->getInt("position");
 			user.wages = res->getDouble("wages");
@@ -240,10 +240,10 @@ public:
 		while (res->next())
 		{
 			TableQuotation  quotation;
-			quotation.name = U2G(res->getString("name").c_str());
-			quotation.sale_name = U2G(res->getString("sale_name").c_str());
-			quotation.quotation_number = U2G(res->getString("quotation_number").c_str());
-			quotation.create_time = U2G(res->getString("create_time").c_str());
+			quotation.name = utf8_to_gbk(res->getString("name").c_str());
+			quotation.sale_name = utf8_to_gbk(res->getString("sale_name").c_str());
+			quotation.quotation_number = utf8_to_gbk(res->getString("quotation_number").c_str());
+			quotation.create_time = utf8_to_gbk(res->getString("create_time").c_str());
 			
 			quotation.print();
 

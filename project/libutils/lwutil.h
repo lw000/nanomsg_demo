@@ -52,10 +52,25 @@ void trim(char* src, char* dest);
 void trim_l(char* src, char* dest);
 void trim_r(char* src, char* dest);
 
-//UTF-8到GB2312转换
+#if defined(_WIN32)
 
-char* U2G(const char* utf8);
+//UTF-8到GB2312转换
+char* utf8_to_gbk(const char* utf8);
 //GB2312到UTF-8转换
-char* G2U(const char* gb2312);
+char* gbk_to_utf8(const char* gb2312);
+
+std::wstring StringUtf8ToWideChar(const std::string& strUtf8);
+std::string StringWideCharToUtf8(const std::wstring& strWideChar);
+std::string UTF8StringToMultiByte(const std::string& strUtf8);
+
+#endif
+
+#if defined(_WIN32)
+#define U2G(v)	utf8_to_gbk(v);
+#define G2U(v)	gbk_to_utf8(v);
+#else
+#define U2G(v)
+#define G2U(v)
+#endif
 
 #endif // !__LW_UTIL_H__
