@@ -1,0 +1,143 @@
+﻿Build started 2017/6/30 13:49:23.
+     1>Project "E:\Work\TTYLQP\common\LibHNNet\proj.win32\LibHNNet.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /I.. /IE:\Work\cocos2d\cocos\2d\..\..\ /IE:\Work\cocos2d\cocos\2d\..\..\\cocos\ /IE:\Work\cocos2d\cocos\2d\..\..\\cocos\audio\include /IE:\Work\cocos2d\cocos\2d\..\..\\cocos\platform\win32 /I"E:\Work\cocos2d\cocos\2d\..\..\\external\win32-specific\gles\include\OGLES" /IE:\Work\cocos2d\cocos\2d\..\..\\external\glfw3\include\win32 /IE:\Work\cocos2d\cocos\2d\..\..\\extensions /IE:\Work\cocos2d\cocos\2d\..\..\\external /I..\..\LibHNUI /IE:\Work\cocos2d\cocos\2d\..\..\cocos /I"E:\Work\cocos2d\cocos\2d\..\..\cocos/editor-support" /IE:\Work\cocos2d\cocos\2d\..\..\external\glfw3\include\win32 /I"E:\Work\cocos2d\cocos\2d\..\..\external\win32-specific\gles\include\OGLES" /IE:\Work\cocos2d\cocos\2d\..\..\external\freetype2\include\win32\freetype2 /IE:\Work\cocos2d\cocos\2d\..\..\external\freetype2\include\win32\ /IE:\Work\cocos2d\cocos\2d\..\..\external /ZI /nologo /W3 /WX- /sdl- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _LIB /D COCOS2DXWIN32_EXPORTS /D GL_GLEXT_PROTOTYPES /D COCOS2D_DEBUG=1 /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS /D ENABLE_LOG_FILE /D _VARIADIC_MAX=10 /D _USING_V110_SDK71_ /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug.win32\\" /Fd"Debug.win32\vc120.pdb" /Gd /TP /wd4819 /wd4251 /analyze- /errorReport:prompt ..\HNCommon\HNConverCode.cpp ..\HNCommon\HNLog.cpp ..\HNCommon\HNThread.cpp ..\HNCommon\HNMemoryPool.cpp ..\HNData\HNGamesInfoModule.cpp ..\HNData\HNMatchInfoCache.cpp ..\HNData\HNRoomInfoModule.cpp ..\HNData\HNUserInfoModule.cpp ..\HNExternal\MD5\MD5.cpp ..\HNExternal\RC4\HNRC4.cpp ..\HNGame\HNGameTableUsersData.cpp ..\HNGame\HNGameUIBase.cpp ..\HNHttp\HNHttp.cpp ..\HNHttp\HNUserHeadHttp.cpp ..\HNNetProtocol\HNBaseCommand.cpp ..\HNNetProtocol\HNPlatformConfig.cpp ..\HNPlatform\HNGameCreator.cpp ..\HNPlatform\HNPlatformLogic.cpp ..\HNPlatform\HNPlatformBase.cpp ..\HNRoom\HNRoomLogic.cpp ..\HNSocket\HNSocket.cpp ..\HNSocket\HNSocketLogic.cpp ..\HNSocket\HNSocketMessage.cpp ..\HNSocket\HNSocketProtocolData.cpp ..\HNSocket\HNSocketThread.cpp
+         HNSocketThread.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>e:\work\ttylqp\common\libhnnet\hnsocket\hnsocketthread.cpp(151): warning C4018: '>' : signed/unsigned mismatch
+         HNSocketProtocolData.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNSocketMessage.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNSocketLogic.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNSocket.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNRoomLogic.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\ui\uitabcontrol.h(292): warning C4244: 'return' : conversion from 'const int' to 'float', possible loss of data
+         HNPlatformBase.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\ui\uitabcontrol.h(292): warning C4244: 'return' : conversion from 'const int' to 'float', possible loss of data
+         HNPlatformLogic.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\ui\uitabcontrol.h(292): warning C4244: 'return' : conversion from 'const int' to 'float', possible loss of data
+         HNGameCreator.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\ui\uitabcontrol.h(292): warning C4244: 'return' : conversion from 'const int' to 'float', possible loss of data
+         HNPlatformConfig.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNBaseCommand.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNUserHeadHttp.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNHttp.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNGameUIBase.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\ui\uitabcontrol.h(292): warning C4244: 'return' : conversion from 'const int' to 'float', possible loss of data
+         HNGameTableUsersData.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\ui\uitabcontrol.h(292): warning C4244: 'return' : conversion from 'const int' to 'float', possible loss of data
+         HNRC4.cpp
+     1>e:\work\ttylqp\common\libhnnet\hnexternal\rc4\hnrc4.cpp(51): warning C4018: '<' : signed/unsigned mismatch
+         MD5.cpp
+         HNUserInfoModule.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNRoomInfoModule.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>e:\work\ttylqp\common\libhnnet\hndata\hnroominfomodule.cpp(104): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\work\ttylqp\common\libhnnet\hndata\hnroominfomodule.cpp(119): warning C4018: '>=' : signed/unsigned mismatch
+     1>e:\work\ttylqp\common\libhnnet\hndata\hnroominfomodule.cpp(134): warning C4018: '>=' : signed/unsigned mismatch
+         HNMatchInfoCache.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         Generating Code...
+         Compiling...
+         HNGamesInfoModule.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+     1>e:\work\ttylqp\common\libhnnet\hndata\hngamesinfomodule.cpp(87): warning C4018: '>=' : signed/unsigned mismatch
+         HNMemoryPool.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNThread.cpp
+         HNLog.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         HNConverCode.cpp
+     1>e:\work\cocos2d\cocos\2d\ccautopolygon.h(252): warning C4244: 'argument' : conversion from 'const unsigned int' to 'float', possible loss of data
+     1>e:\work\cocos2d\cocos\2d\cclabel.h(413): warning C4244: 'return' : conversion from 'const float' to 'int', possible loss of data
+     1>e:\work\cocos2d\cocos\3d\ccterrain.h(427): warning C4244: 'argument' : conversion from 'const int' to 'float', possible loss of data
+         Generating Code...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"E:\Work\TTYLQP\game\MixProject\proj.win32\Debug.win32\LibHNNet.lib" /NOLOGO Debug.win32\HNConverCode.obj
+         Debug.win32\HNLog.obj
+         Debug.win32\HNThread.obj
+         Debug.win32\HNMemoryPool.obj
+         Debug.win32\HNGamesInfoModule.obj
+         Debug.win32\HNMatchInfoCache.obj
+         Debug.win32\HNRoomInfoModule.obj
+         Debug.win32\HNUserInfoModule.obj
+         Debug.win32\MD5.obj
+         Debug.win32\HNRC4.obj
+         Debug.win32\HNGameTableUsersData.obj
+         Debug.win32\HNGameUIBase.obj
+         Debug.win32\HNHttp.obj
+         Debug.win32\HNUserHeadHttp.obj
+         Debug.win32\HNBaseCommand.obj
+         Debug.win32\HNPlatformConfig.obj
+         Debug.win32\HNGameCreator.obj
+         Debug.win32\HNPlatformLogic.obj
+         Debug.win32\HNPlatformBase.obj
+         Debug.win32\HNRoomLogic.obj
+         Debug.win32\HNSocket.obj
+         Debug.win32\HNSocketLogic.obj
+         Debug.win32\HNSocketMessage.obj
+         Debug.win32\HNSocketProtocolData.obj
+         Debug.win32\HNSocketThread.obj
+     1>HNMatchInfoCache.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+         LibHNNet.vcxproj -> E:\Work\TTYLQP\game\MixProject\proj.win32\Debug.win32\LibHNNet.lib
+     1>Done Building Project "E:\Work\TTYLQP\common\LibHNNet\proj.win32\LibHNNet.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:02:22.22

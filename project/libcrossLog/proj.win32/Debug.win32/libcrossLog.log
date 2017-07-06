@@ -1,0 +1,18 @@
+﻿Build started 2017/7/6 11:48:57.
+     1>Project "E:\pcLib\CrossLog\libcrossLog\proj.win32\libcrossLog.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\ /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug.win32\\" /Fd"Debug.win32\vc120.pdb" /Gd /TP /wd4996 /analyze- /errorReport:prompt ..\log4z.cpp ..\log4z_android_ios_ext.cpp
+         log4z_android_ios_ext.cpp
+         log4z.cpp
+         Generating Code...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"E:\pcLib\CrossLog\Debug.win32\libcrossLog.lib" /NOLOGO Debug.win32\FastLog.obj
+         Debug.win32\log4z.obj
+         Debug.win32\log4z_android_ios_ext.obj
+         Debug.win32\LogFile.obj
+         libcrossLog.vcxproj -> E:\pcLib\CrossLog\Debug.win32\libcrossLog.lib
+     1>Done Building Project "E:\pcLib\CrossLog\libcrossLog\proj.win32\libcrossLog.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:07.93
