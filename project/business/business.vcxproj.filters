@@ -50,5 +50,8 @@
     <ClCompile Include="business.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="NetHead.cpp">
+      <Filter>网络层模块</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
