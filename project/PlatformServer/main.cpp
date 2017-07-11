@@ -29,7 +29,10 @@
 #include "platform.pb.h"
 
 #include "http_server.h"
+
+#include "session.h"
 #include "socket_server.h"
+
 #include "client_main.h"
 
 #include "cmdline.h"
@@ -49,7 +52,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
-	struct bufferevent *bev = (struct bufferevent *)userdata;
+	SocketSession *session = (SocketSession *)userdata;
 	switch (cmd)
 	{
 	case cmd_heart_beat:
@@ -62,7 +65,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		lw_bool ret = msg.SerializeToArray(s, len);
 		if (ret)
 		{
-			__g_serv.sendData(bev, cmd_heart_beat, s, len);
+			session->sendData(cmd_heart_beat, s, len);
 		}
 	} break;
 	case cmd_platform_cs_userinfo:
@@ -80,7 +83,8 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 		char s[256] = { 0 };
 		bool ret = userinfo.SerializePartialToArray(s, sizeof(s));
-		__g_serv.sendData(bev, cmd_platform_sc_userinfo, s, strlen(s));
+		session->sendData(cmd_platform_sc_userinfo, s, strlen(s));
+
 	} break;
 	default:
 		break;
@@ -119,19 +123,7 @@ int main(int argc, char** argv)
 {
 	if (argc < 2) return 0;
 
-#if defined(WIN32) || defined(_WIN32)
-	{
-		WORD wVersionRequested;
-		WSADATA wsaData;
-		wVersionRequested = MAKEWORD(2, 2);
-		int err = WSAStartup(wVersionRequested, &wsaData);
-		if (err != 0)
-		{
-			printf("WSAStartup failed with error: %d\n", err);
-			return 0;
-		}
-	}
-#endif
+	lw_socket_init();
 
 	event_set_fatal_callback(_event_fatal_cb);
 
@@ -217,9 +209,7 @@ int main(int argc, char** argv)
 
 	} while (0);
 
-#if defined(WIN32) || defined(_WIN32)
-	WSACleanup();
-#endif
+	lw_socket_celan();
 
 	return 0;
 }

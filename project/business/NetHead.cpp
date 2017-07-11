@@ -1,5 +1,6 @@
 ﻿#include "NetHead.h"
 
+#include <stdio.h>
 #include <time.h>
 
 #ifdef _WIN32

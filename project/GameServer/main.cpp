@@ -31,14 +31,13 @@
 #include "client_http.h"
 
 #include "socket_client.h"
+#include "session.h"
 
 using namespace LW;
 
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
-
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
-	struct bufferevent *bev = (struct bufferevent *)userdata;
+	SocketSession *session = (SocketSession *)userdata;
 	switch (cmd)
 	{
 	case cmd_platform_sc_userinfo:
@@ -60,7 +59,7 @@ void run_rpc_client(lw_int32 port)
 	{
 		client->setRecvHook(on_socket_recv);
 
-		client->setTimerHook([client](struct bufferevent* bev) -> bool
+		client->setTimerHook([](SocketSession* session) -> bool
 		{
 			platform::sc_msg_request_userinfo msg;
 			msg.set_userid(400001);
@@ -70,13 +69,13 @@ void run_rpc_client(lw_int32 port)
 			bool ret = msg.SerializeToArray(s, len);
 			if (ret)
 			{
-				client->sendData(cmd_platform_cs_userinfo, s, len);
+				session->sendData(cmd_platform_cs_userinfo, s, len);
 			}
 
 			return false;
 		});
 
-		int ret = client->start("127.0.0.1", port);
+		int ret = client->run("127.0.0.1", port);
 	}
 }
 
@@ -165,7 +164,7 @@ int main(int argc, char** argv)
 				lw_sleep(0.1);
 			}
 
-			run_client_http(http_times);
+//			run_client_http(http_times);
 		}
 		else
 		{

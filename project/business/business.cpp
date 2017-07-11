@@ -10,6 +10,10 @@
 #include "CacheQueueT.h"
 #include "NetMessage.h"
 
+#if defined(WIN32) || defined(_WIN32)
+#include <winsock2.h>
+#endif // WIN32
+
 using namespace LW;
 
 typedef std::deque<NetMessage*>		NetMessageQueue;
@@ -22,6 +26,32 @@ CacheQueue			__g_cache_queue;
 std::mutex			__g_cache_mutex;
 
 static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
+
+int lw_socket_init()
+{
+#if defined(WIN32) || defined(_WIN32)
+	{
+		WORD wVersionRequested;
+		WSADATA wsaData;
+		wVersionRequested = MAKEWORD(2, 2);
+		int err = WSAStartup(wVersionRequested, &wsaData);
+		if (err != 0)
+		{
+			printf("WSAStartup failed with error: %d\n", err);
+			return 0;
+		}
+	}
+#endif
+
+	return 0;
+}
+
+void lw_socket_celan()
+{
+#if defined(WIN32) || defined(_WIN32)
+	WSACleanup();
+#endif
+}
 
 lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata)
 {

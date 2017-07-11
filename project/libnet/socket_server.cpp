@@ -22,7 +22,7 @@
 #include <sys/socket.h>
 #endif // _WIN32
 
-#include "net_common.h"
+#include "session.h"
 
 static void listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
 static void read_cb(struct bufferevent *, void *);
@@ -43,23 +43,23 @@ static void listener_cb(struct evconnlistener *listener, evutil_socket_t fd, str
 	server->listenerCB(listener, fd, sa, socklen);
 }
 
-static void read_cb(struct bufferevent *bev, void *user_data)
-{
-	SocketServer * server = (SocketServer*)user_data;
-	server->readCB(bev);
-}
-
-static void write_cb(struct bufferevent *bev, void *user_data)
-{
-	SocketServer * server = (SocketServer*)user_data;
-	server->writeCB(bev);
-}
-
-static void event_cb(struct bufferevent *bev, short event, void *user_data)
-{
-	SocketServer * server = (SocketServer*)user_data;
-	server->eventCB(bev, event);
-}
+// static void read_cb(struct bufferevent *bev, void *user_data)
+// {
+// 	SocketServer * server = (SocketServer*)user_data;
+// 	server->readCB(bev);
+// }
+// 
+// static void write_cb(struct bufferevent *bev, void *user_data)
+// {
+// 	SocketServer * server = (SocketServer*)user_data;
+// 	server->writeCB(bev);
+// }
+// 
+// static void event_cb(struct bufferevent *bev, short event, void *user_data)
+// {
+// 	SocketServer * server = (SocketServer*)user_data;
+// 	server->eventCB(bev, event);
+// }
 
 static void accept_error_cb(struct evconnlistener * listener, void * userdata)
 {
@@ -87,10 +87,10 @@ SocketServer::SocketServer() : _base(NULL), _on_start(NULL), _on_recv_func(NULL)
 
 SocketServer::~SocketServer()
 {
-	VTCLIENT::iterator iter = vtClients.begin();
-	for (iter; iter != vtClients.end(); ++iter)
+	SESSIONS::iterator iter = sessions.begin();
+	for (iter; iter != sessions.end(); ++iter)
 	{
-		delete (*iter);
+		delete iter->second;
 	}
 }
 
@@ -118,13 +118,11 @@ void SocketServer::unInit()
 	event_base_free(_base);
 }
 
-lw_int32 SocketServer::sendData(struct bufferevent *bev, lw_int32 cmd, void* object, lw_int32 objectSize)
+lw_int32 SocketServer::sendData(SocketSession* session, lw_int32 cmd, void* object, lw_int32 objectSize)
 {
 	lw_int32 result = 0;
 	{
-		LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
-		result = bufferevent_write(bev, p->buf, p->size);
-		lw_free_net_message(p);
+		result = session->sendData(cmd, object, objectSize);
 	}
 	return result;
 }
@@ -139,6 +137,9 @@ void SocketServer::timeCB(evutil_socket_t fd, short event, void *arg)
 
 void SocketServer::writeCB(struct bufferevent *bev)
 {
+	evutil_socket_t fd = bufferevent_getfd(bev);
+	SocketSession* psesion = sessions[fd];
+
 	struct evbuffer *output = bufferevent_get_output(bev);
 	if (evbuffer_get_length(output) == 0)
 	{
@@ -149,6 +150,10 @@ void SocketServer::writeCB(struct bufferevent *bev)
 // 从客户端读取数据
 void SocketServer::readCB(struct bufferevent *bev)
 {
+	evutil_socket_t fd = bufferevent_getfd(bev);
+	
+	SocketSession* psesion = sessions[fd];
+
 	struct evbuffer *input;
 	input = bufferevent_get_input(bev);
 	size_t input_len = evbuffer_get_length(input);
@@ -190,14 +195,14 @@ void SocketServer::eventCB(struct bufferevent *bev, short event)
 	}
 	else if (event & BEV_EVENT_ERROR)
 	{
-		VTCLIENT::iterator iter = vtClients.begin();
-		for (iter; iter != vtClients.end(); ++iter)
+		SESSIONS::iterator iter = sessions.begin();
+		for (iter; iter != sessions.end(); ++iter)
 		{
-			if ((*iter)->bev == bev)
+			if (iter->first == fd)
 			{
-				printf("leave ([%d] host=%s, port=%s)\n", fd, (*iter)->_addr.c_str(), (*iter)->_port.c_str());
-				delete (*iter);
-				vtClients.erase(iter);
+				printf("leave ([%d] host=%s, port=%d)\n", fd, iter->second->host.c_str(), iter->second->port);
+				delete iter->second;
+				sessions.erase(iter);
 				break;
 			}
 		}
@@ -212,31 +217,28 @@ void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t f
 {
 	struct event_base *base = evconnlistener_get_base(listener);
 
-	struct bufferevent *bev;
-	bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
-	if (NULL != bev)
+	SocketSession* pSession = new SocketSession(SocketSession::TYPE::Server);
+	int r = pSession->create(_base, fd, EV_READ | EV_WRITE);
+	pSession->setRecvCall(_on_recv_func);
+
+	if (r == 0)
 	{
-		bufferevent_setcb(bev, ::read_cb, ::write_cb, ::event_cb, this);
-		bufferevent_enable(bev, EV_WRITE | EV_READ);
-
-		char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
-
-		getnameinfo(sa, socklen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
+		char hbuf[NI_MAXHOST];
+		lw_uint32 sbuf;
+		getnameinfo(sa, socklen, hbuf, sizeof(hbuf), (char*)&sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
 		
-		printf("join (host = %s, port = %s)\n", hbuf, sbuf);
+		printf("join (host = %s, port = %d)\n", hbuf, sbuf);
 
-		CLIENT* pClient = new CLIENT();
-		pClient->bev = bev;
-		pClient->connected = true;
-		pClient->_addr.assign(hbuf);
-		pClient->_port.assign(sbuf);
-		vtClients.push_back(pClient);
+		evutil_socket_t new_fd = pSession->getSocket();
 
-		evutil_socket_t fd = bufferevent_getfd(bev);
+		sessions[new_fd] = pSession;
 	}
 	else
 	{
+		delete pSession;
+
 		fprintf(stderr, "error constructing bufferevent!");
+
 		event_base_loopbreak(base);
 	}
 }

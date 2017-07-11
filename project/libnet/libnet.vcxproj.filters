@@ -10,11 +10,13 @@
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="socket_server.cpp" />
     <ClCompile Include="socket_client.cpp" />
+    <ClCompile Include="session.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
     <ClInclude Include="socket_server.h" />
     <ClInclude Include="socket_client.h" />
     <ClInclude Include="net_common.h" />
+    <ClInclude Include="session.h" />
   </ItemGroup>
 </Project>

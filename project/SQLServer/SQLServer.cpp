@@ -43,6 +43,7 @@
 
 #include "FastLog.h"
 #include "SQLConnPool.h"
+#include "session.h"
 
 using namespace LW;
 
@@ -146,14 +147,12 @@ static void* thread_one_action(void *arg)
 		printf("select [%d] times: %f \n", times, ((double)t1 - t) / CLOCKS_PER_SEC);
 
 	}
-
-	
 	return NULL;
 }
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
-	struct bufferevent *bev = (struct bufferevent *)userdata;
+	SocketSession *session = (SocketSession *)userdata;
 	switch (cmd)
 	{
 	case cmd_heart_beat:
@@ -166,7 +165,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		lw_bool ret = msg.SerializeToArray(s, len);
 		if (ret)
 		{
-			__g_serv.sendData(bev, cmd_heart_beat, s, len);
+			session->sendData(cmd_heart_beat, s, len);
 		}
 	} break;
 	default:

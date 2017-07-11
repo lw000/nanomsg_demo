@@ -23,6 +23,7 @@
 #include "platform.pb.h"
 
 #include "socket_client.h"
+#include "session.h"
 
 using namespace LW;
 
@@ -32,7 +33,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
-	struct bufferevent *bev = (struct bufferevent *)userdata;
+	SocketSession *session = (SocketSession *)userdata;
 	switch (cmd)
 	{
 	case cmd_heart_beat:
@@ -59,7 +60,7 @@ void run_rpc_client(lw_int32 port)
 	{
 		__g_client.setRecvHook(on_socket_recv);
 
-		__g_client.setTimerHook([](struct bufferevent* bev) -> bool
+		__g_client.setTimerHook([](SocketSession* session) -> bool
 		{
 			platform::csc_msg_heartbeat msg;
 			msg.set_time(time(NULL));
@@ -68,12 +69,12 @@ void run_rpc_client(lw_int32 port)
 			lw_bool ret = msg.SerializeToArray(s, len);
 			if (ret)
 			{
-				__g_client.sendData(cmd_heart_beat, s, len);
+				session->sendData(cmd_heart_beat, s, len);
 			}
 			return true;
 		});
 
-		int ret = __g_client.start("127.0.0.1", port);
+		int ret = __g_client.run("127.0.0.1", port);
 	}
 }
 

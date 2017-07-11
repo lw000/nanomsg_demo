@@ -28,6 +28,7 @@
 #include "Message.h"
 #include "platform.pb.h"
 
+#include "session.h"
 #include "socket_server.h"
 
 #include "cmdline.h"
@@ -49,7 +50,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 {
-	struct bufferevent *bev = (struct bufferevent *)userdata;
+	SocketSession *session = (SocketSession *)userdata;
 	switch (cmd)
 	{
 	case cmd_heart_beat:
@@ -62,7 +63,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		lw_bool ret = msg.SerializeToArray(s, len);
 		if (ret)
 		{
-			__g_serv.sendData(bev, cmd_heart_beat, s, len);
+			session->sendData(cmd_heart_beat, s, len);
 		}
 	} break;
 	default:
@@ -100,19 +101,7 @@ int main(int argc, char** argv)
 {
 	if (argc < 2) return 0;
 
-#if defined(WIN32) || defined(_WIN32)
-	{
-		WORD wVersionRequested;
-		WSADATA wsaData;
-		wVersionRequested = MAKEWORD(2, 2);
-		int err = WSAStartup(wVersionRequested, &wsaData);
-		if (err != 0)
-		{
-			printf("WSAStartup failed with error: %d\n", err);
-			return 0;
-		}
-	}
-#endif
+	lw_socket_init();
 
 	event_set_fatal_callback(_event_fatal_cb);
 
@@ -122,44 +111,6 @@ int main(int argc, char** argv)
 #endif
 
 	event_enable_debug_mode();
-	
-	/*int create_times = 10000000;
-	{
-		clock_t t = clock();
-		for (size_t i = 0; i < create_times; i++)
-		{
-			NetMessage* msg = NetMessage::createNetMessage();
-			if (nullptr != msg)
-			{
-				NetMessage::releaseNetMessage(msg);
-			}
-		}
-		clock_t t1 = clock();
-		printf("NetMessage create[%d] : %f \n", create_times, ((double)t1 - t) / CLOCKS_PER_SEC);
-	}*/
-
-// 	cmdline::parser a;
-// 	a.add<std::string>("config", 'c', "配置文件");
-// 	a.add<int>("lport", 'l', "本地RPC服务器端口", false, __s_lport, cmdline::range(9000, 65535));
-// 	a.add<int>("rport", 'r', "远程RPC服务器端口", false, __s_rport, cmdline::range(9000, 65535));
-// 	a.parse_check(argc, argv);
-// 
-// 	std::string config;
-// 	if (a.exist("config"))
-// 	{
-// 		config = a.get<std::string>("config");
-// 	}
-// 
-// 	if (a.exist("lport"))
-// 	{
-// 		__s_lport = a.get<int>("lport");
-// 	}
-// 
-// 	if (a.exist("rport"))
-// 	{
-// 		__s_rport = a.get<int>("rport");
-// 	}
-
 	do 
 	{
 		std::string config(argv[1]);
@@ -191,9 +142,7 @@ int main(int argc, char** argv)
 
 	} while (0);
 
-#if defined(WIN32) || defined(_WIN32)
-	WSACleanup();
-#endif
+	lw_socket_celan();
 
 	return 0;
 }

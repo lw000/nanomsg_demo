@@ -115,17 +115,17 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class SQLTableConfig : public SQLResult
+class SQLTableConfig : public SQLQueryResult
 {
 public:
 	TableConfig config;
 
 public:
-	SQLTableConfig(SQLMgr* mgr) : SQLResult(mgr)
+	SQLTableConfig(SQLMgr* mgr) : SQLQueryResult(mgr)
 	{
 	}
 
-	SQLTableConfig(sql::Connection* conn) : SQLResult(conn)
+	SQLTableConfig(sql::Connection* conn) : SQLQueryResult(conn)
 	{
 	}
 
@@ -166,17 +166,17 @@ public:
 	}
 };
 
-class SQLTableUser : public SQLResult
+class SQLTableUser : public SQLQueryResult
 {
 public:
 	std::vector<TableUser> vtUser;
 
 public:
-	SQLTableUser(SQLMgr* mgr) : SQLResult(mgr)
+	SQLTableUser(SQLMgr* mgr) : SQLQueryResult(mgr)
 	{
 	}
 
-	SQLTableUser(sql::Connection* conn) : SQLResult(conn)
+	SQLTableUser(sql::Connection* conn) : SQLQueryResult(conn)
 	{
 	}
 
@@ -219,17 +219,17 @@ public:
 
 };
 
-class SQLTableQuotation : public SQLResult
+class SQLTableQuotation : public SQLQueryResult
 {
 public:
 	std::vector<TableQuotation> vtQuotation;
 
 public:
-	SQLTableQuotation(SQLMgr* mgr) : SQLResult(mgr)
+	SQLTableQuotation(SQLMgr* mgr) : SQLQueryResult(mgr)
 	{
 	}
 
-	SQLTableQuotation(sql::Connection* conn) : SQLResult(conn)
+	SQLTableQuotation(sql::Connection* conn) : SQLQueryResult(conn)
 	{
 	}
 

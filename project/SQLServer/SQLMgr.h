@@ -13,7 +13,7 @@
 
 #include <functional>
 
-class SQLResult;
+class SQLQueryResult;
 class SQLMgr;
 
 class SQLMgr
@@ -38,13 +38,24 @@ private:
 	sql::Connection* _con;
 };
 
-class SQLResult
+class SQLQuery
 {
 public:
-	SQLResult(SQLMgr* mgr);
-	SQLResult(sql::Connection* conn);
+	SQLQuery();
+	~SQLQuery();
 
-	~SQLResult();
+private:
+
+};
+
+class SQLQueryResult
+{
+public:
+	SQLQueryResult(SQLMgr* mgr);
+	SQLQueryResult(sql::Connection* conn);
+
+public:
+	~SQLQueryResult();
 
 public:
 	void reset();
@@ -60,9 +71,9 @@ public:
 		std::function<void(const std::string&)> onErrorFunc);
 
 public:
+	sql::PreparedStatement* prepareStatement(const std::string& sql);
 	bool executeQuery(std::function<void(sql::ResultSet*)> onResultFunc,
 		std::function<void(const std::string&)> onErrorFunc);
-	sql::PreparedStatement* prepareStatement(const std::string& sql);
 
 public:
 	virtual void onReset() = 0;

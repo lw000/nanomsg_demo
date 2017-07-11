@@ -90,7 +90,17 @@ void SQLMgr::print()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-SQLResult::SQLResult(SQLMgr* mgr) : _mgr(mgr), _res(nullptr), _stmt(nullptr), _pstmt(nullptr)
+SQLQuery::SQLQuery()
+{
+}
+
+SQLQuery::~SQLQuery()
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+SQLQueryResult::SQLQueryResult(SQLMgr* mgr) : _mgr(mgr), _res(nullptr), _stmt(nullptr), _pstmt(nullptr)
 {
 	this->_onResultFunc = nullptr;
 	this->_onErrorFunc = nullptr;
@@ -101,32 +111,32 @@ SQLResult::SQLResult(SQLMgr* mgr) : _mgr(mgr), _res(nullptr), _stmt(nullptr), _p
 	}
 }
 
-SQLResult::SQLResult(sql::Connection* conn) : _mgr(NULL), _conn(conn), _res(nullptr), _stmt(nullptr), _pstmt(nullptr)
+SQLQueryResult::SQLQueryResult(sql::Connection* conn) : _mgr(NULL), _conn(conn), _res(nullptr), _stmt(nullptr), _pstmt(nullptr)
 {
 
 }
 
-SQLResult::~SQLResult()
+SQLQueryResult::~SQLQueryResult()
 {
 	
 }
 
-sql::ResultSet* SQLResult::getResultSet() const
+sql::ResultSet* SQLQueryResult::getResultSet() const
 {
 	return _res;
 }
 
-sql::Statement* SQLResult::getStatement() const
+sql::Statement* SQLQueryResult::getStatement() const
 {
 	return _stmt;
 }
 
-sql::PreparedStatement* SQLResult::getPreparedStatement() const
+sql::PreparedStatement* SQLQueryResult::getPreparedStatement() const
 {
 	return _pstmt;
 }
 
-bool SQLResult::createStatement()
+bool SQLQueryResult::createStatement()
 {
 	try
 	{
@@ -148,7 +158,7 @@ bool SQLResult::createStatement()
 	return (_stmt != nullptr);
 }
 
-bool SQLResult::executeQuery(const std::string& sqlString, std::function<void(sql::ResultSet*)> onResultFunc,
+bool SQLQueryResult::executeQuery(const std::string& sqlString, std::function<void(sql::ResultSet*)> onResultFunc,
 	std::function<void(const std::string&)> onErrorFunc)
 {
 	try
@@ -186,7 +196,7 @@ bool SQLResult::executeQuery(const std::string& sqlString, std::function<void(sq
 }
 
 
-sql::PreparedStatement* SQLResult::prepareStatement(const std::string& sql)
+sql::PreparedStatement* SQLQueryResult::prepareStatement(const std::string& sql)
 {
 	try
 	{
@@ -210,7 +220,7 @@ sql::PreparedStatement* SQLResult::prepareStatement(const std::string& sql)
 	return (_pstmt);
 }
 
-bool SQLResult::executeQuery(std::function<void(sql::ResultSet*)> onResultFunc,
+bool SQLQueryResult::executeQuery(std::function<void(sql::ResultSet*)> onResultFunc,
 	std::function<void(const std::string&)> onErrorFunc)
 {
 	try
@@ -244,7 +254,7 @@ bool SQLResult::executeQuery(std::function<void(sql::ResultSet*)> onResultFunc,
 	return (_res != nullptr);
 }
 
-void SQLResult::reset()
+void SQLQueryResult::reset()
 {
  	this->_onResultFunc = nullptr;
  	this->_onErrorFunc = nullptr;
