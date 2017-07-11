@@ -1,9 +1,0 @@
-﻿Build started 2017/7/6 15:40:09.
-     1>Project "E:\lw000\cpp\nanomsg_demo\project\libcrossLog\proj.win32\libcrossLog.vcxproj" on node 5 (Build target(s)).
-     1>Lib:
-         libcrossLog.vcxproj -> E:\lw000\cpp\nanomsg_demo\project\Release\libcrossLog.lib
-     1>Done Building Project "E:\lw000\cpp\nanomsg_demo\project\libcrossLog\proj.win32\libcrossLog.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:00.04

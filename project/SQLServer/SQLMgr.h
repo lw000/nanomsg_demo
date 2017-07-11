@@ -19,24 +19,6 @@ class SQLMgr;
 class SQLMgr
 {
 public:
-	class DriverThread
-	{
-	public:
-		DriverThread(SQLMgr* sqlMgr) : _sqlMgr(sqlMgr)
-		{
-			_sqlMgr->_driver->threadInit();
-		}
-
-		~DriverThread() 
-		{
-			_sqlMgr->_driver->threadEnd();
-		} 
-
-	private:
-		SQLMgr* _sqlMgr;
-	};
-
-public:
 	SQLMgr();
 	~SQLMgr();
 
@@ -46,7 +28,6 @@ public:
 	void useSchema(const std::string& schema);
 
 public:
-	sql::Driver* getDriver();
 	sql::Connection* getConnection();
 
 public:
@@ -61,6 +42,8 @@ class SQLResult
 {
 public:
 	SQLResult(SQLMgr* mgr);
+	SQLResult(sql::Connection* conn);
+
 	~SQLResult();
 
 public:
@@ -91,6 +74,7 @@ private:
 	sql::ResultSet* _res;
 	sql::Statement * _stmt;
 	sql::PreparedStatement *_pstmt;
+	sql::Connection* _conn;
 
 	std::function<void(sql::ResultSet*)> _onResultFunc;
 	std::function<void(const std::string&)> _onErrorFunc;

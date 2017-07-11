@@ -72,11 +72,6 @@ void SQLMgr::useSchema(const std::string& schema)
 	_con->setSchema(schema);
 }
 
-sql::Driver* SQLMgr::getDriver()
-{
-	return _driver;
-}
-
 sql::Connection* SQLMgr::getConnection()
 {
 	return _con;
@@ -99,6 +94,16 @@ SQLResult::SQLResult(SQLMgr* mgr) : _mgr(mgr), _res(nullptr), _stmt(nullptr), _p
 {
 	this->_onResultFunc = nullptr;
 	this->_onErrorFunc = nullptr;
+
+	if (_conn == NULL)
+	{
+		_conn = _mgr->getConnection();
+	}
+}
+
+SQLResult::SQLResult(sql::Connection* conn) : _mgr(NULL), _conn(conn), _res(nullptr), _stmt(nullptr), _pstmt(nullptr)
+{
+
 }
 
 SQLResult::~SQLResult()
@@ -127,7 +132,11 @@ bool SQLResult::createStatement()
 	{
 		if (_stmt == nullptr)
 		{
-			_stmt = _mgr->getConnection()->createStatement();
+			if (_conn == NULL)
+			{
+				_conn = _mgr->getConnection();
+			}
+			_stmt = _conn->createStatement();
 		}
 	}
 	catch (sql::SQLException& e)
@@ -181,13 +190,16 @@ sql::PreparedStatement* SQLResult::prepareStatement(const std::string& sql)
 {
 	try
 	{
-
 		if (_pstmt != nullptr)
 		{
 			delete _pstmt;
 			_pstmt = nullptr;
 		}
-		_pstmt = _mgr->getConnection()->prepareStatement(sql);
+		if (_conn == NULL)
+		{
+			_conn = _mgr->getConnection();
+		}
+		_pstmt = _conn->prepareStatement(sql);
 	}
 	catch (sql::SQLException& e)
 	{

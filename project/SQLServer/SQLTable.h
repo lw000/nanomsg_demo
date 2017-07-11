@@ -125,6 +125,10 @@ public:
 	{
 	}
 
+	SQLTableConfig(sql::Connection* conn) : SQLResult(conn)
+	{
+	}
+
 	~SQLTableConfig()
 	{
 	}
@@ -160,9 +164,7 @@ public:
 	{
 
 	}
-
 };
-
 
 class SQLTableUser : public SQLResult
 {
@@ -171,6 +173,10 @@ public:
 
 public:
 	SQLTableUser(SQLMgr* mgr) : SQLResult(mgr)
+	{
+	}
+
+	SQLTableUser(sql::Connection* conn) : SQLResult(conn)
 	{
 	}
 
@@ -220,6 +226,10 @@ public:
 
 public:
 	SQLTableQuotation(SQLMgr* mgr) : SQLResult(mgr)
+	{
+	}
+
+	SQLTableQuotation(sql::Connection* conn) : SQLResult(conn)
 	{
 	}
 

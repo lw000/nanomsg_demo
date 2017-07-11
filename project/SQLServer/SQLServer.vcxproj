@@ -50,7 +50,6 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\libnet;..\libutils;..\json;..\libproperties-1.0\include;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protocol;..\business;..\business\common;..\protobuf\include;..\mysql-connector-c++-noinstall-1.1.9-win32\include;..\..\..\..\..\pcLib\boost_1_62_0;..\prebuilt-dll-2-9-1-release\include;..\libcrosslog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -66,11 +65,11 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\libnet;..\libutils;..\json;..\libproperties-1.0\include;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protocol;..\business;..\business\common;..\protobuf\include;..\mysql-connector-c++-noinstall-1.1.9-win32\include;..\..\..\..\..\pcLib\boost_1_62_0;..\prebuilt-dll-2-9-1-release\include;..\libcrosslog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -87,6 +86,7 @@
   <ItemGroup>
     <ClCompile Include="..\protocol\game.pb.cc" />
     <ClCompile Include="..\protocol\platform.pb.cc" />
+    <ClCompile Include="SQLConnPool.cpp" />
     <ClCompile Include="SQLMgr.cpp" />
     <ClCompile Include="SQLServer.cpp" />
   </ItemGroup>
@@ -95,6 +95,7 @@
     <ClInclude Include="..\protocol\game.pb.h" />
     <ClInclude Include="..\protocol\Message.h" />
     <ClInclude Include="..\protocol\platform.pb.h" />
+    <ClInclude Include="SQLConnPool.h" />
     <ClInclude Include="SQLMgr.h" />
     <ClInclude Include="SQLTable.h" />
   </ItemGroup>

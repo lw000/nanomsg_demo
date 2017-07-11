@@ -66,8 +66,8 @@ std::string UTF8StringToMultiByte(const std::string& strUtf8);
 #endif
 
 #if defined(_WIN32)
-#define U2G(v)	utf8_to_gbk(v);
-#define G2U(v)	gbk_to_utf8(v);
+#define U2G(v)	utf8_to_gbk(v)
+#define G2U(v)	gbk_to_utf8(v)
 #else
 #define U2G(v)
 #define G2U(v)
