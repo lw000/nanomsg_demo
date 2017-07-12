@@ -20,16 +20,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="http_server.cpp" />
-    <ClCompile Include="session.cpp" />
+    <ClCompile Include="socket_session.cpp" />
     <ClCompile Include="socket_client.cpp" />
     <ClCompile Include="socket_server.cpp" />
+    <ClCompile Include="socket_timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
     <ClInclude Include="net_common.h" />
-    <ClInclude Include="session.h" />
+    <ClInclude Include="socket_session.h" />
     <ClInclude Include="socket_client.h" />
     <ClInclude Include="socket_server.h" />
+    <ClInclude Include="socket_timer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{006686E3-6160-4984-827E-B9200E5B3338}</ProjectGuid>

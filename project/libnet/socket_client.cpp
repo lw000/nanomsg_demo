@@ -1,9 +1,5 @@
 ﻿#include "socket_client.h"
 
-// #if defined(WIN32) || defined(_WIN32)
-// #include <winsock2.h>
-// #endif // WIN32
-
 #include <stdio.h>
 #include <iostream>
 #include <signal.h>
@@ -17,43 +13,65 @@
 #include <event2/util.h>
 
 #include "business.h"
-#include "session.h"
+#include "socket_session.h"
+#include "socket_timer.h"
 
 using namespace LW;
-
-#define BUF_SIZE	1024
-
-static void time_cb(evutil_socket_t fd, short event, void *arg);
-
-static void time_cb(evutil_socket_t fd, short event, void *arg)
-{
-	SocketClient *client = (SocketClient*)arg;
-	client->time_cb(fd, event);
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 SocketClient::SocketClient()
 {
 	_session = new SocketSession(SocketSession::TYPE::Client);
+	_timer = new SocketTimer;
 }
 
 SocketClient::~SocketClient()
 {
 	delete _session;
+	_session = NULL;
+
+	delete _timer;
+	_timer = NULL;
 }
 
-bool SocketClient::init()
+bool SocketClient::create()
 {
+	if (this->_base == NULL)
+	{
+		this->_base = event_base_new();
+
+		_timer->create(this->_base);
+	}
+
 	return true;
+}
+
+void SocketClient::destory()
+{
+	if (_timer != NULL)
+	{
+		_timer->destory();
+	}
+
+	if (_session != NULL)
+	{
+		_session->destory();
+	}
+
+	if (this->_base != NULL)
+	{
+		event_base_free(this->_base);
+		this->_base = NULL;
+	}
 }
 
 int SocketClient::run(const char* addr, int port)
 {
 	if (addr == NULL) return -1;
 
-	this->_session->host = addr;
-	this->_session->port = port;
+	this->_session->setHost(addr);
+	this->_session->setPort(port);
 
 	std::thread t(std::bind(&SocketClient::__run, this));
 	t.detach();
@@ -61,9 +79,9 @@ int SocketClient::run(const char* addr, int port)
 	return 0;
 }
 
-bool SocketClient::isConnected()
-{ 
-	return this->_session->connected;
+SocketSession* SocketClient::getSession()
+{
+	return this->_session;
 }
 
 int SocketClient::setRecvHook(LW_PARSE_DATA_CALLFUNC func)
@@ -73,58 +91,35 @@ int SocketClient::setRecvHook(LW_PARSE_DATA_CALLFUNC func)
 	return 0;
 }
 
-int SocketClient::setTimerHook(std::function<bool(SocketSession* session)> func)
+int SocketClient::startTimer(int id, int t, CLIENT_TIMERCALL func)
 {
- 	if (func == NULL) return -1;
-
-	this->_on_timer_func = func;
+	_timer->startTimer(id, t, [this, func](int id) -> bool
+	{
+		return func(id, this->_session);
+	});
 
 	return 0;
 }
 
-void SocketClient::time_cb(evutil_socket_t fd, short ev)
+void SocketClient::killTimer(int id)
 {
-	if (_session->connected)
-	{
-		// 设置定时器回调函数 
-		struct timeval tv;
-		evutil_timerclear(&tv);
-		tv.tv_sec = 1;
-		tv.tv_usec = 0;
-		event_add(&this->_timer, &tv);
-
-		bool ret = this->_on_timer_func(this->_session);
-	}
-}
-
-void SocketClient::unInit()
-{
-
+	_timer->killTimer(id);
 }
 
 void SocketClient::__run()
 {
-	this->_base = event_base_new();
+	this->create();
 	if (NULL != this->_base)
 	{
-		int r = this->_session->create(_base, -1, EV_READ | EV_PERSIST, this->_session->host, this->_session->port);
-
-		// 设置定时器
-		event_assign(&this->_timer, this->_base, -1, 0, ::time_cb, this);
-		//event_assign(&this->_timer, this->_base, -1, EV_PERSIST, ::time_cb, this);
-		struct timeval tv;
-		evutil_timerclear(&tv);
-		tv.tv_sec = 1;
-		tv.tv_usec = 0;
-		event_add(&this->_timer, &tv);
+		int r = this->_session->create(_base, -1, EV_READ | EV_PERSIST);
 
 		event_base_dispatch(this->_base);
 
-		event_base_free(this->_base);
+		this->destory();
 	}
 	else
 	{
-		bufferevent_free(this->_session->bev);
+		this->_session->destory();
 	}
 	return;
 }

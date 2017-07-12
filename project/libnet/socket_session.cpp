@@ -1,4 +1,4 @@
-#include "session.h"
+#include "socket_session.h"
 
 #if defined(WIN32) || defined(_WIN32)
 #include <winsock2.h>
@@ -14,24 +14,29 @@
 static void read_cb(struct bufferevent* bev, void* arg)
 {
 	SocketSession *session = (SocketSession*)arg;
-	session->read_cb();
+	session->read_ev();
 }
 
 static void write_cb(struct bufferevent *bev, void *arg)
 {
 	SocketSession * session = (SocketSession*)arg;
-	session->write_cb();
+	session->write_ev();
 }
 
 static void event_cb(struct bufferevent *bev, short event, void *arg)
 {
 	SocketSession *session = (SocketSession*)arg;
-	session->event_cb(event);
+	session->event_ev(event);
 }
 
-SocketSession::SocketSession(TYPE c) : bev(NULL), _on_recv_func(NULL), connected(false), port(-1)
+SocketSession::SocketSession(TYPE c) : _bev(NULL), _on_recv_func(NULL), _connected(false), _port(-1)
 {
 	this->c = c;
+}
+
+SocketSession::~SocketSession()
+{
+	this->destory();
 }
 
 int SocketSession::setRecvCall(LW_PARSE_DATA_CALLFUNC func)
@@ -45,10 +50,8 @@ int SocketSession::setRecvCall(LW_PARSE_DATA_CALLFUNC func)
 	return 0;
 }
 
-int SocketSession::create(struct event_base* base, evutil_socket_t fd, short event, std::string addr, int port)
+int SocketSession::create(struct event_base* base, evutil_socket_t fd, short event)
 {
-	this->host = host;
-	this->port = port;	
 	switch (c)
 	{
 	case SocketSession::Client:
@@ -56,28 +59,28 @@ int SocketSession::create(struct event_base* base, evutil_socket_t fd, short eve
 		struct sockaddr_in saddr;
 		memset(&saddr, 0, sizeof(saddr));
 		saddr.sin_family = AF_INET;
-		saddr.sin_addr.s_addr = inet_addr(this->host.c_str());
-		saddr.sin_port = htons(this->port);
+		saddr.sin_addr.s_addr = inet_addr(this->_host.c_str());
+		saddr.sin_port = htons(this->_port);
 
-		this->bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
-		bufferevent_setcb(this->bev, ::read_cb, NULL, ::event_cb, this);
-		int con = bufferevent_socket_connect(this->bev, (struct sockaddr *)&saddr, sizeof(saddr));
+		this->_bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
+		bufferevent_setcb(this->_bev, ::read_cb, NULL, ::event_cb, this);
+		int con = bufferevent_socket_connect(this->_bev, (struct sockaddr *)&saddr, sizeof(saddr));
 		if (con >= 0)
 		{
-			bufferevent_enable(this->bev, event);
-			connected = true;
+			bufferevent_enable(this->_bev, event);
+			_connected = true;
 		}
 		else
 		{
-			connected = false;
+			_connected = false;
 		}
 	} break;
 	case SocketSession::Server:
 	{
-		this->bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
-		bufferevent_setcb(this->bev, ::read_cb, ::write_cb, ::event_cb, this);
-		bufferevent_enable(this->bev, EV_READ | EV_WRITE);
-		connected = true;
+		this->_bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
+		bufferevent_setcb(this->_bev, ::read_cb, ::write_cb, ::event_cb, this);
+		bufferevent_enable(this->_bev, EV_READ | EV_WRITE);
+		_connected = true;
 	} break;
 	default:
 		break;
@@ -86,16 +89,46 @@ int SocketSession::create(struct event_base* base, evutil_socket_t fd, short eve
 	return 0;
 }
 
+void SocketSession::destory()
+{
+	if (this->_bev != NULL)
+	{
+		bufferevent_free(this->_bev);
+	}
+	this->_bev = NULL;
+}
+
+void SocketSession::setHost(std::string host)
+{
+	this->_host = host;
+}
+
+std::string SocketSession::getHost()
+{
+	return this->_host;
+}
+
+
+void SocketSession::setPort(int port)
+{
+	this->_port = port;
+}
+
+int SocketSession::getPort()
+{
+	return _port;
+}
+
 evutil_socket_t SocketSession::getSocket() 
 { 
-	return bufferevent_getfd(this->bev);
+	return bufferevent_getfd(this->_bev);
 }
 
 lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)
 {
 	int c = lw_send_socket_data(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
 	{
-		int c = bufferevent_write(bev, p->buf, p->size);
+		int c = bufferevent_write(_bev, p->buf, p->size);
 
 		return c;
 	});
@@ -103,20 +136,20 @@ lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize
 	return c;
 }
 
-void SocketSession::write_cb()
+void SocketSession::write_ev()
 {
 
 }
 
-void SocketSession::read_cb()
+void SocketSession::read_ev()
 {
-	struct evbuffer *input = bufferevent_get_input(bev);
+	struct evbuffer *input = bufferevent_get_input(_bev);
 	size_t input_len = evbuffer_get_length(input);
 
 	{
 		char *read_buf = (char*)malloc(input_len);
 
-		size_t read_len = bufferevent_read(bev, read_buf, input_len);
+		size_t read_len = bufferevent_read(_bev, read_buf, input_len);
 
 		if (lw_parse_socket_data(read_buf, read_len, this->_on_recv_func, this) == 0)
 		{
@@ -127,11 +160,11 @@ void SocketSession::read_cb()
 	}
 }
 
-void SocketSession::event_cb(short ev)
+void SocketSession::event_ev(short ev)
 {
-	connected = false;
+	_connected = false;
 
-	evutil_socket_t fd = bufferevent_getfd(bev);
+	evutil_socket_t fd = bufferevent_getfd(_bev);
 
 	if (ev & BEV_EVENT_READING)
 	{
@@ -155,13 +188,13 @@ void SocketSession::event_cb(short ev)
 	}
 	else if (ev & BEV_EVENT_CONNECTED)
 	{
-		connected = true;
+		_connected = true;
 		return;
 	}
 
 	/* None of the other events can happen here, since we haven't enabled
 	* timeouts */
-	bufferevent_free(bev);
+	bufferevent_free(_bev);
 
 	//if (ev & BEV_EVENT_EOF)
 	//{

@@ -6,8 +6,13 @@
 #include "business.h"
 
 #include <string>
+#include <unordered_map>
 
-struct SocketSession;
+class SocketSession;
+class SocketClient;
+class SocketTimer;
+
+typedef std::function<bool(int id, SocketSession* session)> CLIENT_TIMERCALL;
 
 class SocketClient final
 {
@@ -16,31 +21,28 @@ public:
 	~SocketClient();
 
 public:
-	bool init();
-	void unInit();
+	bool create();
+	void destory();
 
 public:
 	int run(const char* addr, int port);
-	bool isConnected();
+	SocketSession* getSession();
 
 public:
 	int setRecvHook(LW_PARSE_DATA_CALLFUNC func);
-	int setTimerHook(std::function<bool(SocketSession* session)> func);
-
+	
 public:
-	void time_cb(evutil_socket_t fd, short ev);
+	int startTimer(int id, int t, CLIENT_TIMERCALL func);
+	void killTimer(int id);
 
 private:
 	void __run();
 
-public:
-	SocketSession* _session;
-
 private:
 	struct event_base* _base;
-	struct event _timer;
-
-	std::function<bool(SocketSession* session)> _on_timer_func;
+	SocketSession* _session;
+	SocketTimer* _timer;
+	CLIENT_TIMERCALL _on_timer_func;
 };
 
 #endif // !__SocketClient_H__

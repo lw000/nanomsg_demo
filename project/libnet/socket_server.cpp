@@ -22,7 +22,7 @@
 #include <sys/socket.h>
 #endif // _WIN32
 
-#include "session.h"
+#include "socket_session.h"
 
 static void listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
 static void read_cb(struct bufferevent *, void *);
@@ -200,9 +200,9 @@ void SocketServer::eventCB(struct bufferevent *bev, short event)
 		{
 			if (iter->first == fd)
 			{
-				printf("leave ([%d] host=%s, port=%d)\n", fd, iter->second->host.c_str(), iter->second->port);
+				printf("leave ([%d] host=%s, port=%d)\n", fd, iter->second->getHost().c_str(), iter->second->getPort());
 				delete iter->second;
-				sessions.erase(iter);
+				iter = sessions.erase(iter);
 				break;
 			}
 		}
