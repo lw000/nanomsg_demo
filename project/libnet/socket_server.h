@@ -9,7 +9,7 @@
 #include <list>
 #include <unordered_map>
 
-struct SocketSession;
+class SocketSession;
 
 typedef void(*LW_SERVER_START_COMPLETE)(lw_int32 what);
 

@@ -29,7 +29,7 @@ public:
 	SocketSession* getSession();
 
 public:
-	int setRecvHook(LW_PARSE_DATA_CALLFUNC func);
+	int setRecvHook(LW_PARSE_DATA_CALLFUNC func, void* userdata);
 	
 public:
 	int startTimer(int id, int t, CLIENT_TIMERCALL func);

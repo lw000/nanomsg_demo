@@ -19,7 +19,6 @@
 #include "business.h"
 
 #include "command.h"
-#include "Message.h"
 #include "platform.pb.h"
 
 #include "socket_client.h"
@@ -46,7 +45,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 		platform::sc_msg_userinfo msg;
 		msg.ParseFromArray(buf, bufsize);
-		printf("userid: %d age:%d sex:%d name:%s address:%s\n", msg.userid(),
+		printf("userid: %d age:%d sex:%d name:%s address:%s\n", msg.uid(),
 			msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
 	} break;
 	default:
@@ -58,7 +57,7 @@ void run_rpc_client(lw_int32 port)
 {
 	if (__g_client.create())
 	{
-		__g_client.setRecvHook(on_socket_recv);
+		__g_client.setRecvHook(on_socket_recv, NULL);
 
 		for (int i = 0; i < 1; i++)
 		{

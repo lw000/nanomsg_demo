@@ -31,6 +31,7 @@ static void event_cb(struct bufferevent *bev, short event, void *arg)
 
 SocketSession::SocketSession(TYPE c) : _bev(NULL), _on_recv_func(NULL), _connected(false), _port(-1)
 {
+	userdata = NULL;
 	this->c = c;
 }
 
@@ -122,6 +123,16 @@ int SocketSession::getPort()
 evutil_socket_t SocketSession::getSocket() 
 { 
 	return bufferevent_getfd(this->_bev);
+}
+
+void SocketSession::setUserData(void* userdata)
+{
+	this->userdata = userdata;
+}
+
+void* SocketSession::getUserData()
+{
+	return userdata;
 }
 
 lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)

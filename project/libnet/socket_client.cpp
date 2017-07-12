@@ -84,10 +84,10 @@ SocketSession* SocketClient::getSession()
 	return this->_session;
 }
 
-int SocketClient::setRecvHook(LW_PARSE_DATA_CALLFUNC func)
+int SocketClient::setRecvHook(LW_PARSE_DATA_CALLFUNC func, void* userdata)
 {
 	this->_session->setRecvCall(func);
-
+	this->_session->setUserData(userdata);
 	return 0;
 }
 

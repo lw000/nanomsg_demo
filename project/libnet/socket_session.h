@@ -24,6 +24,8 @@ private:
 	bool _connected;
 	std::string _host;
 	int _port;
+	
+	void *userdata;
 
 private:
 	unsigned int uid;
@@ -38,6 +40,8 @@ public:
 
 public:
 	evutil_socket_t getSocket();
+	void setUserData(void* userdata);
+	void* getUserData();
 
 public:
 	int create(struct event_base* base, evutil_socket_t fd, short event);

@@ -224,9 +224,6 @@ int pub_server(const char *url)
 		} break;
 		case 2:
 		{
-			platform::sc_msg_servertime sertime;
-			time_t secs = time(NULL);
-			sertime.set_time((lw_int32)secs);
 		} break;
 		default:
 			break;

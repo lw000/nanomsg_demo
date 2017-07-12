@@ -21,7 +21,6 @@
 
 
 #include "command.h"
-#include "Message.h"
 #include "platform.pb.h"
 
 #include "cmdline.h"
@@ -30,55 +29,14 @@
 #include "libproperties.h"
 #include "client_http.h"
 
-#include "socket_client.h"
-#include "socket_session.h"
+#include "GameDesk.h"
 
 using namespace LW;
 
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
-{
-	SocketSession *session = (SocketSession *)userdata;
-	switch (cmd)
-	{
-	case cmd_platform_sc_userinfo:
-	{
-		platform::sc_msg_userinfo userinfo;
-		userinfo.ParseFromArray(buf, bufsize);
-		printf("userid: %d age:%d sex:%d name:%s address:%s\n", userinfo.userid(),
-			userinfo.age(), userinfo.sex(), userinfo.name().c_str(), userinfo.address().c_str());
-	}break;
-	default:
-		break;
-	}
-}
-
 void run_rpc_client(lw_int32 port)
 {
-	SocketClient* client = new SocketClient;
-	if (client->create())
-	{
-		client->setRecvHook(on_socket_recv);
-
-		for (int i = 0; i < 1; i++)
-		{
-			client->startTimer(100+i, 1+i, [i](int id, SocketSession* session) -> bool
-			{
-				platform::sc_msg_request_userinfo msg;
-				msg.set_userid(400000 + i);
-
-				int len = (int)msg.ByteSizeLong();
-				char s[256] = { 0 };
-				bool ret = msg.SerializeToArray(s, len);
-				if (ret)
-				{
-					session->sendData(cmd_platform_cs_userinfo, s, len);
-				}
-
-				return true;
-			});
-		}
-		int ret = client->run("127.0.0.1", port);
-	}
+	GameDesk * logic = new GameDesk(10000, 1, NULL);
+	logic->start("127.0.0.1", port);
 }
 
 // 当向进程发出SIGTERM/SIGHUP/SIGINT/SIGQUIT的时候，终止event的事件侦听循环

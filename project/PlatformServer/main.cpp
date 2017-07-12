@@ -25,7 +25,6 @@
 #include <NetMessage.h>
 
 #include "command.h"
-#include "Message.h"
 #include "platform.pb.h"
 
 #include "http_server.h"
@@ -75,7 +74,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		//printf(" userid: %d\n", client_userinfo.userid());
 
 		platform::sc_msg_userinfo userinfo;
-		userinfo.set_userid(client_userinfo.userid());
+		userinfo.set_uid(client_userinfo.uid());
 		userinfo.set_age(30);
 		userinfo.set_sex(1);
 		userinfo.set_name("liwei");
