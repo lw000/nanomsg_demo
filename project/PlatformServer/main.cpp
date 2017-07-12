@@ -30,7 +30,7 @@
 
 #include "http_server.h"
 
-#include "session.h"
+#include "socket_session.h"
 #include "socket_server.h"
 
 #include "client_main.h"

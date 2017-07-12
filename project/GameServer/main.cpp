@@ -31,7 +31,7 @@
 #include "client_http.h"
 
 #include "socket_client.h"
-#include "session.h"
+#include "socket_session.h"
 
 using namespace LW;
 
@@ -55,26 +55,28 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 void run_rpc_client(lw_int32 port)
 {
 	SocketClient* client = new SocketClient;
-	if (client->init())
+	if (client->create())
 	{
 		client->setRecvHook(on_socket_recv);
 
-		client->setTimerHook([](SocketSession* session) -> bool
+		for (int i = 0; i < 1; i++)
 		{
-			platform::sc_msg_request_userinfo msg;
-			msg.set_userid(400001);
-
-			int len = (int)msg.ByteSizeLong();
-			char s[256] = { 0 };
-			bool ret = msg.SerializeToArray(s, len);
-			if (ret)
+			client->startTimer(100+i, 1+i, [i](int id, SocketSession* session) -> bool
 			{
-				session->sendData(cmd_platform_cs_userinfo, s, len);
-			}
+				platform::sc_msg_request_userinfo msg;
+				msg.set_userid(400000 + i);
 
-			return false;
-		});
+				int len = (int)msg.ByteSizeLong();
+				char s[256] = { 0 };
+				bool ret = msg.SerializeToArray(s, len);
+				if (ret)
+				{
+					session->sendData(cmd_platform_cs_userinfo, s, len);
+				}
 
+				return true;
+			});
+		}
 		int ret = client->run("127.0.0.1", port);
 	}
 }
@@ -100,15 +102,7 @@ int main(int argc, char** argv)
 	signal(SIGBREAK, signal_handler);
 	signal(SIGTERM, signal_handler);
 
-#if defined(WIN32) || defined(_WIN32)
-	WSADATA WSAData;
-	if (int ret = WSAStartup(MAKEWORD(2, 2), &WSAData))
-	{
-		std::cout << "Can not initilize winsock.dll" << std::endl;
-		std::cout << "Error Code:" << WSAGetLastError() << std::endl;
-		return 1;
-	}
-#endif
+	lw_socket_init();
 
 	lw_int32 port = 0;
 	lw_int32 rpc_times = 1;
@@ -173,13 +167,11 @@ int main(int argc, char** argv)
 
 		while (1)
 		{
-			;
+			lw_sleep(1);
 		}
 	} while (0);
 
-#if defined(WIN32) || defined(_WIN32)
-	WSACleanup();
-#endif
+	lw_socket_celan();
 
 	return 0;
 }

@@ -43,7 +43,7 @@
 
 #include "FastLog.h"
 #include "SQLConnPool.h"
-#include "session.h"
+#include "socket_session.h"
 
 using namespace LW;
 

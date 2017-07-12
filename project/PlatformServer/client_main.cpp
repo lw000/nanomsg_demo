@@ -23,7 +23,7 @@
 #include "platform.pb.h"
 
 #include "socket_client.h"
-#include "session.h"
+#include "socket_session.h"
 
 using namespace LW;
 
@@ -56,24 +56,27 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 void run_rpc_client(lw_int32 port)
 {
-	if (__g_client.init())
+	if (__g_client.create())
 	{
 		__g_client.setRecvHook(on_socket_recv);
 
-		__g_client.setTimerHook([](SocketSession* session) -> bool
+		for (int i = 0; i < 1; i++)
 		{
-			platform::csc_msg_heartbeat msg;
-			msg.set_time(time(NULL));
-			lw_int32 len = (lw_int32)msg.ByteSizeLong();
-			lw_char8 s[256] = { 0 };
-			lw_bool ret = msg.SerializeToArray(s, len);
-			if (ret)
+			__g_client.startTimer(100+i, 1+i, [](int id, SocketSession* session) -> bool
 			{
-				session->sendData(cmd_heart_beat, s, len);
-			}
-			return true;
-		});
-
+				platform::csc_msg_heartbeat msg;
+				msg.set_time(time(NULL));
+				lw_int32 len = (lw_int32)msg.ByteSizeLong();
+				lw_char8 s[256] = { 0 };
+				lw_bool ret = msg.SerializeToArray(s, len);
+				if (ret)
+				{
+					session->sendData(cmd_heart_beat, s, len);
+				}
+				return true;
+			});
+		}
+	
 		int ret = __g_client.run("127.0.0.1", port);
 	}
 }
