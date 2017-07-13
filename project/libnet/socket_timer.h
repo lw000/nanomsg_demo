@@ -27,7 +27,7 @@ public:
 public:
 	int startTimer(int id, int t, std::function<bool(int id)> func);
 	void killTimer(int id);
-	void time_cb(void* timer, short ev);
+	void timer_cb(void* timer, short ev);
 
 private:
 	struct event_base* _base;

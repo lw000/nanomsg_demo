@@ -37,41 +37,43 @@ void protobuf_InitDefaults_game_2eproto();
 void protobuf_AssignDesc_game_2eproto();
 void protobuf_ShutdownFile_game_2eproto();
 
-class game_end_msg;
-class game_start_msg;
-class sit_down_msg;
-class sit_up_msg;
+class game_msg_end_reponse;
+class game_msg_sitdown_reponse;
+class game_msg_sitdown_request;
+class game_msg_situp_reponse;
+class game_msg_situp_request;
+class game_msg_start_reponse;
 
 // ===================================================================
 
-class game_start_msg : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.game_start_msg) */ {
+class game_msg_start_reponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.game_msg_start_reponse) */ {
  public:
-  game_start_msg();
-  virtual ~game_start_msg();
+  game_msg_start_reponse();
+  virtual ~game_msg_start_reponse();
 
-  game_start_msg(const game_start_msg& from);
+  game_msg_start_reponse(const game_msg_start_reponse& from);
 
-  inline game_start_msg& operator=(const game_start_msg& from) {
+  inline game_msg_start_reponse& operator=(const game_msg_start_reponse& from) {
     CopyFrom(from);
     return *this;
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const game_start_msg& default_instance();
+  static const game_msg_start_reponse& default_instance();
 
-  static const game_start_msg* internal_default_instance();
+  static const game_msg_start_reponse* internal_default_instance();
 
-  void Swap(game_start_msg* other);
+  void Swap(game_msg_start_reponse* other);
 
   // implements Message ----------------------------------------------
 
-  inline game_start_msg* New() const { return New(NULL); }
+  inline game_msg_start_reponse* New() const { return New(NULL); }
 
-  game_start_msg* New(::google::protobuf::Arena* arena) const;
+  game_msg_start_reponse* New(::google::protobuf::Arena* arena) const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const game_start_msg& from);
-  void MergeFrom(const game_start_msg& from);
+  void CopyFrom(const game_msg_start_reponse& from);
+  void MergeFrom(const game_msg_start_reponse& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -90,8 +92,8 @@ class game_start_msg : public ::google::protobuf::Message /* @@protoc_insertion_
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
-  void InternalSwap(game_start_msg* other);
-  void UnsafeMergeFrom(const game_start_msg& from);
+  void InternalSwap(game_msg_start_reponse* other);
+  void UnsafeMergeFrom(const game_msg_start_reponse& from);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return _internal_metadata_.arena();
@@ -113,7 +115,7 @@ class game_start_msg : public ::google::protobuf::Message /* @@protoc_insertion_
   ::google::protobuf::int32 state() const;
   void set_state(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:msg.game_start_msg)
+  // @@protoc_insertion_point(class_scope:msg.game_msg_start_reponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -126,38 +128,38 @@ class game_start_msg : public ::google::protobuf::Message /* @@protoc_insertion_
 
   void InitAsDefaultInstance();
 };
-extern ::google::protobuf::internal::ExplicitlyConstructed<game_start_msg> game_start_msg_default_instance_;
+extern ::google::protobuf::internal::ExplicitlyConstructed<game_msg_start_reponse> game_msg_start_reponse_default_instance_;
 
 // -------------------------------------------------------------------
 
-class game_end_msg : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.game_end_msg) */ {
+class game_msg_end_reponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.game_msg_end_reponse) */ {
  public:
-  game_end_msg();
-  virtual ~game_end_msg();
+  game_msg_end_reponse();
+  virtual ~game_msg_end_reponse();
 
-  game_end_msg(const game_end_msg& from);
+  game_msg_end_reponse(const game_msg_end_reponse& from);
 
-  inline game_end_msg& operator=(const game_end_msg& from) {
+  inline game_msg_end_reponse& operator=(const game_msg_end_reponse& from) {
     CopyFrom(from);
     return *this;
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const game_end_msg& default_instance();
+  static const game_msg_end_reponse& default_instance();
 
-  static const game_end_msg* internal_default_instance();
+  static const game_msg_end_reponse* internal_default_instance();
 
-  void Swap(game_end_msg* other);
+  void Swap(game_msg_end_reponse* other);
 
   // implements Message ----------------------------------------------
 
-  inline game_end_msg* New() const { return New(NULL); }
+  inline game_msg_end_reponse* New() const { return New(NULL); }
 
-  game_end_msg* New(::google::protobuf::Arena* arena) const;
+  game_msg_end_reponse* New(::google::protobuf::Arena* arena) const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const game_end_msg& from);
-  void MergeFrom(const game_end_msg& from);
+  void CopyFrom(const game_msg_end_reponse& from);
+  void MergeFrom(const game_msg_end_reponse& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -176,8 +178,8 @@ class game_end_msg : public ::google::protobuf::Message /* @@protoc_insertion_po
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
-  void InternalSwap(game_end_msg* other);
-  void UnsafeMergeFrom(const game_end_msg& from);
+  void InternalSwap(game_msg_end_reponse* other);
+  void UnsafeMergeFrom(const game_msg_end_reponse& from);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return _internal_metadata_.arena();
@@ -199,7 +201,7 @@ class game_end_msg : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::google::protobuf::int32 state() const;
   void set_state(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:msg.game_end_msg)
+  // @@protoc_insertion_point(class_scope:msg.game_msg_end_reponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -212,38 +214,38 @@ class game_end_msg : public ::google::protobuf::Message /* @@protoc_insertion_po
 
   void InitAsDefaultInstance();
 };
-extern ::google::protobuf::internal::ExplicitlyConstructed<game_end_msg> game_end_msg_default_instance_;
+extern ::google::protobuf::internal::ExplicitlyConstructed<game_msg_end_reponse> game_msg_end_reponse_default_instance_;
 
 // -------------------------------------------------------------------
 
-class sit_up_msg : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.sit_up_msg) */ {
+class game_msg_situp_request : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.game_msg_situp_request) */ {
  public:
-  sit_up_msg();
-  virtual ~sit_up_msg();
+  game_msg_situp_request();
+  virtual ~game_msg_situp_request();
 
-  sit_up_msg(const sit_up_msg& from);
+  game_msg_situp_request(const game_msg_situp_request& from);
 
-  inline sit_up_msg& operator=(const sit_up_msg& from) {
+  inline game_msg_situp_request& operator=(const game_msg_situp_request& from) {
     CopyFrom(from);
     return *this;
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const sit_up_msg& default_instance();
+  static const game_msg_situp_request& default_instance();
 
-  static const sit_up_msg* internal_default_instance();
+  static const game_msg_situp_request* internal_default_instance();
 
-  void Swap(sit_up_msg* other);
+  void Swap(game_msg_situp_request* other);
 
   // implements Message ----------------------------------------------
 
-  inline sit_up_msg* New() const { return New(NULL); }
+  inline game_msg_situp_request* New() const { return New(NULL); }
 
-  sit_up_msg* New(::google::protobuf::Arena* arena) const;
+  game_msg_situp_request* New(::google::protobuf::Arena* arena) const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const sit_up_msg& from);
-  void MergeFrom(const sit_up_msg& from);
+  void CopyFrom(const game_msg_situp_request& from);
+  void MergeFrom(const game_msg_situp_request& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -262,8 +264,8 @@ class sit_up_msg : public ::google::protobuf::Message /* @@protoc_insertion_poin
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
-  void InternalSwap(sit_up_msg* other);
-  void UnsafeMergeFrom(const sit_up_msg& from);
+  void InternalSwap(game_msg_situp_request* other);
+  void UnsafeMergeFrom(const game_msg_situp_request& from);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return _internal_metadata_.arena();
@@ -285,7 +287,7 @@ class sit_up_msg : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::int32 uid() const;
   void set_uid(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:msg.sit_up_msg)
+  // @@protoc_insertion_point(class_scope:msg.game_msg_situp_request)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -298,38 +300,38 @@ class sit_up_msg : public ::google::protobuf::Message /* @@protoc_insertion_poin
 
   void InitAsDefaultInstance();
 };
-extern ::google::protobuf::internal::ExplicitlyConstructed<sit_up_msg> sit_up_msg_default_instance_;
+extern ::google::protobuf::internal::ExplicitlyConstructed<game_msg_situp_request> game_msg_situp_request_default_instance_;
 
 // -------------------------------------------------------------------
 
-class sit_down_msg : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.sit_down_msg) */ {
+class game_msg_situp_reponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.game_msg_situp_reponse) */ {
  public:
-  sit_down_msg();
-  virtual ~sit_down_msg();
+  game_msg_situp_reponse();
+  virtual ~game_msg_situp_reponse();
 
-  sit_down_msg(const sit_down_msg& from);
+  game_msg_situp_reponse(const game_msg_situp_reponse& from);
 
-  inline sit_down_msg& operator=(const sit_down_msg& from) {
+  inline game_msg_situp_reponse& operator=(const game_msg_situp_reponse& from) {
     CopyFrom(from);
     return *this;
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const sit_down_msg& default_instance();
+  static const game_msg_situp_reponse& default_instance();
 
-  static const sit_down_msg* internal_default_instance();
+  static const game_msg_situp_reponse* internal_default_instance();
 
-  void Swap(sit_down_msg* other);
+  void Swap(game_msg_situp_reponse* other);
 
   // implements Message ----------------------------------------------
 
-  inline sit_down_msg* New() const { return New(NULL); }
+  inline game_msg_situp_reponse* New() const { return New(NULL); }
 
-  sit_down_msg* New(::google::protobuf::Arena* arena) const;
+  game_msg_situp_reponse* New(::google::protobuf::Arena* arena) const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const sit_down_msg& from);
-  void MergeFrom(const sit_down_msg& from);
+  void CopyFrom(const game_msg_situp_reponse& from);
+  void MergeFrom(const game_msg_situp_reponse& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -348,8 +350,8 @@ class sit_down_msg : public ::google::protobuf::Message /* @@protoc_insertion_po
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
-  void InternalSwap(sit_down_msg* other);
-  void UnsafeMergeFrom(const sit_down_msg& from);
+  void InternalSwap(game_msg_situp_reponse* other);
+  void UnsafeMergeFrom(const game_msg_situp_reponse& from);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return _internal_metadata_.arena();
@@ -371,7 +373,100 @@ class sit_down_msg : public ::google::protobuf::Message /* @@protoc_insertion_po
   ::google::protobuf::int32 uid() const;
   void set_uid(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:msg.sit_down_msg)
+  // optional int32 pos = 2;
+  void clear_pos();
+  static const int kPosFieldNumber = 2;
+  ::google::protobuf::int32 pos() const;
+  void set_pos(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:msg.game_msg_situp_reponse)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::int32 uid_;
+  ::google::protobuf::int32 pos_;
+  mutable int _cached_size_;
+  friend void  protobuf_InitDefaults_game_2eproto_impl();
+  friend void  protobuf_AddDesc_game_2eproto_impl();
+  friend void protobuf_AssignDesc_game_2eproto();
+  friend void protobuf_ShutdownFile_game_2eproto();
+
+  void InitAsDefaultInstance();
+};
+extern ::google::protobuf::internal::ExplicitlyConstructed<game_msg_situp_reponse> game_msg_situp_reponse_default_instance_;
+
+// -------------------------------------------------------------------
+
+class game_msg_sitdown_request : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.game_msg_sitdown_request) */ {
+ public:
+  game_msg_sitdown_request();
+  virtual ~game_msg_sitdown_request();
+
+  game_msg_sitdown_request(const game_msg_sitdown_request& from);
+
+  inline game_msg_sitdown_request& operator=(const game_msg_sitdown_request& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const game_msg_sitdown_request& default_instance();
+
+  static const game_msg_sitdown_request* internal_default_instance();
+
+  void Swap(game_msg_sitdown_request* other);
+
+  // implements Message ----------------------------------------------
+
+  inline game_msg_sitdown_request* New() const { return New(NULL); }
+
+  game_msg_sitdown_request* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const game_msg_sitdown_request& from);
+  void MergeFrom(const game_msg_sitdown_request& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  size_t ByteSizeLong() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(game_msg_sitdown_request* other);
+  void UnsafeMergeFrom(const game_msg_sitdown_request& from);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 uid = 1;
+  void clear_uid();
+  static const int kUidFieldNumber = 1;
+  ::google::protobuf::int32 uid() const;
+  void set_uid(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:msg.game_msg_sitdown_request)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -384,7 +479,100 @@ class sit_down_msg : public ::google::protobuf::Message /* @@protoc_insertion_po
 
   void InitAsDefaultInstance();
 };
-extern ::google::protobuf::internal::ExplicitlyConstructed<sit_down_msg> sit_down_msg_default_instance_;
+extern ::google::protobuf::internal::ExplicitlyConstructed<game_msg_sitdown_request> game_msg_sitdown_request_default_instance_;
+
+// -------------------------------------------------------------------
+
+class game_msg_sitdown_reponse : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:msg.game_msg_sitdown_reponse) */ {
+ public:
+  game_msg_sitdown_reponse();
+  virtual ~game_msg_sitdown_reponse();
+
+  game_msg_sitdown_reponse(const game_msg_sitdown_reponse& from);
+
+  inline game_msg_sitdown_reponse& operator=(const game_msg_sitdown_reponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const game_msg_sitdown_reponse& default_instance();
+
+  static const game_msg_sitdown_reponse* internal_default_instance();
+
+  void Swap(game_msg_sitdown_reponse* other);
+
+  // implements Message ----------------------------------------------
+
+  inline game_msg_sitdown_reponse* New() const { return New(NULL); }
+
+  game_msg_sitdown_reponse* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const game_msg_sitdown_reponse& from);
+  void MergeFrom(const game_msg_sitdown_reponse& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  size_t ByteSizeLong() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(game_msg_sitdown_reponse* other);
+  void UnsafeMergeFrom(const game_msg_sitdown_reponse& from);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 uid = 1;
+  void clear_uid();
+  static const int kUidFieldNumber = 1;
+  ::google::protobuf::int32 uid() const;
+  void set_uid(::google::protobuf::int32 value);
+
+  // optional int32 pos = 2;
+  void clear_pos();
+  static const int kPosFieldNumber = 2;
+  ::google::protobuf::int32 pos() const;
+  void set_pos(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:msg.game_msg_sitdown_reponse)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::int32 uid_;
+  ::google::protobuf::int32 pos_;
+  mutable int _cached_size_;
+  friend void  protobuf_InitDefaults_game_2eproto_impl();
+  friend void  protobuf_AddDesc_game_2eproto_impl();
+  friend void protobuf_AssignDesc_game_2eproto();
+  friend void protobuf_ShutdownFile_game_2eproto();
+
+  void InitAsDefaultInstance();
+};
+extern ::google::protobuf::internal::ExplicitlyConstructed<game_msg_sitdown_reponse> game_msg_sitdown_reponse_default_instance_;
 
 // ===================================================================
 
@@ -392,89 +580,163 @@ extern ::google::protobuf::internal::ExplicitlyConstructed<sit_down_msg> sit_dow
 // ===================================================================
 
 #if !PROTOBUF_INLINE_NOT_IN_HEADERS
-// game_start_msg
+// game_msg_start_reponse
 
 // optional int32 state = 1;
-inline void game_start_msg::clear_state() {
+inline void game_msg_start_reponse::clear_state() {
   state_ = 0;
 }
-inline ::google::protobuf::int32 game_start_msg::state() const {
-  // @@protoc_insertion_point(field_get:msg.game_start_msg.state)
+inline ::google::protobuf::int32 game_msg_start_reponse::state() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_start_reponse.state)
   return state_;
 }
-inline void game_start_msg::set_state(::google::protobuf::int32 value) {
+inline void game_msg_start_reponse::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
-  // @@protoc_insertion_point(field_set:msg.game_start_msg.state)
+  // @@protoc_insertion_point(field_set:msg.game_msg_start_reponse.state)
 }
 
-inline const game_start_msg* game_start_msg::internal_default_instance() {
-  return &game_start_msg_default_instance_.get();
+inline const game_msg_start_reponse* game_msg_start_reponse::internal_default_instance() {
+  return &game_msg_start_reponse_default_instance_.get();
 }
 // -------------------------------------------------------------------
 
-// game_end_msg
+// game_msg_end_reponse
 
 // optional int32 state = 1;
-inline void game_end_msg::clear_state() {
+inline void game_msg_end_reponse::clear_state() {
   state_ = 0;
 }
-inline ::google::protobuf::int32 game_end_msg::state() const {
-  // @@protoc_insertion_point(field_get:msg.game_end_msg.state)
+inline ::google::protobuf::int32 game_msg_end_reponse::state() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_end_reponse.state)
   return state_;
 }
-inline void game_end_msg::set_state(::google::protobuf::int32 value) {
+inline void game_msg_end_reponse::set_state(::google::protobuf::int32 value) {
   
   state_ = value;
-  // @@protoc_insertion_point(field_set:msg.game_end_msg.state)
+  // @@protoc_insertion_point(field_set:msg.game_msg_end_reponse.state)
 }
 
-inline const game_end_msg* game_end_msg::internal_default_instance() {
-  return &game_end_msg_default_instance_.get();
+inline const game_msg_end_reponse* game_msg_end_reponse::internal_default_instance() {
+  return &game_msg_end_reponse_default_instance_.get();
 }
 // -------------------------------------------------------------------
 
-// sit_up_msg
+// game_msg_situp_request
 
 // optional int32 uid = 1;
-inline void sit_up_msg::clear_uid() {
+inline void game_msg_situp_request::clear_uid() {
   uid_ = 0;
 }
-inline ::google::protobuf::int32 sit_up_msg::uid() const {
-  // @@protoc_insertion_point(field_get:msg.sit_up_msg.uid)
+inline ::google::protobuf::int32 game_msg_situp_request::uid() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_request.uid)
   return uid_;
 }
-inline void sit_up_msg::set_uid(::google::protobuf::int32 value) {
+inline void game_msg_situp_request::set_uid(::google::protobuf::int32 value) {
   
   uid_ = value;
-  // @@protoc_insertion_point(field_set:msg.sit_up_msg.uid)
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_request.uid)
 }
 
-inline const sit_up_msg* sit_up_msg::internal_default_instance() {
-  return &sit_up_msg_default_instance_.get();
+inline const game_msg_situp_request* game_msg_situp_request::internal_default_instance() {
+  return &game_msg_situp_request_default_instance_.get();
 }
 // -------------------------------------------------------------------
 
-// sit_down_msg
+// game_msg_situp_reponse
 
 // optional int32 uid = 1;
-inline void sit_down_msg::clear_uid() {
+inline void game_msg_situp_reponse::clear_uid() {
   uid_ = 0;
 }
-inline ::google::protobuf::int32 sit_down_msg::uid() const {
-  // @@protoc_insertion_point(field_get:msg.sit_down_msg.uid)
+inline ::google::protobuf::int32 game_msg_situp_reponse::uid() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_reponse.uid)
   return uid_;
 }
-inline void sit_down_msg::set_uid(::google::protobuf::int32 value) {
+inline void game_msg_situp_reponse::set_uid(::google::protobuf::int32 value) {
   
   uid_ = value;
-  // @@protoc_insertion_point(field_set:msg.sit_down_msg.uid)
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.uid)
 }
 
-inline const sit_down_msg* sit_down_msg::internal_default_instance() {
-  return &sit_down_msg_default_instance_.get();
+// optional int32 pos = 2;
+inline void game_msg_situp_reponse::clear_pos() {
+  pos_ = 0;
+}
+inline ::google::protobuf::int32 game_msg_situp_reponse::pos() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_reponse.pos)
+  return pos_;
+}
+inline void game_msg_situp_reponse::set_pos(::google::protobuf::int32 value) {
+  
+  pos_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.pos)
+}
+
+inline const game_msg_situp_reponse* game_msg_situp_reponse::internal_default_instance() {
+  return &game_msg_situp_reponse_default_instance_.get();
+}
+// -------------------------------------------------------------------
+
+// game_msg_sitdown_request
+
+// optional int32 uid = 1;
+inline void game_msg_sitdown_request::clear_uid() {
+  uid_ = 0;
+}
+inline ::google::protobuf::int32 game_msg_sitdown_request::uid() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_request.uid)
+  return uid_;
+}
+inline void game_msg_sitdown_request::set_uid(::google::protobuf::int32 value) {
+  
+  uid_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_request.uid)
+}
+
+inline const game_msg_sitdown_request* game_msg_sitdown_request::internal_default_instance() {
+  return &game_msg_sitdown_request_default_instance_.get();
+}
+// -------------------------------------------------------------------
+
+// game_msg_sitdown_reponse
+
+// optional int32 uid = 1;
+inline void game_msg_sitdown_reponse::clear_uid() {
+  uid_ = 0;
+}
+inline ::google::protobuf::int32 game_msg_sitdown_reponse::uid() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_reponse.uid)
+  return uid_;
+}
+inline void game_msg_sitdown_reponse::set_uid(::google::protobuf::int32 value) {
+  
+  uid_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.uid)
+}
+
+// optional int32 pos = 2;
+inline void game_msg_sitdown_reponse::clear_pos() {
+  pos_ = 0;
+}
+inline ::google::protobuf::int32 game_msg_sitdown_reponse::pos() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_reponse.pos)
+  return pos_;
+}
+inline void game_msg_sitdown_reponse::set_pos(::google::protobuf::int32 value) {
+  
+  pos_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.pos)
+}
+
+inline const game_msg_sitdown_reponse* game_msg_sitdown_reponse::internal_default_instance() {
+  return &game_msg_sitdown_reponse_default_instance_.get();
 }
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

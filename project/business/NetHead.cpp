@@ -9,11 +9,14 @@
 #include <arpa/inet.h>
 #endif
 
+#define SOCKET_TRANSION_VERSION		10000
+
 namespace LW 
 {
 	tagNetHead::tagNetHead()
 	{
 		memset(this, 0x00, sizeof(tagNetHead));
+		this->v = SOCKET_TRANSION_VERSION;
 	}
 
 	void tagNetHead::debug()

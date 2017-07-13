@@ -156,7 +156,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 	case cmd_heart_beat:
 	{
-		platform::csc_msg_heartbeat msg;
+		platform::msg_heartbeat msg;
 		msg.set_time(time(NULL));
 
 		lw_int32 len = (lw_int32)msg.ByteSizeLong();

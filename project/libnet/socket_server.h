@@ -10,6 +10,7 @@
 #include <unordered_map>
 
 class SocketSession;
+class SocketTimer;
 
 typedef void(*LW_SERVER_START_COMPLETE)(lw_int32 what);
 
@@ -22,20 +23,23 @@ public:
 	~SocketServer();
 
 public:
-	lw_int32 init();
-	void unInit();
+	lw_int32 create(u_short port);
+	void destory();
 
 public:
 	lw_int32 sendData(SocketSession* session, lw_int32 cmd, void* object, lw_int32 objectSize);
-	lw_int32 run(u_short port, LW_SERVER_START_COMPLETE start_func, LW_PARSE_DATA_CALLFUNC func);
+	lw_int32 run(LW_SERVER_START_COMPLETE start_func, LW_PARSE_DATA_CALLFUNC func);
+
+public:
 	lw_int32 getPort() { return this->_port; }
 
 public:
-	void listenerCB(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int);
-	void readCB(struct bufferevent *);
-	void writeCB(struct bufferevent *);
-	void eventCB(struct bufferevent *, short event);
-	void timeCB(evutil_socket_t fd, short event, void *arg);
+	void listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int);
+	void event_cb(struct bufferevent *, short event);
+	void timer_cb(evutil_socket_t fd, short event, void *arg);
+
+private:
+	struct evconnlistener * createConnListener(int port);
 
 private:
 	void __run();
@@ -43,6 +47,7 @@ private:
 private:
 	lw_int32 _port;
 	struct event_base* _base;
+	SocketTimer* _timer;
 	LW_PARSE_DATA_CALLFUNC _on_recv_func;
 	LW_SERVER_START_COMPLETE _on_start;
 	SESSIONS sessions;

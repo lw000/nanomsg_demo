@@ -56,7 +56,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 	case cmd_heart_beat:
 	{
-		platform::csc_msg_heartbeat msg;
+		platform::msg_heartbeat msg;
 		msg.set_time(time(NULL));
 
 		lw_int32 len = (lw_int32)msg.ByteSizeLong();
@@ -69,11 +69,11 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	} break;
 	case cmd_platform_cs_userinfo:
 	{
-		platform::sc_msg_request_userinfo client_userinfo;
+		platform::msg_userinfo_request client_userinfo;
 		client_userinfo.ParseFromArray(buf, bufsize);
 		//printf(" userid: %d\n", client_userinfo.userid());
 
-		platform::sc_msg_userinfo userinfo;
+		platform::msg_userinfo_reponse userinfo;
 		userinfo.set_uid(client_userinfo.uid());
 		userinfo.set_age(30);
 		userinfo.set_sex(1);
@@ -194,9 +194,9 @@ int main(int argc, char** argv)
 			std::string sport = Pro.getProperty("port", "19901");
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.init() == 0)
+			if (__g_serv.create(port) == 0)
 			{
-				__g_serv.run(port, _start_cb, on_socket_recv);
+				__g_serv.run(_start_cb, on_socket_recv);
 			}
 
 			while (1) { lw_sleep(1); }

@@ -2,22 +2,34 @@ syntax = "proto3";
 
 package msg;
 
-message game_start_msg
+message game_msg_start_reponse
 {
-	int32    state = 1;		// uid
+	int32    state = 1;		// state
 }
 
-message game_end_msg
+message game_msg_end_reponse
 {
-	int32    state = 1;		// uid
+	int32    state = 1;		// state
 }
 
-message sit_up_msg
+message game_msg_situp_request
 {
 	int32    uid = 1;		// uid
 }
 
-message sit_down_msg
+message game_msg_situp_reponse
 {
 	int32    uid = 1;		// uid
+	int32    pos = 2;		// pos
+}
+
+message game_msg_sitdown_request
+{
+	int32    uid = 1;		// uid
+}
+
+message game_msg_sitdown_reponse
+{
+	int32    uid = 1;		// uid
+	int32    pos = 2;		// pos
 }

@@ -37,13 +37,13 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 	case cmd_heart_beat:
 	{
-		platform::csc_msg_heartbeat msg;
+		platform::msg_heartbeat msg;
 		msg.ParseFromArray(buf, bufsize);
 		printf("heartBeat[%d]\n", msg.time());
 	} break;
 	case cmd_platform_sc_userinfo:
 	{
-		platform::sc_msg_userinfo msg;
+		platform::msg_userinfo_reponse msg;
 		msg.ParseFromArray(buf, bufsize);
 		printf("userid: %d age:%d sex:%d name:%s address:%s\n", msg.uid(),
 			msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
@@ -63,7 +63,7 @@ void run_rpc_client(lw_int32 port)
 		{
 			__g_client.startTimer(100+i, 1+i, [](int id, SocketSession* session) -> bool
 			{
-				platform::csc_msg_heartbeat msg;
+				platform::msg_heartbeat msg;
 				msg.set_time(time(NULL));
 				lw_int32 len = (lw_int32)msg.ByteSizeLong();
 				lw_char8 s[256] = { 0 };

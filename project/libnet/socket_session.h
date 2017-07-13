@@ -18,21 +18,6 @@ public:
 		Server = 1,
 	};
 
-private:
-	TYPE c;
-	struct bufferevent* _bev;
-	bool _connected;
-	std::string _host;
-	int _port;
-	
-	void *userdata;
-
-private:
-	unsigned int uid;
-	std::string ext;
-
-private:
-	LW_PARSE_DATA_CALLFUNC _on_recv_func;
 
 public:
 	SocketSession(TYPE c);
@@ -54,7 +39,7 @@ public:
 	void setPort(int port);
 	int getPort();
 
-	bool getConnected() { return _connected; }
+	bool connected();
 
 public:
 	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize);
@@ -64,6 +49,23 @@ public:
 	void read_ev();
 	void write_ev();
 	void event_ev(short ev);
+
+private:
+	TYPE _c;	//session¿‡–Õ
+
+private:
+	struct bufferevent* _bev;
+
+private:
+	std::string _host;
+	int _port;
+	bool _connected;
+
+private:
+	void *userdata;
+
+private:
+	LW_PARSE_DATA_CALLFUNC _on_recv_func;
 };
 
 

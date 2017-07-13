@@ -50,7 +50,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	{
 	case cmd_heart_beat:
 	{
-		platform::csc_msg_heartbeat msg;
+		platform::msg_heartbeat msg;
 		msg.set_time(time(NULL));
 
 		lw_int32 len = (lw_int32)msg.ByteSizeLong();
@@ -60,6 +60,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		{
 			session->sendData(cmd_heart_beat, s, len);
 		}
+
 	} break;
 	default:
 		break;
@@ -123,9 +124,9 @@ int main(int argc, char** argv)
 
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.init() == 0)
+			if (__g_serv.create(port) == 0)
 			{
-				__g_serv.run(port, _start_cb, on_socket_recv);
+				__g_serv.run(_start_cb, on_socket_recv);
 			}
 
 			while (1) { LW_SLEEP(1); }

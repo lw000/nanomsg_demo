@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <event2/event.h>
+#include <event2/bufferevent.h>
 #include <event2/util.h>
 
 #include "socket_session.h"
@@ -19,7 +20,7 @@ struct TIMER_ITEM
 	int state;	// 默认 -1，启动 1，删除 0
 
 public:
-	TIMER_ITEM(SocketTimer* owner) : owner(owner), ev(NULL), t(0), id(-1), state(-1)
+	TIMER_ITEM(SocketTimer* owner) : owner(owner), t(0), id(-1), state(-1)
 	{
 		ev = new struct event;
 	}
@@ -31,15 +32,36 @@ public:
 };
 
 
-static void time_cb(evutil_socket_t fd, short event, void *arg)
+static void __timer_cb(evutil_socket_t fd, short event, void *arg)
 {
+	if (event & BEV_EVENT_READING)
+	{
+	}
+	else if (event & BEV_EVENT_WRITING)
+	{
+	}
+	else if (event & BEV_EVENT_EOF)
+	{
+	}
+	else if (event & BEV_EVENT_TIMEOUT)
+	{
+	}
+	else if (event & BEV_EVENT_ERROR)
+	{
+
+	}
+	else if (event & BEV_EVENT_CONNECTED)
+	{
+
+	}
+
 	TIMER_ITEM *pCurrentTimer = (TIMER_ITEM*)arg;
-	pCurrentTimer->owner->time_cb(pCurrentTimer, event);
+	pCurrentTimer->owner->timer_cb(pCurrentTimer, event);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-SocketTimer::SocketTimer()
+SocketTimer::SocketTimer() : _base(NULL)
 {
 	
 }
@@ -78,7 +100,7 @@ int SocketTimer::startTimer(int id, int t, std::function<bool(int id)> func)
 		new_timer->state = 1;
 
 		// 设置定时器
-		r = event_assign(new_timer->ev, this->_base, -1, 0, ::time_cb, new_timer);
+		r = event_assign(new_timer->ev, this->_base, -1, 0, ::__timer_cb, new_timer);
 		//event_assign(&this->_timer, this->_base, -1, EV_PERSIST, ::time_cb, this);
 
 		struct timeval tv;
@@ -97,7 +119,7 @@ int SocketTimer::startTimer(int id, int t, std::function<bool(int id)> func)
 		timer->state = 1;
 
 		// 设置定时器
-		r = event_assign(timer->ev, this->_base, -1, 0, ::time_cb, timer);
+		r = event_assign(timer->ev, this->_base, -1, 0, ::__timer_cb, timer);
 		//event_assign(&this->_timer, this->_base, -1, EV_PERSIST, ::time_cb, this);
 
 		struct timeval tv;
@@ -121,7 +143,7 @@ void SocketTimer::killTimer(int id)
 	}
 }
 
-void SocketTimer::time_cb(void* timer, short ev)
+void SocketTimer::timer_cb(void* timer, short ev)
 {
 	TIMER_ITEM* pTimer = (TIMER_ITEM*)timer;
 	bool r = this->_on_timer(pTimer->id);

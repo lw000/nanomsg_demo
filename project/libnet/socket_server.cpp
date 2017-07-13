@@ -23,45 +23,35 @@
 #endif // _WIN32
 
 #include "socket_session.h"
+#include "socket_timer.h"
 
-static void listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
-static void read_cb(struct bufferevent *, void *);
-static void write_cb(struct bufferevent *, void *);
-static void event_cb(struct bufferevent *, short, void *);
-static void signal_cb(evutil_socket_t, short, void *);
-static void time_cb(evutil_socket_t fd, short event, void *arg);
+static void __listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
+static void __read_cb(struct bufferevent *, void *);
+static void __write_cb(struct bufferevent *, void *);
+static void __event_cb(struct bufferevent *, short, void *);
+static void __signal_cb(evutil_socket_t, short, void *);
+static void __timer_cb(evutil_socket_t fd, short event, void *arg);
+static void __accept_error_cb(struct evconnlistener *, void *);
 
-static void time_cb(evutil_socket_t fd, short event, void *arg)
+static void __timer_cb(evutil_socket_t fd, short event, void *arg)
 {
 	SocketServer * sev = (SocketServer*)arg;
-	sev->timeCB(fd, event, arg);
+	sev->timer_cb(fd, event, arg);
 }
 
-static void listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
+static void __listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
 {
 	SocketServer * server = (SocketServer*)user_data;
-	server->listenerCB(listener, fd, sa, socklen);
+	server->listener_cb(listener, fd, sa, socklen);
 }
 
-// static void read_cb(struct bufferevent *bev, void *user_data)
-// {
-// 	SocketServer * server = (SocketServer*)user_data;
-// 	server->readCB(bev);
-// }
-// 
-// static void write_cb(struct bufferevent *bev, void *user_data)
-// {
-// 	SocketServer * server = (SocketServer*)user_data;
-// 	server->writeCB(bev);
-// }
-// 
 // static void event_cb(struct bufferevent *bev, short event, void *user_data)
 // {
 // 	SocketServer * server = (SocketServer*)user_data;
 // 	server->eventCB(bev, event);
 // }
 
-static void accept_error_cb(struct evconnlistener * listener, void * userdata)
+static void __accept_error_cb(struct evconnlistener * listener, void * userdata)
 {
 	struct event_base *base = evconnlistener_get_base(listener);
 	int err = EVUTIL_SOCKET_ERROR();
@@ -71,7 +61,7 @@ static void accept_error_cb(struct evconnlistener * listener, void * userdata)
 	event_base_loopexit(base, NULL);
 }
 
-static void signal_cb(evutil_socket_t fd, short event, void *user_data)
+static void __signal_cb(evutil_socket_t fd, short event, void *user_data)
 {
 	struct event_base *base = (struct event_base *)user_data;
 	struct timeval delay = { 1, 0 };
@@ -83,6 +73,7 @@ static void signal_cb(evutil_socket_t fd, short event, void *user_data)
 
 SocketServer::SocketServer() : _base(NULL), _on_start(NULL), _on_recv_func(NULL)
 {
+	_timer = new SocketTimer();
 }
 
 SocketServer::~SocketServer()
@@ -92,10 +83,18 @@ SocketServer::~SocketServer()
 	{
 		delete iter->second;
 	}
+
+	if (_timer != NULL)
+	{
+		delete _timer;
+		_timer = NULL;
+	}
 }
 
-lw_int32 SocketServer::init()
+lw_int32 SocketServer::create(u_short port)
 {
+	this->_port = port;
+
 #ifdef WIN32
 	struct event_config *cfg = event_config_new();
 	event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
@@ -113,7 +112,7 @@ lw_int32 SocketServer::init()
 	return 0;
 }
 
-void SocketServer::unInit()
+void SocketServer::destory()
 {
 	event_base_free(_base);
 }
@@ -127,7 +126,7 @@ lw_int32 SocketServer::sendData(SocketSession* session, lw_int32 cmd, void* obje
 	return result;
 }
 
-void SocketServer::timeCB(evutil_socket_t fd, short event, void *arg)
+void SocketServer::timer_cb(evutil_socket_t fd, short event, void *arg)
 {
 	if (_on_start != NULL)
 	{
@@ -135,45 +134,7 @@ void SocketServer::timeCB(evutil_socket_t fd, short event, void *arg)
 	}
 }
 
-void SocketServer::writeCB(struct bufferevent *bev)
-{
-	evutil_socket_t fd = bufferevent_getfd(bev);
-	SocketSession* psesion = sessions[fd];
-
-	struct evbuffer *output = bufferevent_get_output(bev);
-	if (evbuffer_get_length(output) == 0)
-	{
-
-	}
-}
-
-// 从客户端读取数据
-void SocketServer::readCB(struct bufferevent *bev)
-{
-	evutil_socket_t fd = bufferevent_getfd(bev);
-	
-	SocketSession* psesion = sessions[fd];
-
-	struct evbuffer *input;
-	input = bufferevent_get_input(bev);
-	size_t input_len = evbuffer_get_length(input);
-
-	lw_char8 *read_buf = (lw_char8*)malloc(input_len);
-
-	size_t read_len = bufferevent_read(bev, read_buf, input_len);
-
-	if (read_len == input_len)
-	{
-		if (lw_parse_socket_data(read_buf, read_len, this->_on_recv_func, bev) == 0)
-		{
-
-		}
-	}
-
-	free(read_buf);
-}
-
-void SocketServer::eventCB(struct bufferevent *bev, short event)
+void SocketServer::event_cb(struct bufferevent *bev, short event)
 {
 	evutil_socket_t fd = bufferevent_getfd(bev);
 	
@@ -213,21 +174,24 @@ void SocketServer::eventCB(struct bufferevent *bev, short event)
 	bufferevent_free(bev);
 }
 
-void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen)
+void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen)
 {
 	struct event_base *base = evconnlistener_get_base(listener);
 
 	SocketSession* pSession = new SocketSession(SocketSession::TYPE::Server);
 	int r = pSession->create(_base, fd, EV_READ | EV_WRITE);
-	pSession->setRecvCall(_on_recv_func);
-
 	if (r == 0)
 	{
-		char hbuf[NI_MAXHOST];
-		lw_uint32 sbuf;
-		getnameinfo(sa, socklen, hbuf, sizeof(hbuf), (char*)&sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
-		
-		printf("join (host = %s, port = %d)\n", hbuf, sbuf);
+		pSession->setRecvCall(_on_recv_func);
+
+		char hostBuf[NI_MAXHOST];
+		char portBuf[64];
+		getnameinfo(sa, socklen, hostBuf, sizeof(hostBuf), portBuf, sizeof(portBuf), NI_NUMERICHOST | NI_NUMERICSERV);
+
+		printf("join (host = %s, port = %s)\n", hostBuf, portBuf);
+	
+		pSession->setHost(hostBuf);
+		pSession->setPort(std::stoi(portBuf));
 
 		evutil_socket_t new_fd = pSession->getSocket();
 
@@ -243,9 +207,10 @@ void SocketServer::listenerCB(struct evconnlistener *listener, evutil_socket_t f
 	}
 }
 
-lw_int32 SocketServer::run(u_short port, LW_SERVER_START_COMPLETE start_func, LW_PARSE_DATA_CALLFUNC func)
+lw_int32 SocketServer::run(LW_SERVER_START_COMPLETE start_func, LW_PARSE_DATA_CALLFUNC func)
 {
 	if (NULL == func) return -1;
+
 	if (NULL == start_func) return -1;
 
 	if (func != _on_recv_func)
@@ -258,64 +223,74 @@ lw_int32 SocketServer::run(u_short port, LW_SERVER_START_COMPLETE start_func, LW
 		_on_start = start_func;
 	}
 
-	if (_port != port)
-	{
-		_port = port;
-	}
-
 	std::thread t(std::bind(&SocketServer::__run, this));
 	t.detach();
 
 	return 0;
 }
 
-void SocketServer::__run()
+struct evconnlistener * SocketServer::createConnListener(int port)
 {
+	struct evconnlistener *listener = NULL;
 	struct sockaddr_in sin;
 	sin.sin_family = AF_INET;
 	sin.sin_addr.s_addr = htonl(0);	//绑定0.0.0.0地址
-	sin.sin_port = htons(_port);
-
-	struct evconnlistener *listener;
-	listener = evconnlistener_new_bind(_base, ::listener_cb, this,
+	sin.sin_port = htons(port);
+	//inet_pton(AF_INET, "127.0.0.1", &sin.sin_addr.s_addr);
+	listener = evconnlistener_new_bind(_base, ::__listener_cb, this,
 		LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE, -1, (struct sockaddr*)&sin, sizeof(sin));
+	return listener;
+}
 
+void SocketServer::__run()
+{
 	struct event *signal_event;
-	signal_event = evsignal_new(_base, SIGINT, ::signal_cb, (void *)_base);
+	signal_event = evsignal_new(_base, SIGINT, ::__signal_cb, (void *)_base);
 	if (!signal_event || event_add(signal_event, nullptr) < 0)
 	{
 		fprintf(stderr, "could not create/add a signal event!\n");
 		return;
 	}
 
-	evconnlistener_set_error_cb(listener, accept_error_cb);
-
-	// 初始化完成定时器 
+	struct evconnlistener *listener = createConnListener(_port);
+	if (listener != NULL)
 	{
-		struct event evtimer;
-		event_assign(&evtimer, _base, 0, 0, time_cb, this);
-		struct timeval tv;
-		evutil_timerclear(&tv);
-		tv.tv_sec = 1;
-		tv.tv_usec = 0;
-		event_add(&evtimer, &tv);
-	}
-	
-	// 客户端存活检测定时器
-// 	{
-// 		struct event _client_live_timer;
-// 		event_assign(&_client_live_timer, _base, 0, 0, time_cb, this);
-// 		struct timeval tv;
-// 		evutil_timerclear(&tv);
-// 		tv.tv_sec = 1;
-// 		tv.tv_usec = 0;
-// 		event_add(&_client_live_timer, &tv);
-// 	}
+		evconnlistener_set_error_cb(listener, __accept_error_cb);
 
-	int ret = event_base_dispatch(_base);
+		// 初始化完成定时器 
+		{
+			_timer->create(this->_base);
+			_timer->startTimer(100, 2, [this](int id) -> bool
+			{
+				if (_on_start != NULL)
+				{
+					_on_start(0);
+				}
 
-	event_free(signal_event);
-	evconnlistener_free(listener);
+				return false;
+			});
+
+// 			struct event evtimer;
+// 			event_assign(&evtimer, _base, 0, 0, __timer_cb, this);
+// 			struct timeval tv;
+// 			evutil_timerclear(&tv);
+// 			tv.tv_sec = 1;
+// 			tv.tv_usec = 0;
+// 			event_add(&evtimer, &tv);
+		}
+
+		int r = event_base_dispatch(_base);
+
+		if (signal_event != NULL)
+		{
+			event_free(signal_event);
+		}
+
+		if (listener != NULL)
+		{
+			evconnlistener_free(listener);
+		}
+	}	
 
 	event_base_free(_base);
 

@@ -21,30 +21,33 @@ namespace platform {
 
 namespace {
 
-const ::google::protobuf::Descriptor* csc_msg_heartbeat_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* msg_heartbeat_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  csc_msg_heartbeat_reflection_ = NULL;
-const ::google::protobuf::Descriptor* cs_msg_login_descriptor_ = NULL;
+  msg_heartbeat_reflection_ = NULL;
+const ::google::protobuf::Descriptor* msg_login_request_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  cs_msg_login_reflection_ = NULL;
-const ::google::protobuf::Descriptor* sc_msg_login_descriptor_ = NULL;
+  msg_login_request_reflection_ = NULL;
+const ::google::protobuf::Descriptor* msg_login_reponse_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  sc_msg_login_reflection_ = NULL;
-const ::google::protobuf::Descriptor* cs_msg_logout_descriptor_ = NULL;
+  msg_login_reponse_reflection_ = NULL;
+const ::google::protobuf::Descriptor* msg_logout_request_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  cs_msg_logout_reflection_ = NULL;
-const ::google::protobuf::Descriptor* sc_msg_logout_descriptor_ = NULL;
+  msg_logout_request_reflection_ = NULL;
+const ::google::protobuf::Descriptor* msg_logout_reponse_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  sc_msg_logout_reflection_ = NULL;
-const ::google::protobuf::Descriptor* cs_msg_chat_descriptor_ = NULL;
+  msg_logout_reponse_reflection_ = NULL;
+const ::google::protobuf::Descriptor* msg_chat_request_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  cs_msg_chat_reflection_ = NULL;
-const ::google::protobuf::Descriptor* sc_msg_request_userinfo_descriptor_ = NULL;
+  msg_chat_request_reflection_ = NULL;
+const ::google::protobuf::Descriptor* msg_chat_reponse_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  sc_msg_request_userinfo_reflection_ = NULL;
-const ::google::protobuf::Descriptor* sc_msg_userinfo_descriptor_ = NULL;
+  msg_chat_reponse_reflection_ = NULL;
+const ::google::protobuf::Descriptor* msg_userinfo_request_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  sc_msg_userinfo_reflection_ = NULL;
+  msg_userinfo_request_reflection_ = NULL;
+const ::google::protobuf::Descriptor* msg_userinfo_reponse_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  msg_userinfo_reponse_reflection_ = NULL;
 
 }  // namespace
 
@@ -56,128 +59,144 @@ void protobuf_AssignDesc_platform_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "platform.proto");
   GOOGLE_CHECK(file != NULL);
-  csc_msg_heartbeat_descriptor_ = file->message_type(0);
-  static const int csc_msg_heartbeat_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(csc_msg_heartbeat, time_),
+  msg_heartbeat_descriptor_ = file->message_type(0);
+  static const int msg_heartbeat_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_heartbeat, time_),
   };
-  csc_msg_heartbeat_reflection_ =
+  msg_heartbeat_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      csc_msg_heartbeat_descriptor_,
-      csc_msg_heartbeat::internal_default_instance(),
-      csc_msg_heartbeat_offsets_,
+      msg_heartbeat_descriptor_,
+      msg_heartbeat::internal_default_instance(),
+      msg_heartbeat_offsets_,
       -1,
       -1,
       -1,
-      sizeof(csc_msg_heartbeat),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(csc_msg_heartbeat, _internal_metadata_));
-  cs_msg_login_descriptor_ = file->message_type(1);
-  static const int cs_msg_login_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_login, device_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_login, username_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_login, userpsd_),
+      sizeof(msg_heartbeat),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_heartbeat, _internal_metadata_));
+  msg_login_request_descriptor_ = file->message_type(1);
+  static const int msg_login_request_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_request, device_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_request, username_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_request, userpsd_),
   };
-  cs_msg_login_reflection_ =
+  msg_login_request_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      cs_msg_login_descriptor_,
-      cs_msg_login::internal_default_instance(),
-      cs_msg_login_offsets_,
+      msg_login_request_descriptor_,
+      msg_login_request::internal_default_instance(),
+      msg_login_request_offsets_,
       -1,
       -1,
       -1,
-      sizeof(cs_msg_login),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_login, _internal_metadata_));
-  sc_msg_login_descriptor_ = file->message_type(2);
-  static const int sc_msg_login_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_login, msg_),
+      sizeof(msg_login_request),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_request, _internal_metadata_));
+  msg_login_reponse_descriptor_ = file->message_type(2);
+  static const int msg_login_reponse_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_reponse, msg_),
   };
-  sc_msg_login_reflection_ =
+  msg_login_reponse_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      sc_msg_login_descriptor_,
-      sc_msg_login::internal_default_instance(),
-      sc_msg_login_offsets_,
+      msg_login_reponse_descriptor_,
+      msg_login_reponse::internal_default_instance(),
+      msg_login_reponse_offsets_,
       -1,
       -1,
       -1,
-      sizeof(sc_msg_login),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_login, _internal_metadata_));
-  cs_msg_logout_descriptor_ = file->message_type(3);
-  static const int cs_msg_logout_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_logout, device_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_logout, uid_),
+      sizeof(msg_login_reponse),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_reponse, _internal_metadata_));
+  msg_logout_request_descriptor_ = file->message_type(3);
+  static const int msg_logout_request_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_request, device_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_request, uid_),
   };
-  cs_msg_logout_reflection_ =
+  msg_logout_request_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      cs_msg_logout_descriptor_,
-      cs_msg_logout::internal_default_instance(),
-      cs_msg_logout_offsets_,
+      msg_logout_request_descriptor_,
+      msg_logout_request::internal_default_instance(),
+      msg_logout_request_offsets_,
       -1,
       -1,
       -1,
-      sizeof(cs_msg_logout),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_logout, _internal_metadata_));
-  sc_msg_logout_descriptor_ = file->message_type(4);
-  static const int sc_msg_logout_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_logout, msg_),
+      sizeof(msg_logout_request),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_request, _internal_metadata_));
+  msg_logout_reponse_descriptor_ = file->message_type(4);
+  static const int msg_logout_reponse_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_reponse, msg_),
   };
-  sc_msg_logout_reflection_ =
+  msg_logout_reponse_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      sc_msg_logout_descriptor_,
-      sc_msg_logout::internal_default_instance(),
-      sc_msg_logout_offsets_,
+      msg_logout_reponse_descriptor_,
+      msg_logout_reponse::internal_default_instance(),
+      msg_logout_reponse_offsets_,
       -1,
       -1,
       -1,
-      sizeof(sc_msg_logout),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_logout, _internal_metadata_));
-  cs_msg_chat_descriptor_ = file->message_type(5);
-  static const int cs_msg_chat_offsets_[4] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_chat, device_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_chat, from_uid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_chat, to_uid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_chat, msg_),
+      sizeof(msg_logout_reponse),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_reponse, _internal_metadata_));
+  msg_chat_request_descriptor_ = file->message_type(5);
+  static const int msg_chat_request_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_request, device_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_request, from_uid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_request, to_uid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_request, msg_),
   };
-  cs_msg_chat_reflection_ =
+  msg_chat_request_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      cs_msg_chat_descriptor_,
-      cs_msg_chat::internal_default_instance(),
-      cs_msg_chat_offsets_,
+      msg_chat_request_descriptor_,
+      msg_chat_request::internal_default_instance(),
+      msg_chat_request_offsets_,
       -1,
       -1,
       -1,
-      sizeof(cs_msg_chat),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(cs_msg_chat, _internal_metadata_));
-  sc_msg_request_userinfo_descriptor_ = file->message_type(6);
-  static const int sc_msg_request_userinfo_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_request_userinfo, uid_),
+      sizeof(msg_chat_request),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_request, _internal_metadata_));
+  msg_chat_reponse_descriptor_ = file->message_type(6);
+  static const int msg_chat_reponse_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_reponse, from_uid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_reponse, to_uid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_reponse, result_),
   };
-  sc_msg_request_userinfo_reflection_ =
+  msg_chat_reponse_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      sc_msg_request_userinfo_descriptor_,
-      sc_msg_request_userinfo::internal_default_instance(),
-      sc_msg_request_userinfo_offsets_,
+      msg_chat_reponse_descriptor_,
+      msg_chat_reponse::internal_default_instance(),
+      msg_chat_reponse_offsets_,
       -1,
       -1,
       -1,
-      sizeof(sc_msg_request_userinfo),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_request_userinfo, _internal_metadata_));
-  sc_msg_userinfo_descriptor_ = file->message_type(7);
-  static const int sc_msg_userinfo_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_userinfo, uid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_userinfo, age_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_userinfo, sex_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_userinfo, name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_userinfo, address_),
+      sizeof(msg_chat_reponse),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_reponse, _internal_metadata_));
+  msg_userinfo_request_descriptor_ = file->message_type(7);
+  static const int msg_userinfo_request_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_request, uid_),
   };
-  sc_msg_userinfo_reflection_ =
+  msg_userinfo_request_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      sc_msg_userinfo_descriptor_,
-      sc_msg_userinfo::internal_default_instance(),
-      sc_msg_userinfo_offsets_,
+      msg_userinfo_request_descriptor_,
+      msg_userinfo_request::internal_default_instance(),
+      msg_userinfo_request_offsets_,
       -1,
       -1,
       -1,
-      sizeof(sc_msg_userinfo),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(sc_msg_userinfo, _internal_metadata_));
+      sizeof(msg_userinfo_request),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_request, _internal_metadata_));
+  msg_userinfo_reponse_descriptor_ = file->message_type(8);
+  static const int msg_userinfo_reponse_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_reponse, uid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_reponse, age_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_reponse, sex_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_reponse, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_reponse, address_),
+  };
+  msg_userinfo_reponse_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      msg_userinfo_reponse_descriptor_,
+      msg_userinfo_reponse::internal_default_instance(),
+      msg_userinfo_reponse_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(msg_userinfo_reponse),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_reponse, _internal_metadata_));
 }
 
 namespace {
@@ -192,68 +211,74 @@ void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      csc_msg_heartbeat_descriptor_, csc_msg_heartbeat::internal_default_instance());
+      msg_heartbeat_descriptor_, msg_heartbeat::internal_default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      cs_msg_login_descriptor_, cs_msg_login::internal_default_instance());
+      msg_login_request_descriptor_, msg_login_request::internal_default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      sc_msg_login_descriptor_, sc_msg_login::internal_default_instance());
+      msg_login_reponse_descriptor_, msg_login_reponse::internal_default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      cs_msg_logout_descriptor_, cs_msg_logout::internal_default_instance());
+      msg_logout_request_descriptor_, msg_logout_request::internal_default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      sc_msg_logout_descriptor_, sc_msg_logout::internal_default_instance());
+      msg_logout_reponse_descriptor_, msg_logout_reponse::internal_default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      cs_msg_chat_descriptor_, cs_msg_chat::internal_default_instance());
+      msg_chat_request_descriptor_, msg_chat_request::internal_default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      sc_msg_request_userinfo_descriptor_, sc_msg_request_userinfo::internal_default_instance());
+      msg_chat_reponse_descriptor_, msg_chat_reponse::internal_default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      sc_msg_userinfo_descriptor_, sc_msg_userinfo::internal_default_instance());
+      msg_userinfo_request_descriptor_, msg_userinfo_request::internal_default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      msg_userinfo_reponse_descriptor_, msg_userinfo_reponse::internal_default_instance());
 }
 
 }  // namespace
 
 void protobuf_ShutdownFile_platform_2eproto() {
-  csc_msg_heartbeat_default_instance_.Shutdown();
-  delete csc_msg_heartbeat_reflection_;
-  cs_msg_login_default_instance_.Shutdown();
-  delete cs_msg_login_reflection_;
-  sc_msg_login_default_instance_.Shutdown();
-  delete sc_msg_login_reflection_;
-  cs_msg_logout_default_instance_.Shutdown();
-  delete cs_msg_logout_reflection_;
-  sc_msg_logout_default_instance_.Shutdown();
-  delete sc_msg_logout_reflection_;
-  cs_msg_chat_default_instance_.Shutdown();
-  delete cs_msg_chat_reflection_;
-  sc_msg_request_userinfo_default_instance_.Shutdown();
-  delete sc_msg_request_userinfo_reflection_;
-  sc_msg_userinfo_default_instance_.Shutdown();
-  delete sc_msg_userinfo_reflection_;
+  msg_heartbeat_default_instance_.Shutdown();
+  delete msg_heartbeat_reflection_;
+  msg_login_request_default_instance_.Shutdown();
+  delete msg_login_request_reflection_;
+  msg_login_reponse_default_instance_.Shutdown();
+  delete msg_login_reponse_reflection_;
+  msg_logout_request_default_instance_.Shutdown();
+  delete msg_logout_request_reflection_;
+  msg_logout_reponse_default_instance_.Shutdown();
+  delete msg_logout_reponse_reflection_;
+  msg_chat_request_default_instance_.Shutdown();
+  delete msg_chat_request_reflection_;
+  msg_chat_reponse_default_instance_.Shutdown();
+  delete msg_chat_reponse_reflection_;
+  msg_userinfo_request_default_instance_.Shutdown();
+  delete msg_userinfo_request_reflection_;
+  msg_userinfo_reponse_default_instance_.Shutdown();
+  delete msg_userinfo_reponse_reflection_;
 }
 
 void protobuf_InitDefaults_platform_2eproto_impl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  csc_msg_heartbeat_default_instance_.DefaultConstruct();
+  msg_heartbeat_default_instance_.DefaultConstruct();
   ::google::protobuf::internal::GetEmptyString();
-  cs_msg_login_default_instance_.DefaultConstruct();
+  msg_login_request_default_instance_.DefaultConstruct();
   ::google::protobuf::internal::GetEmptyString();
-  sc_msg_login_default_instance_.DefaultConstruct();
-  cs_msg_logout_default_instance_.DefaultConstruct();
+  msg_login_reponse_default_instance_.DefaultConstruct();
+  msg_logout_request_default_instance_.DefaultConstruct();
   ::google::protobuf::internal::GetEmptyString();
-  sc_msg_logout_default_instance_.DefaultConstruct();
+  msg_logout_reponse_default_instance_.DefaultConstruct();
   ::google::protobuf::internal::GetEmptyString();
-  cs_msg_chat_default_instance_.DefaultConstruct();
-  sc_msg_request_userinfo_default_instance_.DefaultConstruct();
+  msg_chat_request_default_instance_.DefaultConstruct();
+  msg_chat_reponse_default_instance_.DefaultConstruct();
+  msg_userinfo_request_default_instance_.DefaultConstruct();
   ::google::protobuf::internal::GetEmptyString();
-  sc_msg_userinfo_default_instance_.DefaultConstruct();
-  csc_msg_heartbeat_default_instance_.get_mutable()->InitAsDefaultInstance();
-  cs_msg_login_default_instance_.get_mutable()->InitAsDefaultInstance();
-  sc_msg_login_default_instance_.get_mutable()->InitAsDefaultInstance();
-  cs_msg_logout_default_instance_.get_mutable()->InitAsDefaultInstance();
-  sc_msg_logout_default_instance_.get_mutable()->InitAsDefaultInstance();
-  cs_msg_chat_default_instance_.get_mutable()->InitAsDefaultInstance();
-  sc_msg_request_userinfo_default_instance_.get_mutable()->InitAsDefaultInstance();
-  sc_msg_userinfo_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_userinfo_reponse_default_instance_.DefaultConstruct();
+  msg_heartbeat_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_login_request_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_login_reponse_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_logout_request_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_logout_reponse_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_chat_request_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_chat_reponse_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_userinfo_request_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_userinfo_reponse_default_instance_.get_mutable()->InitAsDefaultInstance();
 }
 
 GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_InitDefaults_platform_2eproto_once_);
@@ -266,18 +291,20 @@ void protobuf_AddDesc_platform_2eproto_impl() {
 
   protobuf_InitDefaults_platform_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016platform.proto\022\010platform\"!\n\021csc_msg_he"
-    "artbeat\022\014\n\004time\030\001 \001(\003\"A\n\014cs_msg_login\022\016\n"
-    "\006device\030\001 \001(\005\022\020\n\010username\030\002 \001(\t\022\017\n\007userp"
-    "sd\030\003 \001(\t\"\033\n\014sc_msg_login\022\013\n\003msg\030\001 \001(\t\",\n"
-    "\rcs_msg_logout\022\016\n\006device\030\001 \001(\005\022\013\n\003uid\030\002 "
-    "\001(\005\"\034\n\rsc_msg_logout\022\013\n\003msg\030\001 \001(\t\"L\n\013cs_"
-    "msg_chat\022\016\n\006device\030\001 \001(\005\022\020\n\010from_uid\030\002 \001"
-    "(\005\022\016\n\006to_uid\030\003 \001(\005\022\013\n\003msg\030\004 \001(\t\"&\n\027sc_ms"
-    "g_request_userinfo\022\013\n\003uid\030\001 \001(\005\"W\n\017sc_ms"
-    "g_userinfo\022\013\n\003uid\030\001 \001(\005\022\013\n\003age\030\002 \001(\005\022\013\n\003"
-    "sex\030\003 \001(\005\022\014\n\004name\030\004 \001(\t\022\017\n\007address\030\005 \001(\t"
-    "b\006proto3", 448);
+    "\n\016platform.proto\022\010platform\"\035\n\rmsg_heartb"
+    "eat\022\014\n\004time\030\001 \001(\003\"F\n\021msg_login_request\022\016"
+    "\n\006device\030\001 \001(\005\022\020\n\010username\030\002 \001(\t\022\017\n\007user"
+    "psd\030\003 \001(\t\" \n\021msg_login_reponse\022\013\n\003msg\030\001 "
+    "\001(\t\"1\n\022msg_logout_request\022\016\n\006device\030\001 \001("
+    "\005\022\013\n\003uid\030\002 \001(\005\"!\n\022msg_logout_reponse\022\013\n\003"
+    "msg\030\001 \001(\t\"Q\n\020msg_chat_request\022\016\n\006device\030"
+    "\001 \001(\005\022\020\n\010from_uid\030\002 \001(\005\022\016\n\006to_uid\030\003 \001(\005\022"
+    "\013\n\003msg\030\004 \001(\t\"D\n\020msg_chat_reponse\022\020\n\010from"
+    "_uid\030\001 \001(\005\022\016\n\006to_uid\030\002 \001(\005\022\016\n\006result\030\003 \001"
+    "(\005\"#\n\024msg_userinfo_request\022\013\n\003uid\030\001 \001(\005\""
+    "\\\n\024msg_userinfo_reponse\022\013\n\003uid\030\001 \001(\005\022\013\n\003"
+    "age\030\002 \001(\005\022\013\n\003sex\030\003 \001(\005\022\014\n\004name\030\004 \001(\t\022\017\n\007"
+    "address\030\005 \001(\tb\006proto3", 541);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "platform.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_platform_2eproto);
@@ -308,75 +335,75 @@ static void MergeFromFail(int line) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int csc_msg_heartbeat::kTimeFieldNumber;
+const int msg_heartbeat::kTimeFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-csc_msg_heartbeat::csc_msg_heartbeat()
+msg_heartbeat::msg_heartbeat()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
   SharedCtor();
-  // @@protoc_insertion_point(constructor:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(constructor:platform.msg_heartbeat)
 }
 
-void csc_msg_heartbeat::InitAsDefaultInstance() {
+void msg_heartbeat::InitAsDefaultInstance() {
 }
 
-csc_msg_heartbeat::csc_msg_heartbeat(const csc_msg_heartbeat& from)
+msg_heartbeat::msg_heartbeat(const msg_heartbeat& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   UnsafeMergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(copy_constructor:platform.msg_heartbeat)
 }
 
-void csc_msg_heartbeat::SharedCtor() {
+void msg_heartbeat::SharedCtor() {
   time_ = GOOGLE_LONGLONG(0);
   _cached_size_ = 0;
 }
 
-csc_msg_heartbeat::~csc_msg_heartbeat() {
-  // @@protoc_insertion_point(destructor:platform.csc_msg_heartbeat)
+msg_heartbeat::~msg_heartbeat() {
+  // @@protoc_insertion_point(destructor:platform.msg_heartbeat)
   SharedDtor();
 }
 
-void csc_msg_heartbeat::SharedDtor() {
+void msg_heartbeat::SharedDtor() {
 }
 
-void csc_msg_heartbeat::SetCachedSize(int size) const {
+void msg_heartbeat::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* csc_msg_heartbeat::descriptor() {
+const ::google::protobuf::Descriptor* msg_heartbeat::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return csc_msg_heartbeat_descriptor_;
+  return msg_heartbeat_descriptor_;
 }
 
-const csc_msg_heartbeat& csc_msg_heartbeat::default_instance() {
+const msg_heartbeat& msg_heartbeat::default_instance() {
   protobuf_InitDefaults_platform_2eproto();
   return *internal_default_instance();
 }
 
-::google::protobuf::internal::ExplicitlyConstructed<csc_msg_heartbeat> csc_msg_heartbeat_default_instance_;
+::google::protobuf::internal::ExplicitlyConstructed<msg_heartbeat> msg_heartbeat_default_instance_;
 
-csc_msg_heartbeat* csc_msg_heartbeat::New(::google::protobuf::Arena* arena) const {
-  csc_msg_heartbeat* n = new csc_msg_heartbeat;
+msg_heartbeat* msg_heartbeat::New(::google::protobuf::Arena* arena) const {
+  msg_heartbeat* n = new msg_heartbeat;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void csc_msg_heartbeat::Clear() {
-// @@protoc_insertion_point(message_clear_start:platform.csc_msg_heartbeat)
+void msg_heartbeat::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_heartbeat)
   time_ = GOOGLE_LONGLONG(0);
 }
 
-bool csc_msg_heartbeat::MergePartialFromCodedStream(
+bool msg_heartbeat::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(parse_start:platform.msg_heartbeat)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -409,40 +436,40 @@ bool csc_msg_heartbeat::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(parse_success:platform.msg_heartbeat)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(parse_failure:platform.msg_heartbeat)
   return false;
 #undef DO_
 }
 
-void csc_msg_heartbeat::SerializeWithCachedSizes(
+void msg_heartbeat::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(serialize_start:platform.msg_heartbeat)
   // optional int64 time = 1;
   if (this->time() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->time(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(serialize_end:platform.msg_heartbeat)
 }
 
-::google::protobuf::uint8* csc_msg_heartbeat::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* msg_heartbeat::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_heartbeat)
   // optional int64 time = 1;
   if (this->time() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->time(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_heartbeat)
   return target;
 }
 
-size_t csc_msg_heartbeat::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:platform.csc_msg_heartbeat)
+size_t msg_heartbeat::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_heartbeat)
   size_t total_size = 0;
 
   // optional int64 time = 1;
@@ -459,23 +486,23 @@ size_t csc_msg_heartbeat::ByteSizeLong() const {
   return total_size;
 }
 
-void csc_msg_heartbeat::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:platform.csc_msg_heartbeat)
+void msg_heartbeat::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_heartbeat)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const csc_msg_heartbeat* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const csc_msg_heartbeat>(
+  const msg_heartbeat* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_heartbeat>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_heartbeat)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.csc_msg_heartbeat)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_heartbeat)
     UnsafeMergeFrom(*source);
   }
 }
 
-void csc_msg_heartbeat::MergeFrom(const csc_msg_heartbeat& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:platform.csc_msg_heartbeat)
+void msg_heartbeat::MergeFrom(const msg_heartbeat& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_heartbeat)
   if (GOOGLE_PREDICT_TRUE(&from != this)) {
     UnsafeMergeFrom(from);
   } else {
@@ -483,152 +510,152 @@ void csc_msg_heartbeat::MergeFrom(const csc_msg_heartbeat& from) {
   }
 }
 
-void csc_msg_heartbeat::UnsafeMergeFrom(const csc_msg_heartbeat& from) {
+void msg_heartbeat::UnsafeMergeFrom(const msg_heartbeat& from) {
   GOOGLE_DCHECK(&from != this);
   if (from.time() != 0) {
     set_time(from.time());
   }
 }
 
-void csc_msg_heartbeat::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:platform.csc_msg_heartbeat)
+void msg_heartbeat::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_heartbeat)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void csc_msg_heartbeat::CopyFrom(const csc_msg_heartbeat& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:platform.csc_msg_heartbeat)
+void msg_heartbeat::CopyFrom(const msg_heartbeat& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_heartbeat)
   if (&from == this) return;
   Clear();
   UnsafeMergeFrom(from);
 }
 
-bool csc_msg_heartbeat::IsInitialized() const {
+bool msg_heartbeat::IsInitialized() const {
 
   return true;
 }
 
-void csc_msg_heartbeat::Swap(csc_msg_heartbeat* other) {
+void msg_heartbeat::Swap(msg_heartbeat* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void csc_msg_heartbeat::InternalSwap(csc_msg_heartbeat* other) {
+void msg_heartbeat::InternalSwap(msg_heartbeat* other) {
   std::swap(time_, other->time_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata csc_msg_heartbeat::GetMetadata() const {
+::google::protobuf::Metadata msg_heartbeat::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = csc_msg_heartbeat_descriptor_;
-  metadata.reflection = csc_msg_heartbeat_reflection_;
+  metadata.descriptor = msg_heartbeat_descriptor_;
+  metadata.reflection = msg_heartbeat_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// csc_msg_heartbeat
+// msg_heartbeat
 
 // optional int64 time = 1;
-void csc_msg_heartbeat::clear_time() {
+void msg_heartbeat::clear_time() {
   time_ = GOOGLE_LONGLONG(0);
 }
-::google::protobuf::int64 csc_msg_heartbeat::time() const {
-  // @@protoc_insertion_point(field_get:platform.csc_msg_heartbeat.time)
+::google::protobuf::int64 msg_heartbeat::time() const {
+  // @@protoc_insertion_point(field_get:platform.msg_heartbeat.time)
   return time_;
 }
-void csc_msg_heartbeat::set_time(::google::protobuf::int64 value) {
+void msg_heartbeat::set_time(::google::protobuf::int64 value) {
   
   time_ = value;
-  // @@protoc_insertion_point(field_set:platform.csc_msg_heartbeat.time)
+  // @@protoc_insertion_point(field_set:platform.msg_heartbeat.time)
 }
 
-inline const csc_msg_heartbeat* csc_msg_heartbeat::internal_default_instance() {
-  return &csc_msg_heartbeat_default_instance_.get();
+inline const msg_heartbeat* msg_heartbeat::internal_default_instance() {
+  return &msg_heartbeat_default_instance_.get();
 }
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int cs_msg_login::kDeviceFieldNumber;
-const int cs_msg_login::kUsernameFieldNumber;
-const int cs_msg_login::kUserpsdFieldNumber;
+const int msg_login_request::kDeviceFieldNumber;
+const int msg_login_request::kUsernameFieldNumber;
+const int msg_login_request::kUserpsdFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-cs_msg_login::cs_msg_login()
+msg_login_request::msg_login_request()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
   SharedCtor();
-  // @@protoc_insertion_point(constructor:platform.cs_msg_login)
+  // @@protoc_insertion_point(constructor:platform.msg_login_request)
 }
 
-void cs_msg_login::InitAsDefaultInstance() {
+void msg_login_request::InitAsDefaultInstance() {
 }
 
-cs_msg_login::cs_msg_login(const cs_msg_login& from)
+msg_login_request::msg_login_request(const msg_login_request& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   UnsafeMergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:platform.cs_msg_login)
+  // @@protoc_insertion_point(copy_constructor:platform.msg_login_request)
 }
 
-void cs_msg_login::SharedCtor() {
+void msg_login_request::SharedCtor() {
   username_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   userpsd_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   device_ = 0;
   _cached_size_ = 0;
 }
 
-cs_msg_login::~cs_msg_login() {
-  // @@protoc_insertion_point(destructor:platform.cs_msg_login)
+msg_login_request::~msg_login_request() {
+  // @@protoc_insertion_point(destructor:platform.msg_login_request)
   SharedDtor();
 }
 
-void cs_msg_login::SharedDtor() {
+void msg_login_request::SharedDtor() {
   username_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   userpsd_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void cs_msg_login::SetCachedSize(int size) const {
+void msg_login_request::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* cs_msg_login::descriptor() {
+const ::google::protobuf::Descriptor* msg_login_request::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return cs_msg_login_descriptor_;
+  return msg_login_request_descriptor_;
 }
 
-const cs_msg_login& cs_msg_login::default_instance() {
+const msg_login_request& msg_login_request::default_instance() {
   protobuf_InitDefaults_platform_2eproto();
   return *internal_default_instance();
 }
 
-::google::protobuf::internal::ExplicitlyConstructed<cs_msg_login> cs_msg_login_default_instance_;
+::google::protobuf::internal::ExplicitlyConstructed<msg_login_request> msg_login_request_default_instance_;
 
-cs_msg_login* cs_msg_login::New(::google::protobuf::Arena* arena) const {
-  cs_msg_login* n = new cs_msg_login;
+msg_login_request* msg_login_request::New(::google::protobuf::Arena* arena) const {
+  msg_login_request* n = new msg_login_request;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void cs_msg_login::Clear() {
-// @@protoc_insertion_point(message_clear_start:platform.cs_msg_login)
+void msg_login_request::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_login_request)
   device_ = 0;
   username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   userpsd_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-bool cs_msg_login::MergePartialFromCodedStream(
+bool msg_login_request::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:platform.cs_msg_login)
+  // @@protoc_insertion_point(parse_start:platform.msg_login_request)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -657,7 +684,7 @@ bool cs_msg_login::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->username().data(), this->username().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "platform.cs_msg_login.username"));
+            "platform.msg_login_request.username"));
         } else {
           goto handle_unusual;
         }
@@ -674,7 +701,7 @@ bool cs_msg_login::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->userpsd().data(), this->userpsd().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "platform.cs_msg_login.userpsd"));
+            "platform.msg_login_request.userpsd"));
         } else {
           goto handle_unusual;
         }
@@ -695,17 +722,17 @@ bool cs_msg_login::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:platform.cs_msg_login)
+  // @@protoc_insertion_point(parse_success:platform.msg_login_request)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:platform.cs_msg_login)
+  // @@protoc_insertion_point(parse_failure:platform.msg_login_request)
   return false;
 #undef DO_
 }
 
-void cs_msg_login::SerializeWithCachedSizes(
+void msg_login_request::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:platform.cs_msg_login)
+  // @@protoc_insertion_point(serialize_start:platform.msg_login_request)
   // optional int32 device = 1;
   if (this->device() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->device(), output);
@@ -716,7 +743,7 @@ void cs_msg_login::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->username().data(), this->username().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.cs_msg_login.username");
+      "platform.msg_login_request.username");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       2, this->username(), output);
   }
@@ -726,18 +753,18 @@ void cs_msg_login::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->userpsd().data(), this->userpsd().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.cs_msg_login.userpsd");
+      "platform.msg_login_request.userpsd");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       3, this->userpsd(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:platform.cs_msg_login)
+  // @@protoc_insertion_point(serialize_end:platform.msg_login_request)
 }
 
-::google::protobuf::uint8* cs_msg_login::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* msg_login_request::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:platform.cs_msg_login)
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_login_request)
   // optional int32 device = 1;
   if (this->device() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->device(), target);
@@ -748,7 +775,7 @@ void cs_msg_login::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->username().data(), this->username().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.cs_msg_login.username");
+      "platform.msg_login_request.username");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         2, this->username(), target);
@@ -759,18 +786,18 @@ void cs_msg_login::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->userpsd().data(), this->userpsd().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.cs_msg_login.userpsd");
+      "platform.msg_login_request.userpsd");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         3, this->userpsd(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:platform.cs_msg_login)
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_login_request)
   return target;
 }
 
-size_t cs_msg_login::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:platform.cs_msg_login)
+size_t msg_login_request::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_login_request)
   size_t total_size = 0;
 
   // optional int32 device = 1;
@@ -801,23 +828,23 @@ size_t cs_msg_login::ByteSizeLong() const {
   return total_size;
 }
 
-void cs_msg_login::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:platform.cs_msg_login)
+void msg_login_request::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_login_request)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const cs_msg_login* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const cs_msg_login>(
+  const msg_login_request* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_login_request>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.cs_msg_login)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_login_request)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.cs_msg_login)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_login_request)
     UnsafeMergeFrom(*source);
   }
 }
 
-void cs_msg_login::MergeFrom(const cs_msg_login& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:platform.cs_msg_login)
+void msg_login_request::MergeFrom(const msg_login_request& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_login_request)
   if (GOOGLE_PREDICT_TRUE(&from != this)) {
     UnsafeMergeFrom(from);
   } else {
@@ -825,7 +852,7 @@ void cs_msg_login::MergeFrom(const cs_msg_login& from) {
   }
 }
 
-void cs_msg_login::UnsafeMergeFrom(const cs_msg_login& from) {
+void msg_login_request::UnsafeMergeFrom(const msg_login_request& from) {
   GOOGLE_DCHECK(&from != this);
   if (from.device() != 0) {
     set_device(from.device());
@@ -840,30 +867,30 @@ void cs_msg_login::UnsafeMergeFrom(const cs_msg_login& from) {
   }
 }
 
-void cs_msg_login::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:platform.cs_msg_login)
+void msg_login_request::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_login_request)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void cs_msg_login::CopyFrom(const cs_msg_login& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:platform.cs_msg_login)
+void msg_login_request::CopyFrom(const msg_login_request& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_login_request)
   if (&from == this) return;
   Clear();
   UnsafeMergeFrom(from);
 }
 
-bool cs_msg_login::IsInitialized() const {
+bool msg_login_request::IsInitialized() const {
 
   return true;
 }
 
-void cs_msg_login::Swap(cs_msg_login* other) {
+void msg_login_request::Swap(msg_login_request* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void cs_msg_login::InternalSwap(cs_msg_login* other) {
+void msg_login_request::InternalSwap(msg_login_request* other) {
   std::swap(device_, other->device_);
   username_.Swap(&other->username_);
   userpsd_.Swap(&other->userpsd_);
@@ -871,197 +898,197 @@ void cs_msg_login::InternalSwap(cs_msg_login* other) {
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata cs_msg_login::GetMetadata() const {
+::google::protobuf::Metadata msg_login_request::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = cs_msg_login_descriptor_;
-  metadata.reflection = cs_msg_login_reflection_;
+  metadata.descriptor = msg_login_request_descriptor_;
+  metadata.reflection = msg_login_request_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// cs_msg_login
+// msg_login_request
 
 // optional int32 device = 1;
-void cs_msg_login::clear_device() {
+void msg_login_request::clear_device() {
   device_ = 0;
 }
-::google::protobuf::int32 cs_msg_login::device() const {
-  // @@protoc_insertion_point(field_get:platform.cs_msg_login.device)
+::google::protobuf::int32 msg_login_request::device() const {
+  // @@protoc_insertion_point(field_get:platform.msg_login_request.device)
   return device_;
 }
-void cs_msg_login::set_device(::google::protobuf::int32 value) {
+void msg_login_request::set_device(::google::protobuf::int32 value) {
   
   device_ = value;
-  // @@protoc_insertion_point(field_set:platform.cs_msg_login.device)
+  // @@protoc_insertion_point(field_set:platform.msg_login_request.device)
 }
 
 // optional string username = 2;
-void cs_msg_login::clear_username() {
+void msg_login_request::clear_username() {
   username_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-const ::std::string& cs_msg_login::username() const {
-  // @@protoc_insertion_point(field_get:platform.cs_msg_login.username)
+const ::std::string& msg_login_request::username() const {
+  // @@protoc_insertion_point(field_get:platform.msg_login_request.username)
   return username_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void cs_msg_login::set_username(const ::std::string& value) {
+void msg_login_request::set_username(const ::std::string& value) {
   
   username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:platform.cs_msg_login.username)
+  // @@protoc_insertion_point(field_set:platform.msg_login_request.username)
 }
-void cs_msg_login::set_username(const char* value) {
+void msg_login_request::set_username(const char* value) {
   
   username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:platform.cs_msg_login.username)
+  // @@protoc_insertion_point(field_set_char:platform.msg_login_request.username)
 }
-void cs_msg_login::set_username(const char* value, size_t size) {
+void msg_login_request::set_username(const char* value, size_t size) {
   
   username_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:platform.cs_msg_login.username)
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_login_request.username)
 }
-::std::string* cs_msg_login::mutable_username() {
+::std::string* msg_login_request::mutable_username() {
   
-  // @@protoc_insertion_point(field_mutable:platform.cs_msg_login.username)
+  // @@protoc_insertion_point(field_mutable:platform.msg_login_request.username)
   return username_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* cs_msg_login::release_username() {
-  // @@protoc_insertion_point(field_release:platform.cs_msg_login.username)
+::std::string* msg_login_request::release_username() {
+  // @@protoc_insertion_point(field_release:platform.msg_login_request.username)
   
   return username_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void cs_msg_login::set_allocated_username(::std::string* username) {
+void msg_login_request::set_allocated_username(::std::string* username) {
   if (username != NULL) {
     
   } else {
     
   }
   username_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), username);
-  // @@protoc_insertion_point(field_set_allocated:platform.cs_msg_login.username)
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_login_request.username)
 }
 
 // optional string userpsd = 3;
-void cs_msg_login::clear_userpsd() {
+void msg_login_request::clear_userpsd() {
   userpsd_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-const ::std::string& cs_msg_login::userpsd() const {
-  // @@protoc_insertion_point(field_get:platform.cs_msg_login.userpsd)
+const ::std::string& msg_login_request::userpsd() const {
+  // @@protoc_insertion_point(field_get:platform.msg_login_request.userpsd)
   return userpsd_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void cs_msg_login::set_userpsd(const ::std::string& value) {
+void msg_login_request::set_userpsd(const ::std::string& value) {
   
   userpsd_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:platform.cs_msg_login.userpsd)
+  // @@protoc_insertion_point(field_set:platform.msg_login_request.userpsd)
 }
-void cs_msg_login::set_userpsd(const char* value) {
+void msg_login_request::set_userpsd(const char* value) {
   
   userpsd_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:platform.cs_msg_login.userpsd)
+  // @@protoc_insertion_point(field_set_char:platform.msg_login_request.userpsd)
 }
-void cs_msg_login::set_userpsd(const char* value, size_t size) {
+void msg_login_request::set_userpsd(const char* value, size_t size) {
   
   userpsd_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:platform.cs_msg_login.userpsd)
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_login_request.userpsd)
 }
-::std::string* cs_msg_login::mutable_userpsd() {
+::std::string* msg_login_request::mutable_userpsd() {
   
-  // @@protoc_insertion_point(field_mutable:platform.cs_msg_login.userpsd)
+  // @@protoc_insertion_point(field_mutable:platform.msg_login_request.userpsd)
   return userpsd_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* cs_msg_login::release_userpsd() {
-  // @@protoc_insertion_point(field_release:platform.cs_msg_login.userpsd)
+::std::string* msg_login_request::release_userpsd() {
+  // @@protoc_insertion_point(field_release:platform.msg_login_request.userpsd)
   
   return userpsd_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void cs_msg_login::set_allocated_userpsd(::std::string* userpsd) {
+void msg_login_request::set_allocated_userpsd(::std::string* userpsd) {
   if (userpsd != NULL) {
     
   } else {
     
   }
   userpsd_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), userpsd);
-  // @@protoc_insertion_point(field_set_allocated:platform.cs_msg_login.userpsd)
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_login_request.userpsd)
 }
 
-inline const cs_msg_login* cs_msg_login::internal_default_instance() {
-  return &cs_msg_login_default_instance_.get();
+inline const msg_login_request* msg_login_request::internal_default_instance() {
+  return &msg_login_request_default_instance_.get();
 }
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int sc_msg_login::kMsgFieldNumber;
+const int msg_login_reponse::kMsgFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-sc_msg_login::sc_msg_login()
+msg_login_reponse::msg_login_reponse()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
   SharedCtor();
-  // @@protoc_insertion_point(constructor:platform.sc_msg_login)
+  // @@protoc_insertion_point(constructor:platform.msg_login_reponse)
 }
 
-void sc_msg_login::InitAsDefaultInstance() {
+void msg_login_reponse::InitAsDefaultInstance() {
 }
 
-sc_msg_login::sc_msg_login(const sc_msg_login& from)
+msg_login_reponse::msg_login_reponse(const msg_login_reponse& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   UnsafeMergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:platform.sc_msg_login)
+  // @@protoc_insertion_point(copy_constructor:platform.msg_login_reponse)
 }
 
-void sc_msg_login::SharedCtor() {
+void msg_login_reponse::SharedCtor() {
   msg_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   _cached_size_ = 0;
 }
 
-sc_msg_login::~sc_msg_login() {
-  // @@protoc_insertion_point(destructor:platform.sc_msg_login)
+msg_login_reponse::~msg_login_reponse() {
+  // @@protoc_insertion_point(destructor:platform.msg_login_reponse)
   SharedDtor();
 }
 
-void sc_msg_login::SharedDtor() {
+void msg_login_reponse::SharedDtor() {
   msg_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void sc_msg_login::SetCachedSize(int size) const {
+void msg_login_reponse::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* sc_msg_login::descriptor() {
+const ::google::protobuf::Descriptor* msg_login_reponse::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return sc_msg_login_descriptor_;
+  return msg_login_reponse_descriptor_;
 }
 
-const sc_msg_login& sc_msg_login::default_instance() {
+const msg_login_reponse& msg_login_reponse::default_instance() {
   protobuf_InitDefaults_platform_2eproto();
   return *internal_default_instance();
 }
 
-::google::protobuf::internal::ExplicitlyConstructed<sc_msg_login> sc_msg_login_default_instance_;
+::google::protobuf::internal::ExplicitlyConstructed<msg_login_reponse> msg_login_reponse_default_instance_;
 
-sc_msg_login* sc_msg_login::New(::google::protobuf::Arena* arena) const {
-  sc_msg_login* n = new sc_msg_login;
+msg_login_reponse* msg_login_reponse::New(::google::protobuf::Arena* arena) const {
+  msg_login_reponse* n = new msg_login_reponse;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void sc_msg_login::Clear() {
-// @@protoc_insertion_point(message_clear_start:platform.sc_msg_login)
+void msg_login_reponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_login_reponse)
   msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-bool sc_msg_login::MergePartialFromCodedStream(
+bool msg_login_reponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:platform.sc_msg_login)
+  // @@protoc_insertion_point(parse_start:platform.msg_login_reponse)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -1075,7 +1102,7 @@ bool sc_msg_login::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->msg().data(), this->msg().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "platform.sc_msg_login.msg"));
+            "platform.msg_login_reponse.msg"));
         } else {
           goto handle_unusual;
         }
@@ -1096,51 +1123,51 @@ bool sc_msg_login::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:platform.sc_msg_login)
+  // @@protoc_insertion_point(parse_success:platform.msg_login_reponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:platform.sc_msg_login)
+  // @@protoc_insertion_point(parse_failure:platform.msg_login_reponse)
   return false;
 #undef DO_
 }
 
-void sc_msg_login::SerializeWithCachedSizes(
+void msg_login_reponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:platform.sc_msg_login)
+  // @@protoc_insertion_point(serialize_start:platform.msg_login_reponse)
   // optional string msg = 1;
   if (this->msg().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->msg().data(), this->msg().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.sc_msg_login.msg");
+      "platform.msg_login_reponse.msg");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->msg(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:platform.sc_msg_login)
+  // @@protoc_insertion_point(serialize_end:platform.msg_login_reponse)
 }
 
-::google::protobuf::uint8* sc_msg_login::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* msg_login_reponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:platform.sc_msg_login)
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_login_reponse)
   // optional string msg = 1;
   if (this->msg().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->msg().data(), this->msg().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.sc_msg_login.msg");
+      "platform.msg_login_reponse.msg");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->msg(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:platform.sc_msg_login)
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_login_reponse)
   return target;
 }
 
-size_t sc_msg_login::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:platform.sc_msg_login)
+size_t msg_login_reponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_login_reponse)
   size_t total_size = 0;
 
   // optional string msg = 1;
@@ -1157,23 +1184,23 @@ size_t sc_msg_login::ByteSizeLong() const {
   return total_size;
 }
 
-void sc_msg_login::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:platform.sc_msg_login)
+void msg_login_reponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_login_reponse)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const sc_msg_login* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const sc_msg_login>(
+  const msg_login_reponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_login_reponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.sc_msg_login)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_login_reponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.sc_msg_login)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_login_reponse)
     UnsafeMergeFrom(*source);
   }
 }
 
-void sc_msg_login::MergeFrom(const sc_msg_login& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:platform.sc_msg_login)
+void msg_login_reponse::MergeFrom(const msg_login_reponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_login_reponse)
   if (GOOGLE_PREDICT_TRUE(&from != this)) {
     UnsafeMergeFrom(from);
   } else {
@@ -1181,7 +1208,7 @@ void sc_msg_login::MergeFrom(const sc_msg_login& from) {
   }
 }
 
-void sc_msg_login::UnsafeMergeFrom(const sc_msg_login& from) {
+void msg_login_reponse::UnsafeMergeFrom(const msg_login_reponse& from) {
   GOOGLE_DCHECK(&from != this);
   if (from.msg().size() > 0) {
 
@@ -1189,170 +1216,170 @@ void sc_msg_login::UnsafeMergeFrom(const sc_msg_login& from) {
   }
 }
 
-void sc_msg_login::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:platform.sc_msg_login)
+void msg_login_reponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_login_reponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void sc_msg_login::CopyFrom(const sc_msg_login& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:platform.sc_msg_login)
+void msg_login_reponse::CopyFrom(const msg_login_reponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_login_reponse)
   if (&from == this) return;
   Clear();
   UnsafeMergeFrom(from);
 }
 
-bool sc_msg_login::IsInitialized() const {
+bool msg_login_reponse::IsInitialized() const {
 
   return true;
 }
 
-void sc_msg_login::Swap(sc_msg_login* other) {
+void msg_login_reponse::Swap(msg_login_reponse* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void sc_msg_login::InternalSwap(sc_msg_login* other) {
+void msg_login_reponse::InternalSwap(msg_login_reponse* other) {
   msg_.Swap(&other->msg_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata sc_msg_login::GetMetadata() const {
+::google::protobuf::Metadata msg_login_reponse::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = sc_msg_login_descriptor_;
-  metadata.reflection = sc_msg_login_reflection_;
+  metadata.descriptor = msg_login_reponse_descriptor_;
+  metadata.reflection = msg_login_reponse_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// sc_msg_login
+// msg_login_reponse
 
 // optional string msg = 1;
-void sc_msg_login::clear_msg() {
+void msg_login_reponse::clear_msg() {
   msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-const ::std::string& sc_msg_login::msg() const {
-  // @@protoc_insertion_point(field_get:platform.sc_msg_login.msg)
+const ::std::string& msg_login_reponse::msg() const {
+  // @@protoc_insertion_point(field_get:platform.msg_login_reponse.msg)
   return msg_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void sc_msg_login::set_msg(const ::std::string& value) {
+void msg_login_reponse::set_msg(const ::std::string& value) {
   
   msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:platform.sc_msg_login.msg)
+  // @@protoc_insertion_point(field_set:platform.msg_login_reponse.msg)
 }
-void sc_msg_login::set_msg(const char* value) {
+void msg_login_reponse::set_msg(const char* value) {
   
   msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:platform.sc_msg_login.msg)
+  // @@protoc_insertion_point(field_set_char:platform.msg_login_reponse.msg)
 }
-void sc_msg_login::set_msg(const char* value, size_t size) {
+void msg_login_reponse::set_msg(const char* value, size_t size) {
   
   msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:platform.sc_msg_login.msg)
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_login_reponse.msg)
 }
-::std::string* sc_msg_login::mutable_msg() {
+::std::string* msg_login_reponse::mutable_msg() {
   
-  // @@protoc_insertion_point(field_mutable:platform.sc_msg_login.msg)
+  // @@protoc_insertion_point(field_mutable:platform.msg_login_reponse.msg)
   return msg_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* sc_msg_login::release_msg() {
-  // @@protoc_insertion_point(field_release:platform.sc_msg_login.msg)
+::std::string* msg_login_reponse::release_msg() {
+  // @@protoc_insertion_point(field_release:platform.msg_login_reponse.msg)
   
   return msg_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void sc_msg_login::set_allocated_msg(::std::string* msg) {
+void msg_login_reponse::set_allocated_msg(::std::string* msg) {
   if (msg != NULL) {
     
   } else {
     
   }
   msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
-  // @@protoc_insertion_point(field_set_allocated:platform.sc_msg_login.msg)
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_login_reponse.msg)
 }
 
-inline const sc_msg_login* sc_msg_login::internal_default_instance() {
-  return &sc_msg_login_default_instance_.get();
+inline const msg_login_reponse* msg_login_reponse::internal_default_instance() {
+  return &msg_login_reponse_default_instance_.get();
 }
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int cs_msg_logout::kDeviceFieldNumber;
-const int cs_msg_logout::kUidFieldNumber;
+const int msg_logout_request::kDeviceFieldNumber;
+const int msg_logout_request::kUidFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-cs_msg_logout::cs_msg_logout()
+msg_logout_request::msg_logout_request()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
   SharedCtor();
-  // @@protoc_insertion_point(constructor:platform.cs_msg_logout)
+  // @@protoc_insertion_point(constructor:platform.msg_logout_request)
 }
 
-void cs_msg_logout::InitAsDefaultInstance() {
+void msg_logout_request::InitAsDefaultInstance() {
 }
 
-cs_msg_logout::cs_msg_logout(const cs_msg_logout& from)
+msg_logout_request::msg_logout_request(const msg_logout_request& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   UnsafeMergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:platform.cs_msg_logout)
+  // @@protoc_insertion_point(copy_constructor:platform.msg_logout_request)
 }
 
-void cs_msg_logout::SharedCtor() {
+void msg_logout_request::SharedCtor() {
   ::memset(&device_, 0, reinterpret_cast<char*>(&uid_) -
     reinterpret_cast<char*>(&device_) + sizeof(uid_));
   _cached_size_ = 0;
 }
 
-cs_msg_logout::~cs_msg_logout() {
-  // @@protoc_insertion_point(destructor:platform.cs_msg_logout)
+msg_logout_request::~msg_logout_request() {
+  // @@protoc_insertion_point(destructor:platform.msg_logout_request)
   SharedDtor();
 }
 
-void cs_msg_logout::SharedDtor() {
+void msg_logout_request::SharedDtor() {
 }
 
-void cs_msg_logout::SetCachedSize(int size) const {
+void msg_logout_request::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* cs_msg_logout::descriptor() {
+const ::google::protobuf::Descriptor* msg_logout_request::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return cs_msg_logout_descriptor_;
+  return msg_logout_request_descriptor_;
 }
 
-const cs_msg_logout& cs_msg_logout::default_instance() {
+const msg_logout_request& msg_logout_request::default_instance() {
   protobuf_InitDefaults_platform_2eproto();
   return *internal_default_instance();
 }
 
-::google::protobuf::internal::ExplicitlyConstructed<cs_msg_logout> cs_msg_logout_default_instance_;
+::google::protobuf::internal::ExplicitlyConstructed<msg_logout_request> msg_logout_request_default_instance_;
 
-cs_msg_logout* cs_msg_logout::New(::google::protobuf::Arena* arena) const {
-  cs_msg_logout* n = new cs_msg_logout;
+msg_logout_request* msg_logout_request::New(::google::protobuf::Arena* arena) const {
+  msg_logout_request* n = new msg_logout_request;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void cs_msg_logout::Clear() {
-// @@protoc_insertion_point(message_clear_start:platform.cs_msg_logout)
+void msg_logout_request::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_logout_request)
 #if defined(__clang__)
 #define ZR_HELPER_(f) \
   _Pragma("clang diagnostic push") \
   _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
-  __builtin_offsetof(cs_msg_logout, f) \
+  __builtin_offsetof(msg_logout_request, f) \
   _Pragma("clang diagnostic pop")
 #else
 #define ZR_HELPER_(f) reinterpret_cast<char*>(\
-  &reinterpret_cast<cs_msg_logout*>(16)->f)
+  &reinterpret_cast<msg_logout_request*>(16)->f)
 #endif
 
 #define ZR_(first, last) do {\
@@ -1367,11 +1394,11 @@ void cs_msg_logout::Clear() {
 
 }
 
-bool cs_msg_logout::MergePartialFromCodedStream(
+bool msg_logout_request::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:platform.cs_msg_logout)
+  // @@protoc_insertion_point(parse_start:platform.msg_logout_request)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -1419,17 +1446,17 @@ bool cs_msg_logout::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:platform.cs_msg_logout)
+  // @@protoc_insertion_point(parse_success:platform.msg_logout_request)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:platform.cs_msg_logout)
+  // @@protoc_insertion_point(parse_failure:platform.msg_logout_request)
   return false;
 #undef DO_
 }
 
-void cs_msg_logout::SerializeWithCachedSizes(
+void msg_logout_request::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:platform.cs_msg_logout)
+  // @@protoc_insertion_point(serialize_start:platform.msg_logout_request)
   // optional int32 device = 1;
   if (this->device() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->device(), output);
@@ -1440,13 +1467,13 @@ void cs_msg_logout::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->uid(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:platform.cs_msg_logout)
+  // @@protoc_insertion_point(serialize_end:platform.msg_logout_request)
 }
 
-::google::protobuf::uint8* cs_msg_logout::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* msg_logout_request::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:platform.cs_msg_logout)
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_logout_request)
   // optional int32 device = 1;
   if (this->device() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->device(), target);
@@ -1457,12 +1484,12 @@ void cs_msg_logout::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->uid(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:platform.cs_msg_logout)
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_logout_request)
   return target;
 }
 
-size_t cs_msg_logout::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:platform.cs_msg_logout)
+size_t msg_logout_request::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_logout_request)
   size_t total_size = 0;
 
   // optional int32 device = 1;
@@ -1486,23 +1513,23 @@ size_t cs_msg_logout::ByteSizeLong() const {
   return total_size;
 }
 
-void cs_msg_logout::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:platform.cs_msg_logout)
+void msg_logout_request::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_logout_request)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const cs_msg_logout* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const cs_msg_logout>(
+  const msg_logout_request* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_logout_request>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.cs_msg_logout)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_logout_request)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.cs_msg_logout)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_logout_request)
     UnsafeMergeFrom(*source);
   }
 }
 
-void cs_msg_logout::MergeFrom(const cs_msg_logout& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:platform.cs_msg_logout)
+void msg_logout_request::MergeFrom(const msg_logout_request& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_logout_request)
   if (GOOGLE_PREDICT_TRUE(&from != this)) {
     UnsafeMergeFrom(from);
   } else {
@@ -1510,7 +1537,7 @@ void cs_msg_logout::MergeFrom(const cs_msg_logout& from) {
   }
 }
 
-void cs_msg_logout::UnsafeMergeFrom(const cs_msg_logout& from) {
+void msg_logout_request::UnsafeMergeFrom(const msg_logout_request& from) {
   GOOGLE_DCHECK(&from != this);
   if (from.device() != 0) {
     set_device(from.device());
@@ -1520,153 +1547,153 @@ void cs_msg_logout::UnsafeMergeFrom(const cs_msg_logout& from) {
   }
 }
 
-void cs_msg_logout::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:platform.cs_msg_logout)
+void msg_logout_request::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_logout_request)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void cs_msg_logout::CopyFrom(const cs_msg_logout& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:platform.cs_msg_logout)
+void msg_logout_request::CopyFrom(const msg_logout_request& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_logout_request)
   if (&from == this) return;
   Clear();
   UnsafeMergeFrom(from);
 }
 
-bool cs_msg_logout::IsInitialized() const {
+bool msg_logout_request::IsInitialized() const {
 
   return true;
 }
 
-void cs_msg_logout::Swap(cs_msg_logout* other) {
+void msg_logout_request::Swap(msg_logout_request* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void cs_msg_logout::InternalSwap(cs_msg_logout* other) {
+void msg_logout_request::InternalSwap(msg_logout_request* other) {
   std::swap(device_, other->device_);
   std::swap(uid_, other->uid_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata cs_msg_logout::GetMetadata() const {
+::google::protobuf::Metadata msg_logout_request::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = cs_msg_logout_descriptor_;
-  metadata.reflection = cs_msg_logout_reflection_;
+  metadata.descriptor = msg_logout_request_descriptor_;
+  metadata.reflection = msg_logout_request_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// cs_msg_logout
+// msg_logout_request
 
 // optional int32 device = 1;
-void cs_msg_logout::clear_device() {
+void msg_logout_request::clear_device() {
   device_ = 0;
 }
-::google::protobuf::int32 cs_msg_logout::device() const {
-  // @@protoc_insertion_point(field_get:platform.cs_msg_logout.device)
+::google::protobuf::int32 msg_logout_request::device() const {
+  // @@protoc_insertion_point(field_get:platform.msg_logout_request.device)
   return device_;
 }
-void cs_msg_logout::set_device(::google::protobuf::int32 value) {
+void msg_logout_request::set_device(::google::protobuf::int32 value) {
   
   device_ = value;
-  // @@protoc_insertion_point(field_set:platform.cs_msg_logout.device)
+  // @@protoc_insertion_point(field_set:platform.msg_logout_request.device)
 }
 
 // optional int32 uid = 2;
-void cs_msg_logout::clear_uid() {
+void msg_logout_request::clear_uid() {
   uid_ = 0;
 }
-::google::protobuf::int32 cs_msg_logout::uid() const {
-  // @@protoc_insertion_point(field_get:platform.cs_msg_logout.uid)
+::google::protobuf::int32 msg_logout_request::uid() const {
+  // @@protoc_insertion_point(field_get:platform.msg_logout_request.uid)
   return uid_;
 }
-void cs_msg_logout::set_uid(::google::protobuf::int32 value) {
+void msg_logout_request::set_uid(::google::protobuf::int32 value) {
   
   uid_ = value;
-  // @@protoc_insertion_point(field_set:platform.cs_msg_logout.uid)
+  // @@protoc_insertion_point(field_set:platform.msg_logout_request.uid)
 }
 
-inline const cs_msg_logout* cs_msg_logout::internal_default_instance() {
-  return &cs_msg_logout_default_instance_.get();
+inline const msg_logout_request* msg_logout_request::internal_default_instance() {
+  return &msg_logout_request_default_instance_.get();
 }
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int sc_msg_logout::kMsgFieldNumber;
+const int msg_logout_reponse::kMsgFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-sc_msg_logout::sc_msg_logout()
+msg_logout_reponse::msg_logout_reponse()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
   SharedCtor();
-  // @@protoc_insertion_point(constructor:platform.sc_msg_logout)
+  // @@protoc_insertion_point(constructor:platform.msg_logout_reponse)
 }
 
-void sc_msg_logout::InitAsDefaultInstance() {
+void msg_logout_reponse::InitAsDefaultInstance() {
 }
 
-sc_msg_logout::sc_msg_logout(const sc_msg_logout& from)
+msg_logout_reponse::msg_logout_reponse(const msg_logout_reponse& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   UnsafeMergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:platform.sc_msg_logout)
+  // @@protoc_insertion_point(copy_constructor:platform.msg_logout_reponse)
 }
 
-void sc_msg_logout::SharedCtor() {
+void msg_logout_reponse::SharedCtor() {
   msg_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   _cached_size_ = 0;
 }
 
-sc_msg_logout::~sc_msg_logout() {
-  // @@protoc_insertion_point(destructor:platform.sc_msg_logout)
+msg_logout_reponse::~msg_logout_reponse() {
+  // @@protoc_insertion_point(destructor:platform.msg_logout_reponse)
   SharedDtor();
 }
 
-void sc_msg_logout::SharedDtor() {
+void msg_logout_reponse::SharedDtor() {
   msg_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void sc_msg_logout::SetCachedSize(int size) const {
+void msg_logout_reponse::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* sc_msg_logout::descriptor() {
+const ::google::protobuf::Descriptor* msg_logout_reponse::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return sc_msg_logout_descriptor_;
+  return msg_logout_reponse_descriptor_;
 }
 
-const sc_msg_logout& sc_msg_logout::default_instance() {
+const msg_logout_reponse& msg_logout_reponse::default_instance() {
   protobuf_InitDefaults_platform_2eproto();
   return *internal_default_instance();
 }
 
-::google::protobuf::internal::ExplicitlyConstructed<sc_msg_logout> sc_msg_logout_default_instance_;
+::google::protobuf::internal::ExplicitlyConstructed<msg_logout_reponse> msg_logout_reponse_default_instance_;
 
-sc_msg_logout* sc_msg_logout::New(::google::protobuf::Arena* arena) const {
-  sc_msg_logout* n = new sc_msg_logout;
+msg_logout_reponse* msg_logout_reponse::New(::google::protobuf::Arena* arena) const {
+  msg_logout_reponse* n = new msg_logout_reponse;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void sc_msg_logout::Clear() {
-// @@protoc_insertion_point(message_clear_start:platform.sc_msg_logout)
+void msg_logout_reponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_logout_reponse)
   msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-bool sc_msg_logout::MergePartialFromCodedStream(
+bool msg_logout_reponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:platform.sc_msg_logout)
+  // @@protoc_insertion_point(parse_start:platform.msg_logout_reponse)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -1680,7 +1707,7 @@ bool sc_msg_logout::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->msg().data(), this->msg().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "platform.sc_msg_logout.msg"));
+            "platform.msg_logout_reponse.msg"));
         } else {
           goto handle_unusual;
         }
@@ -1701,51 +1728,51 @@ bool sc_msg_logout::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:platform.sc_msg_logout)
+  // @@protoc_insertion_point(parse_success:platform.msg_logout_reponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:platform.sc_msg_logout)
+  // @@protoc_insertion_point(parse_failure:platform.msg_logout_reponse)
   return false;
 #undef DO_
 }
 
-void sc_msg_logout::SerializeWithCachedSizes(
+void msg_logout_reponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:platform.sc_msg_logout)
+  // @@protoc_insertion_point(serialize_start:platform.msg_logout_reponse)
   // optional string msg = 1;
   if (this->msg().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->msg().data(), this->msg().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.sc_msg_logout.msg");
+      "platform.msg_logout_reponse.msg");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->msg(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:platform.sc_msg_logout)
+  // @@protoc_insertion_point(serialize_end:platform.msg_logout_reponse)
 }
 
-::google::protobuf::uint8* sc_msg_logout::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* msg_logout_reponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:platform.sc_msg_logout)
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_logout_reponse)
   // optional string msg = 1;
   if (this->msg().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->msg().data(), this->msg().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.sc_msg_logout.msg");
+      "platform.msg_logout_reponse.msg");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->msg(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:platform.sc_msg_logout)
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_logout_reponse)
   return target;
 }
 
-size_t sc_msg_logout::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:platform.sc_msg_logout)
+size_t msg_logout_reponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_logout_reponse)
   size_t total_size = 0;
 
   // optional string msg = 1;
@@ -1762,23 +1789,23 @@ size_t sc_msg_logout::ByteSizeLong() const {
   return total_size;
 }
 
-void sc_msg_logout::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:platform.sc_msg_logout)
+void msg_logout_reponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_logout_reponse)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const sc_msg_logout* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const sc_msg_logout>(
+  const msg_logout_reponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_logout_reponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.sc_msg_logout)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_logout_reponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.sc_msg_logout)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_logout_reponse)
     UnsafeMergeFrom(*source);
   }
 }
 
-void sc_msg_logout::MergeFrom(const sc_msg_logout& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:platform.sc_msg_logout)
+void msg_logout_reponse::MergeFrom(const msg_logout_reponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_logout_reponse)
   if (GOOGLE_PREDICT_TRUE(&from != this)) {
     UnsafeMergeFrom(from);
   } else {
@@ -1786,7 +1813,7 @@ void sc_msg_logout::MergeFrom(const sc_msg_logout& from) {
   }
 }
 
-void sc_msg_logout::UnsafeMergeFrom(const sc_msg_logout& from) {
+void msg_logout_reponse::UnsafeMergeFrom(const msg_logout_reponse& from) {
   GOOGLE_DCHECK(&from != this);
   if (from.msg().size() > 0) {
 
@@ -1794,174 +1821,174 @@ void sc_msg_logout::UnsafeMergeFrom(const sc_msg_logout& from) {
   }
 }
 
-void sc_msg_logout::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:platform.sc_msg_logout)
+void msg_logout_reponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_logout_reponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void sc_msg_logout::CopyFrom(const sc_msg_logout& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:platform.sc_msg_logout)
+void msg_logout_reponse::CopyFrom(const msg_logout_reponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_logout_reponse)
   if (&from == this) return;
   Clear();
   UnsafeMergeFrom(from);
 }
 
-bool sc_msg_logout::IsInitialized() const {
+bool msg_logout_reponse::IsInitialized() const {
 
   return true;
 }
 
-void sc_msg_logout::Swap(sc_msg_logout* other) {
+void msg_logout_reponse::Swap(msg_logout_reponse* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void sc_msg_logout::InternalSwap(sc_msg_logout* other) {
+void msg_logout_reponse::InternalSwap(msg_logout_reponse* other) {
   msg_.Swap(&other->msg_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata sc_msg_logout::GetMetadata() const {
+::google::protobuf::Metadata msg_logout_reponse::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = sc_msg_logout_descriptor_;
-  metadata.reflection = sc_msg_logout_reflection_;
+  metadata.descriptor = msg_logout_reponse_descriptor_;
+  metadata.reflection = msg_logout_reponse_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// sc_msg_logout
+// msg_logout_reponse
 
 // optional string msg = 1;
-void sc_msg_logout::clear_msg() {
+void msg_logout_reponse::clear_msg() {
   msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-const ::std::string& sc_msg_logout::msg() const {
-  // @@protoc_insertion_point(field_get:platform.sc_msg_logout.msg)
+const ::std::string& msg_logout_reponse::msg() const {
+  // @@protoc_insertion_point(field_get:platform.msg_logout_reponse.msg)
   return msg_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void sc_msg_logout::set_msg(const ::std::string& value) {
+void msg_logout_reponse::set_msg(const ::std::string& value) {
   
   msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:platform.sc_msg_logout.msg)
+  // @@protoc_insertion_point(field_set:platform.msg_logout_reponse.msg)
 }
-void sc_msg_logout::set_msg(const char* value) {
+void msg_logout_reponse::set_msg(const char* value) {
   
   msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:platform.sc_msg_logout.msg)
+  // @@protoc_insertion_point(field_set_char:platform.msg_logout_reponse.msg)
 }
-void sc_msg_logout::set_msg(const char* value, size_t size) {
+void msg_logout_reponse::set_msg(const char* value, size_t size) {
   
   msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:platform.sc_msg_logout.msg)
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_logout_reponse.msg)
 }
-::std::string* sc_msg_logout::mutable_msg() {
+::std::string* msg_logout_reponse::mutable_msg() {
   
-  // @@protoc_insertion_point(field_mutable:platform.sc_msg_logout.msg)
+  // @@protoc_insertion_point(field_mutable:platform.msg_logout_reponse.msg)
   return msg_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* sc_msg_logout::release_msg() {
-  // @@protoc_insertion_point(field_release:platform.sc_msg_logout.msg)
+::std::string* msg_logout_reponse::release_msg() {
+  // @@protoc_insertion_point(field_release:platform.msg_logout_reponse.msg)
   
   return msg_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void sc_msg_logout::set_allocated_msg(::std::string* msg) {
+void msg_logout_reponse::set_allocated_msg(::std::string* msg) {
   if (msg != NULL) {
     
   } else {
     
   }
   msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
-  // @@protoc_insertion_point(field_set_allocated:platform.sc_msg_logout.msg)
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_logout_reponse.msg)
 }
 
-inline const sc_msg_logout* sc_msg_logout::internal_default_instance() {
-  return &sc_msg_logout_default_instance_.get();
+inline const msg_logout_reponse* msg_logout_reponse::internal_default_instance() {
+  return &msg_logout_reponse_default_instance_.get();
 }
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int cs_msg_chat::kDeviceFieldNumber;
-const int cs_msg_chat::kFromUidFieldNumber;
-const int cs_msg_chat::kToUidFieldNumber;
-const int cs_msg_chat::kMsgFieldNumber;
+const int msg_chat_request::kDeviceFieldNumber;
+const int msg_chat_request::kFromUidFieldNumber;
+const int msg_chat_request::kToUidFieldNumber;
+const int msg_chat_request::kMsgFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-cs_msg_chat::cs_msg_chat()
+msg_chat_request::msg_chat_request()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
   SharedCtor();
-  // @@protoc_insertion_point(constructor:platform.cs_msg_chat)
+  // @@protoc_insertion_point(constructor:platform.msg_chat_request)
 }
 
-void cs_msg_chat::InitAsDefaultInstance() {
+void msg_chat_request::InitAsDefaultInstance() {
 }
 
-cs_msg_chat::cs_msg_chat(const cs_msg_chat& from)
+msg_chat_request::msg_chat_request(const msg_chat_request& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   UnsafeMergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:platform.cs_msg_chat)
+  // @@protoc_insertion_point(copy_constructor:platform.msg_chat_request)
 }
 
-void cs_msg_chat::SharedCtor() {
+void msg_chat_request::SharedCtor() {
   msg_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&device_, 0, reinterpret_cast<char*>(&to_uid_) -
     reinterpret_cast<char*>(&device_) + sizeof(to_uid_));
   _cached_size_ = 0;
 }
 
-cs_msg_chat::~cs_msg_chat() {
-  // @@protoc_insertion_point(destructor:platform.cs_msg_chat)
+msg_chat_request::~msg_chat_request() {
+  // @@protoc_insertion_point(destructor:platform.msg_chat_request)
   SharedDtor();
 }
 
-void cs_msg_chat::SharedDtor() {
+void msg_chat_request::SharedDtor() {
   msg_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void cs_msg_chat::SetCachedSize(int size) const {
+void msg_chat_request::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* cs_msg_chat::descriptor() {
+const ::google::protobuf::Descriptor* msg_chat_request::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return cs_msg_chat_descriptor_;
+  return msg_chat_request_descriptor_;
 }
 
-const cs_msg_chat& cs_msg_chat::default_instance() {
+const msg_chat_request& msg_chat_request::default_instance() {
   protobuf_InitDefaults_platform_2eproto();
   return *internal_default_instance();
 }
 
-::google::protobuf::internal::ExplicitlyConstructed<cs_msg_chat> cs_msg_chat_default_instance_;
+::google::protobuf::internal::ExplicitlyConstructed<msg_chat_request> msg_chat_request_default_instance_;
 
-cs_msg_chat* cs_msg_chat::New(::google::protobuf::Arena* arena) const {
-  cs_msg_chat* n = new cs_msg_chat;
+msg_chat_request* msg_chat_request::New(::google::protobuf::Arena* arena) const {
+  msg_chat_request* n = new msg_chat_request;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void cs_msg_chat::Clear() {
-// @@protoc_insertion_point(message_clear_start:platform.cs_msg_chat)
+void msg_chat_request::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_chat_request)
 #if defined(__clang__)
 #define ZR_HELPER_(f) \
   _Pragma("clang diagnostic push") \
   _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
-  __builtin_offsetof(cs_msg_chat, f) \
+  __builtin_offsetof(msg_chat_request, f) \
   _Pragma("clang diagnostic pop")
 #else
 #define ZR_HELPER_(f) reinterpret_cast<char*>(\
-  &reinterpret_cast<cs_msg_chat*>(16)->f)
+  &reinterpret_cast<msg_chat_request*>(16)->f)
 #endif
 
 #define ZR_(first, last) do {\
@@ -1977,11 +2004,11 @@ void cs_msg_chat::Clear() {
 
 }
 
-bool cs_msg_chat::MergePartialFromCodedStream(
+bool msg_chat_request::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:platform.cs_msg_chat)
+  // @@protoc_insertion_point(parse_start:platform.msg_chat_request)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -2040,7 +2067,7 @@ bool cs_msg_chat::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->msg().data(), this->msg().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "platform.cs_msg_chat.msg"));
+            "platform.msg_chat_request.msg"));
         } else {
           goto handle_unusual;
         }
@@ -2061,17 +2088,17 @@ bool cs_msg_chat::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:platform.cs_msg_chat)
+  // @@protoc_insertion_point(parse_success:platform.msg_chat_request)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:platform.cs_msg_chat)
+  // @@protoc_insertion_point(parse_failure:platform.msg_chat_request)
   return false;
 #undef DO_
 }
 
-void cs_msg_chat::SerializeWithCachedSizes(
+void msg_chat_request::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:platform.cs_msg_chat)
+  // @@protoc_insertion_point(serialize_start:platform.msg_chat_request)
   // optional int32 device = 1;
   if (this->device() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->device(), output);
@@ -2092,18 +2119,18 @@ void cs_msg_chat::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->msg().data(), this->msg().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.cs_msg_chat.msg");
+      "platform.msg_chat_request.msg");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       4, this->msg(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:platform.cs_msg_chat)
+  // @@protoc_insertion_point(serialize_end:platform.msg_chat_request)
 }
 
-::google::protobuf::uint8* cs_msg_chat::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* msg_chat_request::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:platform.cs_msg_chat)
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_chat_request)
   // optional int32 device = 1;
   if (this->device() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->device(), target);
@@ -2124,18 +2151,18 @@ void cs_msg_chat::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->msg().data(), this->msg().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.cs_msg_chat.msg");
+      "platform.msg_chat_request.msg");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         4, this->msg(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:platform.cs_msg_chat)
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_chat_request)
   return target;
 }
 
-size_t cs_msg_chat::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:platform.cs_msg_chat)
+size_t msg_chat_request::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_chat_request)
   size_t total_size = 0;
 
   // optional int32 device = 1;
@@ -2173,23 +2200,23 @@ size_t cs_msg_chat::ByteSizeLong() const {
   return total_size;
 }
 
-void cs_msg_chat::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:platform.cs_msg_chat)
+void msg_chat_request::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_chat_request)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const cs_msg_chat* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const cs_msg_chat>(
+  const msg_chat_request* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_chat_request>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.cs_msg_chat)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_chat_request)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.cs_msg_chat)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_chat_request)
     UnsafeMergeFrom(*source);
   }
 }
 
-void cs_msg_chat::MergeFrom(const cs_msg_chat& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:platform.cs_msg_chat)
+void msg_chat_request::MergeFrom(const msg_chat_request& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_chat_request)
   if (GOOGLE_PREDICT_TRUE(&from != this)) {
     UnsafeMergeFrom(from);
   } else {
@@ -2197,7 +2224,7 @@ void cs_msg_chat::MergeFrom(const cs_msg_chat& from) {
   }
 }
 
-void cs_msg_chat::UnsafeMergeFrom(const cs_msg_chat& from) {
+void msg_chat_request::UnsafeMergeFrom(const msg_chat_request& from) {
   GOOGLE_DCHECK(&from != this);
   if (from.device() != 0) {
     set_device(from.device());
@@ -2214,30 +2241,30 @@ void cs_msg_chat::UnsafeMergeFrom(const cs_msg_chat& from) {
   }
 }
 
-void cs_msg_chat::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:platform.cs_msg_chat)
+void msg_chat_request::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_chat_request)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void cs_msg_chat::CopyFrom(const cs_msg_chat& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:platform.cs_msg_chat)
+void msg_chat_request::CopyFrom(const msg_chat_request& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_chat_request)
   if (&from == this) return;
   Clear();
   UnsafeMergeFrom(from);
 }
 
-bool cs_msg_chat::IsInitialized() const {
+bool msg_chat_request::IsInitialized() const {
 
   return true;
 }
 
-void cs_msg_chat::Swap(cs_msg_chat* other) {
+void msg_chat_request::Swap(msg_chat_request* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void cs_msg_chat::InternalSwap(cs_msg_chat* other) {
+void msg_chat_request::InternalSwap(msg_chat_request* other) {
   std::swap(device_, other->device_);
   std::swap(from_uid_, other->from_uid_);
   std::swap(to_uid_, other->to_uid_);
@@ -2246,180 +2273,547 @@ void cs_msg_chat::InternalSwap(cs_msg_chat* other) {
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata cs_msg_chat::GetMetadata() const {
+::google::protobuf::Metadata msg_chat_request::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = cs_msg_chat_descriptor_;
-  metadata.reflection = cs_msg_chat_reflection_;
+  metadata.descriptor = msg_chat_request_descriptor_;
+  metadata.reflection = msg_chat_request_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// cs_msg_chat
+// msg_chat_request
 
 // optional int32 device = 1;
-void cs_msg_chat::clear_device() {
+void msg_chat_request::clear_device() {
   device_ = 0;
 }
-::google::protobuf::int32 cs_msg_chat::device() const {
-  // @@protoc_insertion_point(field_get:platform.cs_msg_chat.device)
+::google::protobuf::int32 msg_chat_request::device() const {
+  // @@protoc_insertion_point(field_get:platform.msg_chat_request.device)
   return device_;
 }
-void cs_msg_chat::set_device(::google::protobuf::int32 value) {
+void msg_chat_request::set_device(::google::protobuf::int32 value) {
   
   device_ = value;
-  // @@protoc_insertion_point(field_set:platform.cs_msg_chat.device)
+  // @@protoc_insertion_point(field_set:platform.msg_chat_request.device)
 }
 
 // optional int32 from_uid = 2;
-void cs_msg_chat::clear_from_uid() {
+void msg_chat_request::clear_from_uid() {
   from_uid_ = 0;
 }
-::google::protobuf::int32 cs_msg_chat::from_uid() const {
-  // @@protoc_insertion_point(field_get:platform.cs_msg_chat.from_uid)
+::google::protobuf::int32 msg_chat_request::from_uid() const {
+  // @@protoc_insertion_point(field_get:platform.msg_chat_request.from_uid)
   return from_uid_;
 }
-void cs_msg_chat::set_from_uid(::google::protobuf::int32 value) {
+void msg_chat_request::set_from_uid(::google::protobuf::int32 value) {
   
   from_uid_ = value;
-  // @@protoc_insertion_point(field_set:platform.cs_msg_chat.from_uid)
+  // @@protoc_insertion_point(field_set:platform.msg_chat_request.from_uid)
 }
 
 // optional int32 to_uid = 3;
-void cs_msg_chat::clear_to_uid() {
+void msg_chat_request::clear_to_uid() {
   to_uid_ = 0;
 }
-::google::protobuf::int32 cs_msg_chat::to_uid() const {
-  // @@protoc_insertion_point(field_get:platform.cs_msg_chat.to_uid)
+::google::protobuf::int32 msg_chat_request::to_uid() const {
+  // @@protoc_insertion_point(field_get:platform.msg_chat_request.to_uid)
   return to_uid_;
 }
-void cs_msg_chat::set_to_uid(::google::protobuf::int32 value) {
+void msg_chat_request::set_to_uid(::google::protobuf::int32 value) {
   
   to_uid_ = value;
-  // @@protoc_insertion_point(field_set:platform.cs_msg_chat.to_uid)
+  // @@protoc_insertion_point(field_set:platform.msg_chat_request.to_uid)
 }
 
 // optional string msg = 4;
-void cs_msg_chat::clear_msg() {
+void msg_chat_request::clear_msg() {
   msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-const ::std::string& cs_msg_chat::msg() const {
-  // @@protoc_insertion_point(field_get:platform.cs_msg_chat.msg)
+const ::std::string& msg_chat_request::msg() const {
+  // @@protoc_insertion_point(field_get:platform.msg_chat_request.msg)
   return msg_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void cs_msg_chat::set_msg(const ::std::string& value) {
+void msg_chat_request::set_msg(const ::std::string& value) {
   
   msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:platform.cs_msg_chat.msg)
+  // @@protoc_insertion_point(field_set:platform.msg_chat_request.msg)
 }
-void cs_msg_chat::set_msg(const char* value) {
+void msg_chat_request::set_msg(const char* value) {
   
   msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:platform.cs_msg_chat.msg)
+  // @@protoc_insertion_point(field_set_char:platform.msg_chat_request.msg)
 }
-void cs_msg_chat::set_msg(const char* value, size_t size) {
+void msg_chat_request::set_msg(const char* value, size_t size) {
   
   msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:platform.cs_msg_chat.msg)
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_chat_request.msg)
 }
-::std::string* cs_msg_chat::mutable_msg() {
+::std::string* msg_chat_request::mutable_msg() {
   
-  // @@protoc_insertion_point(field_mutable:platform.cs_msg_chat.msg)
+  // @@protoc_insertion_point(field_mutable:platform.msg_chat_request.msg)
   return msg_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* cs_msg_chat::release_msg() {
-  // @@protoc_insertion_point(field_release:platform.cs_msg_chat.msg)
+::std::string* msg_chat_request::release_msg() {
+  // @@protoc_insertion_point(field_release:platform.msg_chat_request.msg)
   
   return msg_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void cs_msg_chat::set_allocated_msg(::std::string* msg) {
+void msg_chat_request::set_allocated_msg(::std::string* msg) {
   if (msg != NULL) {
     
   } else {
     
   }
   msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
-  // @@protoc_insertion_point(field_set_allocated:platform.cs_msg_chat.msg)
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_chat_request.msg)
 }
 
-inline const cs_msg_chat* cs_msg_chat::internal_default_instance() {
-  return &cs_msg_chat_default_instance_.get();
+inline const msg_chat_request* msg_chat_request::internal_default_instance() {
+  return &msg_chat_request_default_instance_.get();
 }
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int sc_msg_request_userinfo::kUidFieldNumber;
+const int msg_chat_reponse::kFromUidFieldNumber;
+const int msg_chat_reponse::kToUidFieldNumber;
+const int msg_chat_reponse::kResultFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-sc_msg_request_userinfo::sc_msg_request_userinfo()
+msg_chat_reponse::msg_chat_reponse()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
   SharedCtor();
-  // @@protoc_insertion_point(constructor:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(constructor:platform.msg_chat_reponse)
 }
 
-void sc_msg_request_userinfo::InitAsDefaultInstance() {
+void msg_chat_reponse::InitAsDefaultInstance() {
 }
 
-sc_msg_request_userinfo::sc_msg_request_userinfo(const sc_msg_request_userinfo& from)
+msg_chat_reponse::msg_chat_reponse(const msg_chat_reponse& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   UnsafeMergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(copy_constructor:platform.msg_chat_reponse)
 }
 
-void sc_msg_request_userinfo::SharedCtor() {
-  uid_ = 0;
+void msg_chat_reponse::SharedCtor() {
+  ::memset(&from_uid_, 0, reinterpret_cast<char*>(&result_) -
+    reinterpret_cast<char*>(&from_uid_) + sizeof(result_));
   _cached_size_ = 0;
 }
 
-sc_msg_request_userinfo::~sc_msg_request_userinfo() {
-  // @@protoc_insertion_point(destructor:platform.sc_msg_request_userinfo)
+msg_chat_reponse::~msg_chat_reponse() {
+  // @@protoc_insertion_point(destructor:platform.msg_chat_reponse)
   SharedDtor();
 }
 
-void sc_msg_request_userinfo::SharedDtor() {
+void msg_chat_reponse::SharedDtor() {
 }
 
-void sc_msg_request_userinfo::SetCachedSize(int size) const {
+void msg_chat_reponse::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* sc_msg_request_userinfo::descriptor() {
+const ::google::protobuf::Descriptor* msg_chat_reponse::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return sc_msg_request_userinfo_descriptor_;
+  return msg_chat_reponse_descriptor_;
 }
 
-const sc_msg_request_userinfo& sc_msg_request_userinfo::default_instance() {
+const msg_chat_reponse& msg_chat_reponse::default_instance() {
   protobuf_InitDefaults_platform_2eproto();
   return *internal_default_instance();
 }
 
-::google::protobuf::internal::ExplicitlyConstructed<sc_msg_request_userinfo> sc_msg_request_userinfo_default_instance_;
+::google::protobuf::internal::ExplicitlyConstructed<msg_chat_reponse> msg_chat_reponse_default_instance_;
 
-sc_msg_request_userinfo* sc_msg_request_userinfo::New(::google::protobuf::Arena* arena) const {
-  sc_msg_request_userinfo* n = new sc_msg_request_userinfo;
+msg_chat_reponse* msg_chat_reponse::New(::google::protobuf::Arena* arena) const {
+  msg_chat_reponse* n = new msg_chat_reponse;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void sc_msg_request_userinfo::Clear() {
-// @@protoc_insertion_point(message_clear_start:platform.sc_msg_request_userinfo)
-  uid_ = 0;
+void msg_chat_reponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_chat_reponse)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(msg_chat_reponse, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<msg_chat_reponse*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&(first), 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(from_uid_, result_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
 }
 
-bool sc_msg_request_userinfo::MergePartialFromCodedStream(
+bool msg_chat_reponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(parse_start:platform.msg_chat_reponse)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 from_uid = 1;
+      case 1: {
+        if (tag == 8) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &from_uid_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_to_uid;
+        break;
+      }
+
+      // optional int32 to_uid = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_to_uid:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &to_uid_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_result;
+        break;
+      }
+
+      // optional int32 result = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_result:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &result_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:platform.msg_chat_reponse)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:platform.msg_chat_reponse)
+  return false;
+#undef DO_
+}
+
+void msg_chat_reponse::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:platform.msg_chat_reponse)
+  // optional int32 from_uid = 1;
+  if (this->from_uid() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->from_uid(), output);
+  }
+
+  // optional int32 to_uid = 2;
+  if (this->to_uid() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->to_uid(), output);
+  }
+
+  // optional int32 result = 3;
+  if (this->result() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->result(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:platform.msg_chat_reponse)
+}
+
+::google::protobuf::uint8* msg_chat_reponse::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_chat_reponse)
+  // optional int32 from_uid = 1;
+  if (this->from_uid() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->from_uid(), target);
+  }
+
+  // optional int32 to_uid = 2;
+  if (this->to_uid() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->to_uid(), target);
+  }
+
+  // optional int32 result = 3;
+  if (this->result() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->result(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_chat_reponse)
+  return target;
+}
+
+size_t msg_chat_reponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_chat_reponse)
+  size_t total_size = 0;
+
+  // optional int32 from_uid = 1;
+  if (this->from_uid() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->from_uid());
+  }
+
+  // optional int32 to_uid = 2;
+  if (this->to_uid() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->to_uid());
+  }
+
+  // optional int32 result = 3;
+  if (this->result() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->result());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void msg_chat_reponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_chat_reponse)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const msg_chat_reponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_chat_reponse>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_chat_reponse)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_chat_reponse)
+    UnsafeMergeFrom(*source);
+  }
+}
+
+void msg_chat_reponse::MergeFrom(const msg_chat_reponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_chat_reponse)
+  if (GOOGLE_PREDICT_TRUE(&from != this)) {
+    UnsafeMergeFrom(from);
+  } else {
+    MergeFromFail(__LINE__);
+  }
+}
+
+void msg_chat_reponse::UnsafeMergeFrom(const msg_chat_reponse& from) {
+  GOOGLE_DCHECK(&from != this);
+  if (from.from_uid() != 0) {
+    set_from_uid(from.from_uid());
+  }
+  if (from.to_uid() != 0) {
+    set_to_uid(from.to_uid());
+  }
+  if (from.result() != 0) {
+    set_result(from.result());
+  }
+}
+
+void msg_chat_reponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_chat_reponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void msg_chat_reponse::CopyFrom(const msg_chat_reponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_chat_reponse)
+  if (&from == this) return;
+  Clear();
+  UnsafeMergeFrom(from);
+}
+
+bool msg_chat_reponse::IsInitialized() const {
+
+  return true;
+}
+
+void msg_chat_reponse::Swap(msg_chat_reponse* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void msg_chat_reponse::InternalSwap(msg_chat_reponse* other) {
+  std::swap(from_uid_, other->from_uid_);
+  std::swap(to_uid_, other->to_uid_);
+  std::swap(result_, other->result_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata msg_chat_reponse::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = msg_chat_reponse_descriptor_;
+  metadata.reflection = msg_chat_reponse_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// msg_chat_reponse
+
+// optional int32 from_uid = 1;
+void msg_chat_reponse::clear_from_uid() {
+  from_uid_ = 0;
+}
+::google::protobuf::int32 msg_chat_reponse::from_uid() const {
+  // @@protoc_insertion_point(field_get:platform.msg_chat_reponse.from_uid)
+  return from_uid_;
+}
+void msg_chat_reponse::set_from_uid(::google::protobuf::int32 value) {
+  
+  from_uid_ = value;
+  // @@protoc_insertion_point(field_set:platform.msg_chat_reponse.from_uid)
+}
+
+// optional int32 to_uid = 2;
+void msg_chat_reponse::clear_to_uid() {
+  to_uid_ = 0;
+}
+::google::protobuf::int32 msg_chat_reponse::to_uid() const {
+  // @@protoc_insertion_point(field_get:platform.msg_chat_reponse.to_uid)
+  return to_uid_;
+}
+void msg_chat_reponse::set_to_uid(::google::protobuf::int32 value) {
+  
+  to_uid_ = value;
+  // @@protoc_insertion_point(field_set:platform.msg_chat_reponse.to_uid)
+}
+
+// optional int32 result = 3;
+void msg_chat_reponse::clear_result() {
+  result_ = 0;
+}
+::google::protobuf::int32 msg_chat_reponse::result() const {
+  // @@protoc_insertion_point(field_get:platform.msg_chat_reponse.result)
+  return result_;
+}
+void msg_chat_reponse::set_result(::google::protobuf::int32 value) {
+  
+  result_ = value;
+  // @@protoc_insertion_point(field_set:platform.msg_chat_reponse.result)
+}
+
+inline const msg_chat_reponse* msg_chat_reponse::internal_default_instance() {
+  return &msg_chat_reponse_default_instance_.get();
+}
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int msg_userinfo_request::kUidFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+msg_userinfo_request::msg_userinfo_request()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:platform.msg_userinfo_request)
+}
+
+void msg_userinfo_request::InitAsDefaultInstance() {
+}
+
+msg_userinfo_request::msg_userinfo_request(const msg_userinfo_request& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  UnsafeMergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:platform.msg_userinfo_request)
+}
+
+void msg_userinfo_request::SharedCtor() {
+  uid_ = 0;
+  _cached_size_ = 0;
+}
+
+msg_userinfo_request::~msg_userinfo_request() {
+  // @@protoc_insertion_point(destructor:platform.msg_userinfo_request)
+  SharedDtor();
+}
+
+void msg_userinfo_request::SharedDtor() {
+}
+
+void msg_userinfo_request::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* msg_userinfo_request::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return msg_userinfo_request_descriptor_;
+}
+
+const msg_userinfo_request& msg_userinfo_request::default_instance() {
+  protobuf_InitDefaults_platform_2eproto();
+  return *internal_default_instance();
+}
+
+::google::protobuf::internal::ExplicitlyConstructed<msg_userinfo_request> msg_userinfo_request_default_instance_;
+
+msg_userinfo_request* msg_userinfo_request::New(::google::protobuf::Arena* arena) const {
+  msg_userinfo_request* n = new msg_userinfo_request;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void msg_userinfo_request::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_userinfo_request)
+  uid_ = 0;
+}
+
+bool msg_userinfo_request::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:platform.msg_userinfo_request)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -2452,40 +2846,40 @@ bool sc_msg_request_userinfo::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(parse_success:platform.msg_userinfo_request)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(parse_failure:platform.msg_userinfo_request)
   return false;
 #undef DO_
 }
 
-void sc_msg_request_userinfo::SerializeWithCachedSizes(
+void msg_userinfo_request::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(serialize_start:platform.msg_userinfo_request)
   // optional int32 uid = 1;
   if (this->uid() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->uid(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(serialize_end:platform.msg_userinfo_request)
 }
 
-::google::protobuf::uint8* sc_msg_request_userinfo::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* msg_userinfo_request::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_userinfo_request)
   // optional int32 uid = 1;
   if (this->uid() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->uid(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_userinfo_request)
   return target;
 }
 
-size_t sc_msg_request_userinfo::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:platform.sc_msg_request_userinfo)
+size_t msg_userinfo_request::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_userinfo_request)
   size_t total_size = 0;
 
   // optional int32 uid = 1;
@@ -2502,23 +2896,23 @@ size_t sc_msg_request_userinfo::ByteSizeLong() const {
   return total_size;
 }
 
-void sc_msg_request_userinfo::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:platform.sc_msg_request_userinfo)
+void msg_userinfo_request::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_userinfo_request)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const sc_msg_request_userinfo* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const sc_msg_request_userinfo>(
+  const msg_userinfo_request* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_userinfo_request>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_userinfo_request)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.sc_msg_request_userinfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_userinfo_request)
     UnsafeMergeFrom(*source);
   }
 }
 
-void sc_msg_request_userinfo::MergeFrom(const sc_msg_request_userinfo& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:platform.sc_msg_request_userinfo)
+void msg_userinfo_request::MergeFrom(const msg_userinfo_request& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_userinfo_request)
   if (GOOGLE_PREDICT_TRUE(&from != this)) {
     UnsafeMergeFrom(from);
   } else {
@@ -2526,101 +2920,101 @@ void sc_msg_request_userinfo::MergeFrom(const sc_msg_request_userinfo& from) {
   }
 }
 
-void sc_msg_request_userinfo::UnsafeMergeFrom(const sc_msg_request_userinfo& from) {
+void msg_userinfo_request::UnsafeMergeFrom(const msg_userinfo_request& from) {
   GOOGLE_DCHECK(&from != this);
   if (from.uid() != 0) {
     set_uid(from.uid());
   }
 }
 
-void sc_msg_request_userinfo::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:platform.sc_msg_request_userinfo)
+void msg_userinfo_request::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_userinfo_request)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void sc_msg_request_userinfo::CopyFrom(const sc_msg_request_userinfo& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:platform.sc_msg_request_userinfo)
+void msg_userinfo_request::CopyFrom(const msg_userinfo_request& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_userinfo_request)
   if (&from == this) return;
   Clear();
   UnsafeMergeFrom(from);
 }
 
-bool sc_msg_request_userinfo::IsInitialized() const {
+bool msg_userinfo_request::IsInitialized() const {
 
   return true;
 }
 
-void sc_msg_request_userinfo::Swap(sc_msg_request_userinfo* other) {
+void msg_userinfo_request::Swap(msg_userinfo_request* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void sc_msg_request_userinfo::InternalSwap(sc_msg_request_userinfo* other) {
+void msg_userinfo_request::InternalSwap(msg_userinfo_request* other) {
   std::swap(uid_, other->uid_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata sc_msg_request_userinfo::GetMetadata() const {
+::google::protobuf::Metadata msg_userinfo_request::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = sc_msg_request_userinfo_descriptor_;
-  metadata.reflection = sc_msg_request_userinfo_reflection_;
+  metadata.descriptor = msg_userinfo_request_descriptor_;
+  metadata.reflection = msg_userinfo_request_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// sc_msg_request_userinfo
+// msg_userinfo_request
 
 // optional int32 uid = 1;
-void sc_msg_request_userinfo::clear_uid() {
+void msg_userinfo_request::clear_uid() {
   uid_ = 0;
 }
-::google::protobuf::int32 sc_msg_request_userinfo::uid() const {
-  // @@protoc_insertion_point(field_get:platform.sc_msg_request_userinfo.uid)
+::google::protobuf::int32 msg_userinfo_request::uid() const {
+  // @@protoc_insertion_point(field_get:platform.msg_userinfo_request.uid)
   return uid_;
 }
-void sc_msg_request_userinfo::set_uid(::google::protobuf::int32 value) {
+void msg_userinfo_request::set_uid(::google::protobuf::int32 value) {
   
   uid_ = value;
-  // @@protoc_insertion_point(field_set:platform.sc_msg_request_userinfo.uid)
+  // @@protoc_insertion_point(field_set:platform.msg_userinfo_request.uid)
 }
 
-inline const sc_msg_request_userinfo* sc_msg_request_userinfo::internal_default_instance() {
-  return &sc_msg_request_userinfo_default_instance_.get();
+inline const msg_userinfo_request* msg_userinfo_request::internal_default_instance() {
+  return &msg_userinfo_request_default_instance_.get();
 }
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int sc_msg_userinfo::kUidFieldNumber;
-const int sc_msg_userinfo::kAgeFieldNumber;
-const int sc_msg_userinfo::kSexFieldNumber;
-const int sc_msg_userinfo::kNameFieldNumber;
-const int sc_msg_userinfo::kAddressFieldNumber;
+const int msg_userinfo_reponse::kUidFieldNumber;
+const int msg_userinfo_reponse::kAgeFieldNumber;
+const int msg_userinfo_reponse::kSexFieldNumber;
+const int msg_userinfo_reponse::kNameFieldNumber;
+const int msg_userinfo_reponse::kAddressFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
-sc_msg_userinfo::sc_msg_userinfo()
+msg_userinfo_reponse::msg_userinfo_reponse()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
   SharedCtor();
-  // @@protoc_insertion_point(constructor:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(constructor:platform.msg_userinfo_reponse)
 }
 
-void sc_msg_userinfo::InitAsDefaultInstance() {
+void msg_userinfo_reponse::InitAsDefaultInstance() {
 }
 
-sc_msg_userinfo::sc_msg_userinfo(const sc_msg_userinfo& from)
+msg_userinfo_reponse::msg_userinfo_reponse(const msg_userinfo_reponse& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   UnsafeMergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(copy_constructor:platform.msg_userinfo_reponse)
 }
 
-void sc_msg_userinfo::SharedCtor() {
+void msg_userinfo_reponse::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   address_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&uid_, 0, reinterpret_cast<char*>(&sex_) -
@@ -2628,52 +3022,52 @@ void sc_msg_userinfo::SharedCtor() {
   _cached_size_ = 0;
 }
 
-sc_msg_userinfo::~sc_msg_userinfo() {
-  // @@protoc_insertion_point(destructor:platform.sc_msg_userinfo)
+msg_userinfo_reponse::~msg_userinfo_reponse() {
+  // @@protoc_insertion_point(destructor:platform.msg_userinfo_reponse)
   SharedDtor();
 }
 
-void sc_msg_userinfo::SharedDtor() {
+void msg_userinfo_reponse::SharedDtor() {
   name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   address_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
-void sc_msg_userinfo::SetCachedSize(int size) const {
+void msg_userinfo_reponse::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* sc_msg_userinfo::descriptor() {
+const ::google::protobuf::Descriptor* msg_userinfo_reponse::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return sc_msg_userinfo_descriptor_;
+  return msg_userinfo_reponse_descriptor_;
 }
 
-const sc_msg_userinfo& sc_msg_userinfo::default_instance() {
+const msg_userinfo_reponse& msg_userinfo_reponse::default_instance() {
   protobuf_InitDefaults_platform_2eproto();
   return *internal_default_instance();
 }
 
-::google::protobuf::internal::ExplicitlyConstructed<sc_msg_userinfo> sc_msg_userinfo_default_instance_;
+::google::protobuf::internal::ExplicitlyConstructed<msg_userinfo_reponse> msg_userinfo_reponse_default_instance_;
 
-sc_msg_userinfo* sc_msg_userinfo::New(::google::protobuf::Arena* arena) const {
-  sc_msg_userinfo* n = new sc_msg_userinfo;
+msg_userinfo_reponse* msg_userinfo_reponse::New(::google::protobuf::Arena* arena) const {
+  msg_userinfo_reponse* n = new msg_userinfo_reponse;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void sc_msg_userinfo::Clear() {
-// @@protoc_insertion_point(message_clear_start:platform.sc_msg_userinfo)
+void msg_userinfo_reponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_userinfo_reponse)
 #if defined(__clang__)
 #define ZR_HELPER_(f) \
   _Pragma("clang diagnostic push") \
   _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
-  __builtin_offsetof(sc_msg_userinfo, f) \
+  __builtin_offsetof(msg_userinfo_reponse, f) \
   _Pragma("clang diagnostic pop")
 #else
 #define ZR_HELPER_(f) reinterpret_cast<char*>(\
-  &reinterpret_cast<sc_msg_userinfo*>(16)->f)
+  &reinterpret_cast<msg_userinfo_reponse*>(16)->f)
 #endif
 
 #define ZR_(first, last) do {\
@@ -2690,11 +3084,11 @@ void sc_msg_userinfo::Clear() {
 
 }
 
-bool sc_msg_userinfo::MergePartialFromCodedStream(
+bool msg_userinfo_reponse::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(parse_start:platform.msg_userinfo_reponse)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -2753,7 +3147,7 @@ bool sc_msg_userinfo::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->name().data(), this->name().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "platform.sc_msg_userinfo.name"));
+            "platform.msg_userinfo_reponse.name"));
         } else {
           goto handle_unusual;
         }
@@ -2770,7 +3164,7 @@ bool sc_msg_userinfo::MergePartialFromCodedStream(
           DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->address().data(), this->address().length(),
             ::google::protobuf::internal::WireFormatLite::PARSE,
-            "platform.sc_msg_userinfo.address"));
+            "platform.msg_userinfo_reponse.address"));
         } else {
           goto handle_unusual;
         }
@@ -2791,17 +3185,17 @@ bool sc_msg_userinfo::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(parse_success:platform.msg_userinfo_reponse)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(parse_failure:platform.msg_userinfo_reponse)
   return false;
 #undef DO_
 }
 
-void sc_msg_userinfo::SerializeWithCachedSizes(
+void msg_userinfo_reponse::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(serialize_start:platform.msg_userinfo_reponse)
   // optional int32 uid = 1;
   if (this->uid() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->uid(), output);
@@ -2822,7 +3216,7 @@ void sc_msg_userinfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.sc_msg_userinfo.name");
+      "platform.msg_userinfo_reponse.name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       4, this->name(), output);
   }
@@ -2832,18 +3226,18 @@ void sc_msg_userinfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->address().data(), this->address().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.sc_msg_userinfo.address");
+      "platform.msg_userinfo_reponse.address");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       5, this->address(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(serialize_end:platform.msg_userinfo_reponse)
 }
 
-::google::protobuf::uint8* sc_msg_userinfo::InternalSerializeWithCachedSizesToArray(
+::google::protobuf::uint8* msg_userinfo_reponse::InternalSerializeWithCachedSizesToArray(
     bool deterministic, ::google::protobuf::uint8* target) const {
   (void)deterministic; // Unused
-  // @@protoc_insertion_point(serialize_to_array_start:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_userinfo_reponse)
   // optional int32 uid = 1;
   if (this->uid() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->uid(), target);
@@ -2864,7 +3258,7 @@ void sc_msg_userinfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.sc_msg_userinfo.name");
+      "platform.msg_userinfo_reponse.name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         4, this->name(), target);
@@ -2875,18 +3269,18 @@ void sc_msg_userinfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->address().data(), this->address().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "platform.sc_msg_userinfo.address");
+      "platform.msg_userinfo_reponse.address");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         5, this->address(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_userinfo_reponse)
   return target;
 }
 
-size_t sc_msg_userinfo::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:platform.sc_msg_userinfo)
+size_t msg_userinfo_reponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_userinfo_reponse)
   size_t total_size = 0;
 
   // optional int32 uid = 1;
@@ -2931,23 +3325,23 @@ size_t sc_msg_userinfo::ByteSizeLong() const {
   return total_size;
 }
 
-void sc_msg_userinfo::MergeFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:platform.sc_msg_userinfo)
+void msg_userinfo_reponse::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_userinfo_reponse)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const sc_msg_userinfo* source =
-      ::google::protobuf::internal::DynamicCastToGenerated<const sc_msg_userinfo>(
+  const msg_userinfo_reponse* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_userinfo_reponse>(
           &from);
   if (source == NULL) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_userinfo_reponse)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.sc_msg_userinfo)
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_userinfo_reponse)
     UnsafeMergeFrom(*source);
   }
 }
 
-void sc_msg_userinfo::MergeFrom(const sc_msg_userinfo& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:platform.sc_msg_userinfo)
+void msg_userinfo_reponse::MergeFrom(const msg_userinfo_reponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_userinfo_reponse)
   if (GOOGLE_PREDICT_TRUE(&from != this)) {
     UnsafeMergeFrom(from);
   } else {
@@ -2955,7 +3349,7 @@ void sc_msg_userinfo::MergeFrom(const sc_msg_userinfo& from) {
   }
 }
 
-void sc_msg_userinfo::UnsafeMergeFrom(const sc_msg_userinfo& from) {
+void msg_userinfo_reponse::UnsafeMergeFrom(const msg_userinfo_reponse& from) {
   GOOGLE_DCHECK(&from != this);
   if (from.uid() != 0) {
     set_uid(from.uid());
@@ -2976,30 +3370,30 @@ void sc_msg_userinfo::UnsafeMergeFrom(const sc_msg_userinfo& from) {
   }
 }
 
-void sc_msg_userinfo::CopyFrom(const ::google::protobuf::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:platform.sc_msg_userinfo)
+void msg_userinfo_reponse::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_userinfo_reponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void sc_msg_userinfo::CopyFrom(const sc_msg_userinfo& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:platform.sc_msg_userinfo)
+void msg_userinfo_reponse::CopyFrom(const msg_userinfo_reponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_userinfo_reponse)
   if (&from == this) return;
   Clear();
   UnsafeMergeFrom(from);
 }
 
-bool sc_msg_userinfo::IsInitialized() const {
+bool msg_userinfo_reponse::IsInitialized() const {
 
   return true;
 }
 
-void sc_msg_userinfo::Swap(sc_msg_userinfo* other) {
+void msg_userinfo_reponse::Swap(msg_userinfo_reponse* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void sc_msg_userinfo::InternalSwap(sc_msg_userinfo* other) {
+void msg_userinfo_reponse::InternalSwap(msg_userinfo_reponse* other) {
   std::swap(uid_, other->uid_);
   std::swap(age_, other->age_);
   std::swap(sex_, other->sex_);
@@ -3009,149 +3403,149 @@ void sc_msg_userinfo::InternalSwap(sc_msg_userinfo* other) {
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata sc_msg_userinfo::GetMetadata() const {
+::google::protobuf::Metadata msg_userinfo_reponse::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = sc_msg_userinfo_descriptor_;
-  metadata.reflection = sc_msg_userinfo_reflection_;
+  metadata.descriptor = msg_userinfo_reponse_descriptor_;
+  metadata.reflection = msg_userinfo_reponse_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// sc_msg_userinfo
+// msg_userinfo_reponse
 
 // optional int32 uid = 1;
-void sc_msg_userinfo::clear_uid() {
+void msg_userinfo_reponse::clear_uid() {
   uid_ = 0;
 }
-::google::protobuf::int32 sc_msg_userinfo::uid() const {
-  // @@protoc_insertion_point(field_get:platform.sc_msg_userinfo.uid)
+::google::protobuf::int32 msg_userinfo_reponse::uid() const {
+  // @@protoc_insertion_point(field_get:platform.msg_userinfo_reponse.uid)
   return uid_;
 }
-void sc_msg_userinfo::set_uid(::google::protobuf::int32 value) {
+void msg_userinfo_reponse::set_uid(::google::protobuf::int32 value) {
   
   uid_ = value;
-  // @@protoc_insertion_point(field_set:platform.sc_msg_userinfo.uid)
+  // @@protoc_insertion_point(field_set:platform.msg_userinfo_reponse.uid)
 }
 
 // optional int32 age = 2;
-void sc_msg_userinfo::clear_age() {
+void msg_userinfo_reponse::clear_age() {
   age_ = 0;
 }
-::google::protobuf::int32 sc_msg_userinfo::age() const {
-  // @@protoc_insertion_point(field_get:platform.sc_msg_userinfo.age)
+::google::protobuf::int32 msg_userinfo_reponse::age() const {
+  // @@protoc_insertion_point(field_get:platform.msg_userinfo_reponse.age)
   return age_;
 }
-void sc_msg_userinfo::set_age(::google::protobuf::int32 value) {
+void msg_userinfo_reponse::set_age(::google::protobuf::int32 value) {
   
   age_ = value;
-  // @@protoc_insertion_point(field_set:platform.sc_msg_userinfo.age)
+  // @@protoc_insertion_point(field_set:platform.msg_userinfo_reponse.age)
 }
 
 // optional int32 sex = 3;
-void sc_msg_userinfo::clear_sex() {
+void msg_userinfo_reponse::clear_sex() {
   sex_ = 0;
 }
-::google::protobuf::int32 sc_msg_userinfo::sex() const {
-  // @@protoc_insertion_point(field_get:platform.sc_msg_userinfo.sex)
+::google::protobuf::int32 msg_userinfo_reponse::sex() const {
+  // @@protoc_insertion_point(field_get:platform.msg_userinfo_reponse.sex)
   return sex_;
 }
-void sc_msg_userinfo::set_sex(::google::protobuf::int32 value) {
+void msg_userinfo_reponse::set_sex(::google::protobuf::int32 value) {
   
   sex_ = value;
-  // @@protoc_insertion_point(field_set:platform.sc_msg_userinfo.sex)
+  // @@protoc_insertion_point(field_set:platform.msg_userinfo_reponse.sex)
 }
 
 // optional string name = 4;
-void sc_msg_userinfo::clear_name() {
+void msg_userinfo_reponse::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-const ::std::string& sc_msg_userinfo::name() const {
-  // @@protoc_insertion_point(field_get:platform.sc_msg_userinfo.name)
+const ::std::string& msg_userinfo_reponse::name() const {
+  // @@protoc_insertion_point(field_get:platform.msg_userinfo_reponse.name)
   return name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void sc_msg_userinfo::set_name(const ::std::string& value) {
+void msg_userinfo_reponse::set_name(const ::std::string& value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:platform.sc_msg_userinfo.name)
+  // @@protoc_insertion_point(field_set:platform.msg_userinfo_reponse.name)
 }
-void sc_msg_userinfo::set_name(const char* value) {
+void msg_userinfo_reponse::set_name(const char* value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:platform.sc_msg_userinfo.name)
+  // @@protoc_insertion_point(field_set_char:platform.msg_userinfo_reponse.name)
 }
-void sc_msg_userinfo::set_name(const char* value, size_t size) {
+void msg_userinfo_reponse::set_name(const char* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:platform.sc_msg_userinfo.name)
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_userinfo_reponse.name)
 }
-::std::string* sc_msg_userinfo::mutable_name() {
+::std::string* msg_userinfo_reponse::mutable_name() {
   
-  // @@protoc_insertion_point(field_mutable:platform.sc_msg_userinfo.name)
+  // @@protoc_insertion_point(field_mutable:platform.msg_userinfo_reponse.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* sc_msg_userinfo::release_name() {
-  // @@protoc_insertion_point(field_release:platform.sc_msg_userinfo.name)
+::std::string* msg_userinfo_reponse::release_name() {
+  // @@protoc_insertion_point(field_release:platform.msg_userinfo_reponse.name)
   
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void sc_msg_userinfo::set_allocated_name(::std::string* name) {
+void msg_userinfo_reponse::set_allocated_name(::std::string* name) {
   if (name != NULL) {
     
   } else {
     
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:platform.sc_msg_userinfo.name)
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_userinfo_reponse.name)
 }
 
 // optional string address = 5;
-void sc_msg_userinfo::clear_address() {
+void msg_userinfo_reponse::clear_address() {
   address_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-const ::std::string& sc_msg_userinfo::address() const {
-  // @@protoc_insertion_point(field_get:platform.sc_msg_userinfo.address)
+const ::std::string& msg_userinfo_reponse::address() const {
+  // @@protoc_insertion_point(field_get:platform.msg_userinfo_reponse.address)
   return address_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void sc_msg_userinfo::set_address(const ::std::string& value) {
+void msg_userinfo_reponse::set_address(const ::std::string& value) {
   
   address_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:platform.sc_msg_userinfo.address)
+  // @@protoc_insertion_point(field_set:platform.msg_userinfo_reponse.address)
 }
-void sc_msg_userinfo::set_address(const char* value) {
+void msg_userinfo_reponse::set_address(const char* value) {
   
   address_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:platform.sc_msg_userinfo.address)
+  // @@protoc_insertion_point(field_set_char:platform.msg_userinfo_reponse.address)
 }
-void sc_msg_userinfo::set_address(const char* value, size_t size) {
+void msg_userinfo_reponse::set_address(const char* value, size_t size) {
   
   address_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:platform.sc_msg_userinfo.address)
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_userinfo_reponse.address)
 }
-::std::string* sc_msg_userinfo::mutable_address() {
+::std::string* msg_userinfo_reponse::mutable_address() {
   
-  // @@protoc_insertion_point(field_mutable:platform.sc_msg_userinfo.address)
+  // @@protoc_insertion_point(field_mutable:platform.msg_userinfo_reponse.address)
   return address_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-::std::string* sc_msg_userinfo::release_address() {
-  // @@protoc_insertion_point(field_release:platform.sc_msg_userinfo.address)
+::std::string* msg_userinfo_reponse::release_address() {
+  // @@protoc_insertion_point(field_release:platform.msg_userinfo_reponse.address)
   
   return address_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-void sc_msg_userinfo::set_allocated_address(::std::string* address) {
+void msg_userinfo_reponse::set_allocated_address(::std::string* address) {
   if (address != NULL) {
     
   } else {
     
   }
   address_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), address);
-  // @@protoc_insertion_point(field_set_allocated:platform.sc_msg_userinfo.address)
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_userinfo_reponse.address)
 }
 
-inline const sc_msg_userinfo* sc_msg_userinfo::internal_default_instance() {
-  return &sc_msg_userinfo_default_instance_.get();
+inline const msg_userinfo_reponse* msg_userinfo_reponse::internal_default_instance() {
+  return &msg_userinfo_reponse_default_instance_.get();
 }
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 

@@ -3,38 +3,38 @@ syntax = "proto3";
 package platform;
 
 // 心跳消息
-message csc_msg_heartbeat
+message msg_heartbeat
 {
 	int64     time = 1;  // time
 }
 
 // 登录消息
-message cs_msg_login
+message msg_login_request
 {
 	int32	device		= 1;	// device
 	string  username	= 2;	// username
 	string  userpsd		= 3;	// userpsd
 }
 
-message sc_msg_login
+message msg_login_reponse
 {
 	string  msg			= 1;	// msg
 }
 
 // 登出消息
-message cs_msg_logout
+message msg_logout_request
 {
 	int32	device		= 1;	// device
 	int32   uid			= 2;	// uid
 }
 
-message sc_msg_logout
+message msg_logout_reponse
 {
 	string  msg			= 1;	// msg
 }
 
 // 聊天消息
-message cs_msg_chat
+message msg_chat_request
 {
 	int32		device		= 1;  // device
 	int32		from_uid	= 2;  // from_uid
@@ -42,13 +42,20 @@ message cs_msg_chat
 	string		msg			= 4;  // msg
 }
 
+message msg_chat_reponse
+{
+	int32		from_uid	= 1;  // from_uid
+	int32		to_uid		= 2;  // to_uid
+	int32		result		= 3;  // result
+}
+
 // 用户信息消息
-message sc_msg_request_userinfo
+message msg_userinfo_request
 {
 	int32     uid = 1;			// uid
 }
 
-message sc_msg_userinfo
+message msg_userinfo_reponse
 {
 	int32     uid = 1;			// uid
 	int32     age = 2;			// u_id

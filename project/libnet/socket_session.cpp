@@ -11,28 +11,33 @@
 #include <event2/buffer.h>
 #include <event2/util.h>
 
-static void read_cb(struct bufferevent* bev, void* arg)
+static void __read_cb(struct bufferevent* bev, void* arg)
 {
 	SocketSession *session = (SocketSession*)arg;
 	session->read_ev();
 }
 
-static void write_cb(struct bufferevent *bev, void *arg)
+static void __write_cb(struct bufferevent *bev, void *arg)
 {
 	SocketSession * session = (SocketSession*)arg;
 	session->write_ev();
 }
 
-static void event_cb(struct bufferevent *bev, short event, void *arg)
+static void __event_cb(struct bufferevent *bev, short event, void *arg)
 {
 	SocketSession *session = (SocketSession*)arg;
 	session->event_ev(event);
 }
 
-SocketSession::SocketSession(TYPE c) : _bev(NULL), _on_recv_func(NULL), _connected(false), _port(-1)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+SocketSession::SocketSession(TYPE c)
+	: _bev(NULL)
+	, _on_recv_func(NULL)
+	, _connected(false)
+	, _port(-1)
 {
 	userdata = NULL;
-	this->c = c;
+	this->_c = c;
 }
 
 SocketSession::~SocketSession()
@@ -53,7 +58,7 @@ int SocketSession::setRecvCall(LW_PARSE_DATA_CALLFUNC func)
 
 int SocketSession::create(struct event_base* base, evutil_socket_t fd, short event)
 {
-	switch (c)
+	switch (_c)
 	{
 	case SocketSession::Client:
 	{
@@ -64,7 +69,7 @@ int SocketSession::create(struct event_base* base, evutil_socket_t fd, short eve
 		saddr.sin_port = htons(this->_port);
 
 		this->_bev = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
-		bufferevent_setcb(this->_bev, ::read_cb, NULL, ::event_cb, this);
+		bufferevent_setcb(this->_bev, ::__read_cb, NULL, ::__event_cb, this);
 		int con = bufferevent_socket_connect(this->_bev, (struct sockaddr *)&saddr, sizeof(saddr));
 		if (con >= 0)
 		{
@@ -79,7 +84,7 @@ int SocketSession::create(struct event_base* base, evutil_socket_t fd, short eve
 	case SocketSession::Server:
 	{
 		this->_bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
-		bufferevent_setcb(this->_bev, ::read_cb, ::write_cb, ::event_cb, this);
+		bufferevent_setcb(this->_bev, ::__read_cb, ::__write_cb, ::__event_cb, this);
 		bufferevent_enable(this->_bev, EV_READ | EV_WRITE);
 		_connected = true;
 	} break;
@@ -109,7 +114,6 @@ std::string SocketSession::getHost()
 	return this->_host;
 }
 
-
 void SocketSession::setPort(int port)
 {
 	this->_port = port;
@@ -118,6 +122,11 @@ void SocketSession::setPort(int port)
 int SocketSession::getPort()
 {
 	return _port;
+}
+
+bool SocketSession::connected()
+{ 
+	return _connected;
 }
 
 evutil_socket_t SocketSession::getSocket() 
@@ -137,14 +146,18 @@ void* SocketSession::getUserData()
 
 lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)
 {
-	int c = lw_send_socket_data(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
+	if (_connected)
 	{
-		int c = bufferevent_write(_bev, p->buf, p->size);
+		int c = lw_send_socket_data(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
+		{
+			int c = bufferevent_write(_bev, p->buf, p->size);
 
+			return c;
+		});
 		return c;
-	});
+	}
 
-	return c;
+	return 0;
 }
 
 void SocketSession::write_ev()
@@ -159,14 +172,14 @@ void SocketSession::read_ev()
 
 	{
 		char *read_buf = (char*)malloc(input_len);
-
 		size_t read_len = bufferevent_read(_bev, read_buf, input_len);
-
-		if (lw_parse_socket_data(read_buf, read_len, this->_on_recv_func, this) == 0)
+		if (input_len == read_len)
 		{
+			if (lw_parse_socket_data(read_buf, read_len, this->_on_recv_func, this) == 0)
+			{
 
+			}
 		}
-
 		free(read_buf);
 	}
 }
@@ -207,24 +220,4 @@ void SocketSession::event_ev(short ev)
 	* timeouts */
 	bufferevent_free(_bev);
 
-	//if (ev & BEV_EVENT_EOF)
-	//{
-	//	printf("connection closed\n");
-	//}
-	//else if (ev & BEV_EVENT_ERROR)
-	//{
-	//	printf("some other error\n");
-	//}
-	//else if (ev & BEV_EVENT_TIMEOUT)
-	//{
-	//	printf("timeout ...\n");
-	//}
-	//else if (ev & BEV_EVENT_CONNECTED)
-	//{
-	//	connected = true;
-	//	return;
-	//}
-
-	////这将自动close套接字和free读写缓冲区  
-	//bufferevent_free(bev);
 }
