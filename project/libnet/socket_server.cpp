@@ -11,10 +11,7 @@
 #include <event2/buffer.h>
 #include <event2/bufferevent.h>
 #include <event2/listener.h>
-#include <event2/util.h>
 #include <event2/thread.h>
-
-#include "common_marco.h"
 
 #ifdef WIN32
 #include <ws2tcpip.h>
@@ -22,12 +19,11 @@
 #include <sys/socket.h>
 #endif // _WIN32
 
+#include "common_marco.h"
 #include "socket_session.h"
 #include "socket_timer.h"
 
 static void __listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
-static void __read_cb(struct bufferevent *, void *);
-static void __write_cb(struct bufferevent *, void *);
 static void __event_cb(struct bufferevent *, short, void *);
 static void __signal_cb(evutil_socket_t, short, void *);
 static void __timer_cb(evutil_socket_t fd, short event, void *arg);

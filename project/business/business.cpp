@@ -7,7 +7,7 @@
 
 #include "base_type.h"
 #include "common_marco.h"
-#include "CacheQueueT.h"
+#include "CacheQueue.h"
 #include "NetMessage.h"
 
 #if defined(WIN32) || defined(_WIN32)
@@ -16,37 +16,28 @@
 
 using namespace LW;
 
-typedef std::deque<NetMessage*>		NetMessageQueue;
-typedef CacheQueueT<lw_char8>		CacheQueue;
-
-NetMessageQueue		__g_msg_queue;
-std::mutex			__g_data_mutex;
-
-CacheQueue			__g_cache_queue;
-std::mutex			__g_cache_mutex;
+CacheQueue	__g_cache_queue;
+std::mutex	__g_cache_mutex;
 
 static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
 
 int lw_socket_init()
 {
 #if defined(WIN32) || defined(_WIN32)
+	WORD wVersionRequested;
+	WSADATA wsaData;
+	wVersionRequested = MAKEWORD(2, 2);
+	int err = WSAStartup(wVersionRequested, &wsaData);
+	if (err != 0)
 	{
-		WORD wVersionRequested;
-		WSADATA wsaData;
-		wVersionRequested = MAKEWORD(2, 2);
-		int err = WSAStartup(wVersionRequested, &wsaData);
-		if (err != 0)
-		{
-			printf("WSAStartup failed with error: %d\n", err);
-			return 0;
-		}
+		printf("WSAStartup failed with error: %d\n", err);
+		return 0;
 	}
 #endif
-
 	return 0;
 }
 
-void lw_socket_celan()
+void lw_socket_clean()
 {
 #if defined(WIN32) || defined(_WIN32)
 	WSACleanup();
@@ -60,13 +51,12 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 
 	{	
 		std::lock_guard < std::mutex > lock(__g_cache_mutex);
-		__g_cache_queue.push(const_cast<char*>(buf), bufSize);
+		__g_cache_queue.push(const_cast<lw_char8*>(buf), bufSize);
 	}
 
 	lw_int32 data_queue_size = (lw_int32)__g_cache_queue.size();
 	if (data_queue_size >= C_NET_HEAD_SIZE)
 	{
-		
 		do
 		{
 			{
@@ -81,14 +71,13 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 					break;
 				}
 
-				lw_char8* data = __g_cache_queue.front() + C_NET_HEAD_SIZE;
-				lw_int32 data_len = phead->size - C_NET_HEAD_SIZE;
+				lw_char8* buffer = __g_cache_queue.front() + C_NET_HEAD_SIZE;
+				lw_int32 buffer_length = phead->size - C_NET_HEAD_SIZE;
 
 				NetMessage* msg = NetMessage::createNetMessage(phead);
 				if (nullptr != msg)
 				{
-					msg->setMessage(data, data_len, msgStatus_RECV);
-					//__g_msg_queue.push_back(smsg);
+					msg->setMessage(buffer, buffer_length);
 					{
 						func(msg->getHead()->cmd, msg->getBuff(), msg->getBuffSize(), userdata);
 					}
@@ -96,37 +85,11 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 				}
 				__g_cache_queue.pop(phead->size);
 			}
-
 			data_queue_size = (lw_uint32)__g_cache_queue.size();
-
-			/*printf("packet [data_queue_size = %d, pHead->size = %d]\n", data_queue_size, pHead->size);*/		
         } while (data_queue_size >= C_NET_HEAD_SIZE);
 	}
 
 	return 0;
-}
-
-void lw_get_message(std::function<void(NetMessage* smsg)> func)
-{
-	int queue_size = 0;
-	do
-	{
-		NetMessage* smsg = nullptr;
-		{
-			std::lock_guard < std::mutex > lock(__g_data_mutex);
-			queue_size = __g_msg_queue.size();
-			if (queue_size > 0)
-			{
-				smsg = __g_msg_queue.front();
-				__g_msg_queue.pop_front();
-			}
-		}
-		if (nullptr != smsg)
-		{
-			func(smsg);
-			NetMessage::releaseNetMessage(smsg);
-		}
-	} while (queue_size > 0);
 }
 
 lw_int32 lw_send_socket_data(lw_int32 command, void* object, lw_int32 objectSize, std::function<lw_int32(LW_NET_MESSAGE* p)> func)

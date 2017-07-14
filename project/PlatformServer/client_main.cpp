@@ -61,7 +61,7 @@ void run_rpc_client(lw_int32 port)
 
 		for (int i = 0; i < 1; i++)
 		{
-			__g_client.startTimer(100+i, 1+i, [](int id, SocketSession* session) -> bool
+			__g_client.startTimer(100+i, 1+i, [](int id) -> bool
 			{
 				platform::msg_heartbeat msg;
 				msg.set_time(time(NULL));
@@ -70,7 +70,7 @@ void run_rpc_client(lw_int32 port)
 				lw_bool ret = msg.SerializeToArray(s, len);
 				if (ret)
 				{
-					session->sendData(cmd_heart_beat, s, len);
+					__g_client.getSession()->sendData(cmd_heart_beat, s, len);					
 				}
 				return true;
 			});

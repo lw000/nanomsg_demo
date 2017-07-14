@@ -1,16 +1,10 @@
 ﻿#include "socket_client.h"
 
 #include <stdio.h>
-#include <iostream>
-#include <signal.h>
 #include <thread>
+#include <assert.h>
 
-#include <event2/event.h>
-#include <event2/event_struct.h>
-#include <event2/event_compat.h>
-#include <event2/bufferevent.h>
-#include <event2/buffer.h>
-#include <event2/util.h>
+#include "event2/event.h"
 
 #include "business.h"
 #include "socket_session.h"
@@ -23,7 +17,7 @@ using namespace LW;
 SocketClient::SocketClient()
 {
 	_session = new SocketSession(SocketSession::TYPE::Client);
-	_timer = new SocketTimer;
+	_timer = new SocketTimer();
 }
 
 SocketClient::~SocketClient()
@@ -91,35 +85,42 @@ int SocketClient::setRecvHook(LW_PARSE_DATA_CALLFUNC func, void* userdata)
 	return 0;
 }
 
-int SocketClient::startTimer(int id, int t, CLIENT_TIMERCALL func)
+int SocketClient::startTimer(int id, int t, std::function<bool(int id)> func)
 {
-	_timer->startTimer(id, t, [this, func](int id) -> bool
+	assert(_timer != NULL);
+	if (_timer != NULL)
 	{
-		return func(id, this->_session);
-	});
-
+		_timer->startTimer(id, t, func);
+	}	
 	return 0;
 }
 
 void SocketClient::killTimer(int id)
 {
-	_timer->killTimer(id);
+	assert(_timer != NULL);
+	if (_timer != NULL)
+	{
+		_timer->killTimer(id);
+	}
 }
 
 void SocketClient::__run()
 {
-	this->create();
-	if (NULL != this->_base)
+	if (this->create())
 	{
-		int r = this->_session->create(_base, -1, EV_READ | EV_PERSIST);
+		if (NULL != this->_base)
+		{
+			int r = this->_session->create(_base, -1, EV_READ | EV_PERSIST);
 
-		event_base_dispatch(this->_base);
+			event_base_dispatch(this->_base);
 
-		this->destory();
+			this->destory();
+		}
+		else
+		{
+			this->_session->destory();
+		}
 	}
-	else
-	{
-		this->_session->destory();
-	}
+	
 	return;
 }

@@ -1,9 +1,7 @@
 ﻿#include "socket_timer.h"
 
-#include <stdio.h>
-#include <iostream>
-
 #include <event2/event.h>
+#include <event2/event_struct.h>
 #include <event2/bufferevent.h>
 #include <event2/util.h>
 
@@ -91,7 +89,7 @@ int SocketTimer::startTimer(int id, int t, std::function<bool(int id)> func)
 
 	int r = 0;
 
-	TIMER_ITEM* timer = this->_timers[id];
+	TIMER_ITEM* timer = (TIMER_ITEM*)this->_timers[id];
 	if (timer == NULL)
 	{
 		TIMER_ITEM* new_timer = new TIMER_ITEM(this);
@@ -136,7 +134,7 @@ void SocketTimer::killTimer(int id)
 {
 	if (id <= 0) return;
 
-	TIMER_ITEM* ptimer = _timers[id];
+	TIMER_ITEM* ptimer = (TIMER_ITEM*)_timers[id];
 	if (ptimer != NULL)
 	{
 		ptimer->state = 0;
@@ -159,9 +157,10 @@ void SocketTimer::timer_cb(void* timer, short ev)
 	TIMERS::iterator iter = _timers.begin();
 	while (iter != _timers.end())
 	{
-		if (iter->second->t == 0)
+		TIMER_ITEM* pTimer = (TIMER_ITEM*)(iter->second);
+		if (pTimer->t == 0)
 		{
-			delete iter->second;
+			delete pTimer;
 			iter = _timers.erase(iter);
 			continue;
 		}

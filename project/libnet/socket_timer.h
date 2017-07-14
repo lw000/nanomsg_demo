@@ -1,20 +1,16 @@
 #ifndef __SocketTimer_H__
 #define __SocketTimer_H__
 
-#include "event2/event.h"
-#include <event2/event_struct.h>
 #include "business.h"
 
-#include <string>
 #include <unordered_map>
 
-class SocketTimer;
-struct TIMER_ITEM;
+struct event_base;
 
 class SocketTimer final
 {
 public:
-	typedef std::unordered_map<lw_int32, TIMER_ITEM*> TIMERS;
+	typedef std::unordered_map<lw_int32, void*> TIMERS;
 
 public:
 	SocketTimer();

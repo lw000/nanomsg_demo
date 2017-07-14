@@ -1,18 +1,15 @@
 #ifndef __SocketClient_H__
 #define __SocketClient_H__
 
-#include "event2/event.h"
-#include <event2/event_struct.h>
 #include "business.h"
 
 #include <string>
-#include <unordered_map>
 
 class SocketSession;
-class SocketClient;
 class SocketTimer;
+class SocketClient;
 
-typedef std::function<bool(int id, SocketSession* session)> CLIENT_TIMERCALL;
+struct event_base;
 
 class SocketClient final
 {
@@ -32,7 +29,7 @@ public:
 	int setRecvHook(LW_PARSE_DATA_CALLFUNC func, void* userdata);
 	
 public:
-	int startTimer(int id, int t, CLIENT_TIMERCALL func);
+	int startTimer(int id, int t, std::function<bool(int id)> func);
 	void killTimer(int id);
 
 private:
@@ -42,7 +39,6 @@ private:
 	struct event_base* _base;
 	SocketSession* _session;
 	SocketTimer* _timer;
-	CLIENT_TIMERCALL _on_timer_func;
 };
 
 #endif // !__SocketClient_H__

@@ -139,12 +139,13 @@
     <ClInclude Include="business.h" />
     <ClInclude Include="common\base_type.h" />
     <ClInclude Include="common\common_marco.h" />
-    <ClInclude Include="CacheQueueT.h" />
+    <ClInclude Include="CacheQueue.h" />
     <ClInclude Include="NetHead.h" />
     <ClInclude Include="NetMessage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="business.cpp" />
+    <ClCompile Include="CacheQueue.cpp" />
     <ClCompile Include="NetHead.cpp" />
     <ClCompile Include="NetMessage.cpp" />
   </ItemGroup>

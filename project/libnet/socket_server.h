@@ -1,9 +1,8 @@
 #ifndef __SocketServer_H__
 #define __SocketServer_H__
 
-#include "event2/event.h"
-#include <event2/event_struct.h>
 #include "business.h"
+#include <event2/util.h>
 
 #include <vector>
 #include <list>
@@ -11,6 +10,8 @@
 
 class SocketSession;
 class SocketTimer;
+struct event_base;
+struct evconnlistener;
 
 typedef void(*LW_SERVER_START_COMPLETE)(lw_int32 what);
 
@@ -48,9 +49,11 @@ private:
 	lw_int32 _port;
 	struct event_base* _base;
 	SocketTimer* _timer;
+	SESSIONS sessions;
+
+private:
 	LW_PARSE_DATA_CALLFUNC _on_recv_func;
 	LW_SERVER_START_COMPLETE _on_start;
-	SESSIONS sessions;
 };
 
 #endif // !__SocketServer_H__

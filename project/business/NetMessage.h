@@ -6,26 +6,22 @@
 #include "NetHead.h"
 #include "base_type.h"
 
-namespace LW 
+namespace LW
 {
-	class NetMessage;
-
-	typedef std::function<bool(NetMessage* msg)> SEL_NetMessage;
-
-	#define SOCKET_CALLBACK(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, ##__VA_ARGS__)
+	#define SOCKET_CALLBACK(__selector__,__target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, ##__VA_ARGS__)
 
 	class NetMessage 
 	{
 	public:
 		static NetMessage* createNetMessage();
-		static NetMessage* createNetMessage(lw_int32 command, lw_void* msg, lw_int32 msgsize);
+		static NetMessage* createNetMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize);
 		static NetMessage* createNetMessage(const NetHead* head);
 
 		static lw_void releaseNetMessage(NetMessage* message);
 
 	public:
-		lw_void setMessage(lw_char8* msg, lw_int32 msgsize, enMsgStatus Status);
-		lw_int32 setMessage(lw_int32 command, lw_void* msg, lw_int32 msgsize);
+		lw_void setMessage(lw_char8* msg, lw_int32 msgsize);
+		lw_int32 setMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize);
 
 	public:
 		lw_char8* getBuff() const;
@@ -51,9 +47,8 @@ namespace LW
 
 	private:
 		NetHead _msgHead;
-		lw_uint32 _buff_size;
+		lw_uint32 _buffsize;
 		lw_char8 *_buff;
-		enMsgStatus _status;
 	};
 };
 

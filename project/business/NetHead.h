@@ -11,8 +11,7 @@ namespace LW
 	public:
 		lw_int32	size;			// 数据包大小
 		lw_int32	cmd;			// 指令
-		lw_uint32	create_time;	// 发送时间
-		lw_int32	reserve;		// 保留字段
+		lw_uint32	createtime;		// 发送时间
 
 	public:
 		tagNetHead();

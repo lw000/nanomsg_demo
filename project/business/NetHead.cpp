@@ -9,14 +9,16 @@
 #include <arpa/inet.h>
 #endif
 
-#define SOCKET_TRANSION_VERSION		10000
+#define  TRANSPORT_PROTOCOL_VERSION		10000
 
 namespace LW 
 {
 	tagNetHead::tagNetHead()
 	{
-		memset(this, 0x00, sizeof(tagNetHead));
-		this->v = SOCKET_TRANSION_VERSION;
+		this->size = 0;			// 数据包大小
+		this->cmd = 0;			// 指令
+		this->createtime = 0;	// 发送时间
+		this->v =  TRANSPORT_PROTOCOL_VERSION;
 	}
 
 	void tagNetHead::debug()
@@ -24,13 +26,9 @@ namespace LW
 # if defined(_DEBUG) || defined(DEBUG)
 		char hhmmss[9];  /* HH:MM:SS\0 */
 		time_t t;
-		t = (time_t)ntohl(create_time);
+		t = (time_t)ntohl(createtime);
 		strftime(hhmmss, sizeof(hhmmss), "%T", localtime(&t));
-		printf("size = %d, cmd = %d, u_reserve = %d, create_time = %s \n",
-			size,
-			cmd,
-			reserve,
-			hhmmss);
+		printf("size = %d, cmd = %d, create_time = %s \n", size, cmd, hhmmss); 
 # endif
 	}
 }

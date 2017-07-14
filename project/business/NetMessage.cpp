@@ -1,10 +1,10 @@
 ﻿#include "NetMessage.h"
 
+#include "common_marco.h"
+
 #include <time.h>
 #include <stdlib.h>
 #include <mutex>
-
-#include "common_marco.h"
 
 #ifdef _WIN32
 #include <winsock.h>
@@ -14,6 +14,8 @@
 
 namespace LW
 {
+	static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
+
 	//////////////////////////////////////////////////////////////////////////
 
 	NetMessage* NetMessage::createNetMessage()
@@ -36,19 +38,19 @@ namespace LW
 		SAFE_DELETE(message);
 	}
 	
-	NetMessage::NetMessage(lw_int32 command, lw_void* msg, lw_int32 msgsize) : NetMessage()
+	NetMessage::NetMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize) : NetMessage()
 	{
-		this->setMessage(command, msg, msgsize);
+		this->setMessage(cmd, msg, msgsize);
 	}
 
 	NetMessage::NetMessage(const NetHead* head) : NetMessage()
 	{
-		setHead(head);
+		this->setHead(head);
 	}
 
-	NetMessage::NetMessage() : _buff_size(0), _status(msgStatus_UNKNOW)
+	NetMessage::NetMessage() : _buffsize(0)
 	{
-		_buff = NULL;	
+		_buff = NULL;
 	}
 
 	NetMessage::~NetMessage()
@@ -82,21 +84,18 @@ namespace LW
 		_msgHead = *head;
 
 		time_t t;
-		t = (time_t)ntohl(_msgHead.create_time);
-		_msgHead.create_time = t;
+		t = (time_t)ntohl(_msgHead.createtime);
+		_msgHead.createtime = t;
 	}
 
-	lw_void NetMessage::setMessage(lw_char8* msg, lw_int32 msgsize, enMsgStatus Status)
+	lw_void NetMessage::setMessage(lw_char8* msg, lw_int32 msgsize)
 	{
 		if (msg == NULL) return;
 		if (msgsize <= 0) return;
 
-		this->_buff_size = msgsize;
-
+		this->_buffsize = msgsize;
 		_buff = (lw_char8*)malloc(msgsize * sizeof(lw_char8));
 		memcpy(this->_buff, msg, msgsize);
-
-		this->_status = Status;
 	}
 
 	lw_int32 NetMessage::setMessage(lw_int32 command, lw_void* msg, lw_int32 msgsize)
@@ -107,14 +106,14 @@ namespace LW
 
 		do
 		{
-			_buff_size = sizeof(NetHead) + msgsize;
+			_buffsize = C_NET_HEAD_SIZE + msgsize;
 
-			_msgHead.size = _buff_size;
+			_msgHead.size = _buffsize;
 			_msgHead.cmd = command;
 			lw_uint32 create_time = (lw_int32)time(NULL);
-			_msgHead.create_time = htonl(create_time);
+			_msgHead.createtime = htonl(create_time);
 
-			_buff = (lw_char8*)malloc(_buff_size * sizeof(lw_char8));
+			_buff = (lw_char8*)malloc(_buffsize * sizeof(lw_char8));
 			::memcpy(_buff, &_msgHead, sizeof(NetHead));
 
 			if (nullptr != msg && msgsize > 0)
@@ -131,12 +130,8 @@ namespace LW
 	{
 # if defined(_DEBUG) || defined(DEBUG)
 		lw_char8 buf[256] = { 0 };
-		sprintf(buf, "NetHead = {size = %d cmd = %d reserve = %d object = %s objectSize = %d}",
-			_msgHead.size,
-			_msgHead.cmd,
-			_msgHead.reserve,
-			buf,
-			_buff_size);
+		sprintf(buf, "NetHead = {size = %6d cmd = %6d objectSize = %6d}",
+			_msgHead.size, _msgHead.cmd, _buffsize);
 #endif	//_DEBUG || DEBUG
 	}
 
@@ -147,7 +142,7 @@ namespace LW
 
 	lw_int32 NetMessage::getBuffSize()
 	{
-		return _buff_size;
+		return _buffsize;
 	}
 
 	const NetHead* NetMessage::getHead()
