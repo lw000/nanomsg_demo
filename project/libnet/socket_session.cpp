@@ -136,7 +136,10 @@ evutil_socket_t SocketSession::getSocket()
 
 void SocketSession::setUserData(void* userdata)
 {
-	this->userdata = userdata;
+	if (this->userdata != userdata)
+	{
+		this->userdata = userdata;
+	}
 }
 
 void* SocketSession::getUserData()
@@ -219,5 +222,5 @@ void SocketSession::event_ev(short ev)
 	/* None of the other events can happen here, since we haven't enabled
 	* timeouts */
 	bufferevent_free(_bev);
-
+	this->_bev = NULL;
 }

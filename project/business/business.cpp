@@ -49,7 +49,7 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 	if (bufSize <= 0) return -1;
 	if (NULL == buf) return -2;
 
-	{	
+	{
 		std::lock_guard < std::mutex > lock(__g_cache_mutex);
 		__g_cache_queue.push(const_cast<lw_char8*>(buf), bufSize);
 	}
@@ -59,10 +59,11 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 	{
 		do
 		{
+			// 解析网络数据包
 			{
 				std::lock_guard < std::mutex > lock(__g_cache_mutex);
+				
 				NetHead *phead = (NetHead*)__g_cache_queue.front();
-
 				if (nullptr == phead) break;
 
 				if (phead->size > data_queue_size)
@@ -71,9 +72,8 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 					break;
 				}
 
-				lw_char8* buffer = __g_cache_queue.front() + C_NET_HEAD_SIZE;
+				lw_char8* buffer = (lw_char8*)(__g_cache_queue.front() + C_NET_HEAD_SIZE);
 				lw_int32 buffer_length = phead->size - C_NET_HEAD_SIZE;
-
 				NetMessage* msg = NetMessage::createNetMessage(phead);
 				if (nullptr != msg)
 				{
@@ -85,6 +85,7 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 				}
 				__g_cache_queue.pop(phead->size);
 			}
+
 			data_queue_size = (lw_uint32)__g_cache_queue.size();
         } while (data_queue_size >= C_NET_HEAD_SIZE);
 	}
@@ -92,20 +93,20 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_D
 	return 0;
 }
 
-lw_int32 lw_send_socket_data(lw_int32 command, void* object, lw_int32 objectSize, std::function<lw_int32(LW_NET_MESSAGE* p)> func)
+lw_int32 lw_send_socket_data(lw_int32 cmd, void* object, lw_int32 objectSize, std::function<lw_int32(LW_NET_MESSAGE* p)> func)
 {
 	lw_int32 result = 0;
 	{
-		LW_NET_MESSAGE* p = lw_create_net_message(command, object, objectSize);
+		LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
 		result = func(p);
 		lw_free_net_message(p);
 	}
 	return result;
 }
 
-LW_NET_MESSAGE* lw_create_net_message(lw_int32 command, lw_void* object, lw_int32 objectSize)
+LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, lw_void* object, lw_int32 objectSize)
 {
-	NetMessage *msg = NetMessage::createNetMessage(command, object, objectSize);
+	NetMessage *msg = NetMessage::createNetMessage(cmd, object, objectSize);
 
 	LW_NET_MESSAGE * p = (LW_NET_MESSAGE*)malloc(sizeof(LW_NET_MESSAGE));
 	p->size = msg->getBuffSize();

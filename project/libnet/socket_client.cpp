@@ -106,21 +106,12 @@ void SocketClient::killTimer(int id)
 
 void SocketClient::__run()
 {
-	if (this->create())
-	{
-		if (NULL != this->_base)
-		{
-			int r = this->_session->create(_base, -1, EV_READ | EV_PERSIST);
+	int r = this->_session->create(_base, -1, EV_READ | EV_PERSIST);
 
-			event_base_dispatch(this->_base);
+	event_base_dispatch(this->_base);
 
-			this->destory();
-		}
-		else
-		{
-			this->_session->destory();
-		}
-	}
-	
+	this->_session->destory();
+	this->destory();
+
 	return;
 }

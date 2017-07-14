@@ -18,8 +18,8 @@ extern "C"
 	int lw_socket_init();
 	void lw_socket_clean();
 
-	lw_int32 lw_send_socket_data(lw_int32 command, void* object, lw_int32 objectSize, std::function<lw_int32(LW_NET_MESSAGE* p)> func);
-	LW_NET_MESSAGE* lw_create_net_message(lw_int32 command, lw_void* object, lw_int32 objectSize);
+	lw_int32 lw_send_socket_data(lw_int32 cmd, void* object, lw_int32 objectSize, std::function<lw_int32(LW_NET_MESSAGE* p)> func);
+	LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, lw_void* object, lw_int32 objectSize);
 	lw_void lw_free_net_message(LW_NET_MESSAGE* p);
 
 	lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata);
