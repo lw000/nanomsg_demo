@@ -11,17 +11,11 @@
 #else
 #include <arpa/inet.h>
 #endif
-
 namespace LW
 {
 	static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
 
 	//////////////////////////////////////////////////////////////////////////
-
-	NetMessage* NetMessage::createNetMessage()
-	{
-		return new NetMessage();
-	}
 
 	NetMessage* NetMessage::createNetMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize)
 	{
@@ -38,9 +32,9 @@ namespace LW
 		SAFE_DELETE(message);
 	}
 	
-	NetMessage::NetMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize) : NetMessage()
+	NetMessage::NetMessage(lw_int32 cmd, lw_void* msg, lw_int32 size) : NetMessage()
 	{
-		this->setMessage(cmd, msg, msgsize);
+		this->setMessage(cmd, msg, size);
 	}
 
 	NetMessage::NetMessage(const NetHead* head) : NetMessage()
@@ -59,7 +53,7 @@ namespace LW
 	}
 
 #ifdef LW_ENABLE_POOL_
-	void *NetMessage::operator new(std::size_t ObjectSize)
+	void *NetMessage::operator new(std::size_t size)
 	{
 		{
 			std::lock_guard < std::mutex > lock(__g_pool_mutex);
@@ -67,13 +61,12 @@ namespace LW
 		}
 	}
 
-	void NetMessage::operator delete(void *ptrObject)
+	void NetMessage::operator delete(void *ptr)
 		{
 			{
 				std::lock_guard < std::mutex > lock(__g_pool_mutex);
 				__g_pool.deallocate((NetMessage*)ptrObject);
 			}
-
 		}
 #endif
 
@@ -88,25 +81,25 @@ namespace LW
 		_msgHead.createtime = t;
 	}
 
-	lw_void NetMessage::setMessage(lw_char8* msg, lw_int32 msgsize)
+	lw_void NetMessage::setMessage(lw_char8* msg, lw_int32 size)
 	{
 		if (msg == NULL) return;
-		if (msgsize <= 0) return;
+		if (size <= 0) return;
 
-		this->_buffsize = msgsize;
-		_buff = (lw_char8*)malloc(msgsize * sizeof(lw_char8));
-		memcpy(this->_buff, msg, msgsize);
+		this->_buffsize = size;
+		_buff = (lw_char8*)malloc(size * sizeof(lw_char8));
+		memcpy(this->_buff, msg, size);
 	}
 
-	lw_int32 NetMessage::setMessage(lw_int32 command, lw_void* msg, lw_int32 msgsize)
+	lw_int32 NetMessage::setMessage(lw_int32 command, lw_void* msg, lw_int32 size)
 	{
-		if (msgsize < 0) return -1;
+		if (size < 0) return -1;
 
 		lw_int32 ret = 0;
 
 		do
 		{
-			_buffsize = C_NET_HEAD_SIZE + msgsize;
+			_buffsize = C_NET_HEAD_SIZE + size;
 
 			_msgHead.size = _buffsize;
 			_msgHead.cmd = command;
@@ -116,9 +109,9 @@ namespace LW
 			_buff = (lw_char8*)malloc(_buffsize * sizeof(lw_char8));
 			::memcpy(_buff, &_msgHead, sizeof(NetHead));
 
-			if (nullptr != msg && msgsize > 0)
+			if (nullptr != msg && size > 0)
 			{
-				::memcpy(_buff + sizeof(NetHead), (void*)msg, msgsize);
+				::memcpy(_buff + sizeof(NetHead), (void*)msg, size);
 			}
 
 		} while (0);
@@ -126,13 +119,12 @@ namespace LW
 		return ret;
 	}
 
-	lw_void NetMessage::debug()
+	std::string NetMessage::debug()
 	{
-# if defined(_DEBUG) || defined(DEBUG)
 		lw_char8 buf[256] = { 0 };
 		sprintf(buf, "NetHead = {size = %6d cmd = %6d objectSize = %6d}",
 			_msgHead.size, _msgHead.cmd, _buffsize);
-#endif	//_DEBUG || DEBUG
+		return std::string(buf);
 	}
 
 	char* NetMessage::getBuff() const

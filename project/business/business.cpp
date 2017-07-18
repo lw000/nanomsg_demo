@@ -4,6 +4,7 @@
 #include <deque>
 #include <mutex>
 #include <string>
+#include <memory>
 
 #include "base_type.h"
 #include "common_marco.h"
@@ -44,14 +45,14 @@ void lw_socket_clean()
 #endif
 }
 
-lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 bufSize, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata)
+lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 size, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata)
 {
-	if (bufSize <= 0) return -1;
+	if (size <= 0) return -1;
 	if (NULL == buf) return -2;
 
 	{
 		std::lock_guard < std::mutex > lock(__g_cache_mutex);
-		__g_cache_queue.push(const_cast<lw_char8*>(buf), bufSize);
+		__g_cache_queue.push(const_cast<lw_char8*>(buf), size);
 	}
 
 	lw_int32 data_queue_size = (lw_int32)__g_cache_queue.size();
@@ -106,14 +107,15 @@ lw_int32 lw_send_socket_data(lw_int32 cmd, void* object, lw_int32 objectSize, st
 
 LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, lw_void* object, lw_int32 objectSize)
 {
-	NetMessage *msg = NetMessage::createNetMessage(cmd, object, objectSize);
-
-	LW_NET_MESSAGE * p = (LW_NET_MESSAGE*)malloc(sizeof(LW_NET_MESSAGE));
-	p->size = msg->getBuffSize();
-	p->buf = (lw_char8*)malloc(p->size * sizeof(lw_char8));
-	memcpy(p->buf, msg->getBuff(), msg->getBuffSize());
-
-	NetMessage::releaseNetMessage(msg);
+	LW_NET_MESSAGE * p = NULL;
+	
+	{
+		auto_release_net_message msg(NetMessage::createNetMessage(cmd, object, objectSize));
+		p = (LW_NET_MESSAGE*)malloc(sizeof(LW_NET_MESSAGE));
+		p->size = msg->getBuffSize();
+		p->buf = (lw_char8*)malloc(p->size * sizeof(lw_char8));
+		memcpy(p->buf, msg->getBuff(), p->size);
+	}
 
 	return p;
 }
