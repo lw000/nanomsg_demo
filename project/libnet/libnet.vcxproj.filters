@@ -13,6 +13,7 @@
     <ClCompile Include="socket_timer.cpp" />
     <ClCompile Include="socket_session.cpp" />
     <ClCompile Include="user_session.cpp" />
+    <ClCompile Include="object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
@@ -22,5 +23,6 @@
     <ClInclude Include="socket_session.h" />
     <ClInclude Include="net.h" />
     <ClInclude Include="user_session.h" />
+    <ClInclude Include="object.h" />
   </ItemGroup>
 </Project>

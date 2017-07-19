@@ -1,15 +1,14 @@
 #ifndef __session_H__
 #define __session_H__
 
-#include "base_type.h"
-
-#include "business.h"
-
+#include <string>
 #include <event2/util.h>
 
-#include <string>
+#include "base_type.h"
+#include "business.h"
+#include "object.h"
 
-class SocketSession
+class SocketSession : public Object
 {
 public:
 	enum TYPE
@@ -18,15 +17,12 @@ public:
 		Server = 1,
 	};
 
-
 public:
 	SocketSession(TYPE c);
 	~SocketSession();
 
 public:
 	evutil_socket_t getSocket();
-	void setUserData(void* userdata);
-	void* getUserData();
 
 public:
 	int create(struct event_base* base, evutil_socket_t fd, short event);
@@ -43,6 +39,7 @@ public:
 
 public:
 	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize);
+	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize, SocketCallback cb);
 	int setRecvCall(LW_PARSE_DATA_CALLFUNC func);
 
 public:
@@ -60,9 +57,6 @@ private:
 	std::string _host;
 	int _port;
 	bool _connected;
-
-private:
-	void *userdata;
 
 private:
 	LW_PARSE_DATA_CALLFUNC _on_recv_func;

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="http_server.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="socket_session.cpp" />
     <ClCompile Include="socket_client.cpp" />
     <ClCompile Include="socket_server.cpp" />
@@ -29,6 +30,7 @@
   <ItemGroup>
     <ClInclude Include="http_server.h" />
     <ClInclude Include="net.h" />
+    <ClInclude Include="object.h" />
     <ClInclude Include="socket_session.h" />
     <ClInclude Include="socket_client.h" />
     <ClInclude Include="socket_server.h" />

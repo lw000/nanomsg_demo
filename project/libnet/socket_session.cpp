@@ -36,7 +36,6 @@ SocketSession::SocketSession(TYPE c)
 	, _connected(false)
 	, _port(-1)
 {
-	userdata = NULL;
 	this->_c = c;
 }
 
@@ -134,20 +133,23 @@ evutil_socket_t SocketSession::getSocket()
 	return bufferevent_getfd(this->_bev);
 }
 
-void SocketSession::setUserData(void* userdata)
-{
-	if (this->userdata != userdata)
-	{
-		this->userdata = userdata;
-	}
-}
-
-void* SocketSession::getUserData()
-{
-	return userdata;
-}
-
 lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)
+{
+	if (_connected)
+	{
+		int c = lw_send_socket_data(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
+		{
+			int c = bufferevent_write(_bev, p->buf, p->size);
+
+			return c;
+		});
+		return c;
+	}
+
+	return 0;
+}
+
+lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize, SocketCallback cb)
 {
 	if (_connected)
 	{

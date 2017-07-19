@@ -1,5 +1,5 @@
-﻿#ifndef __SocketMessage_H__
-#define __SocketMessage_H__
+﻿#ifndef __NetMessage_H__
+#define __NetMessage_H__
 
 #include <functional>
 
@@ -11,18 +11,14 @@
 
 namespace LW
 {
-	#define SOCKET_CALLBACK(__selector__,__target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, ##__VA_ARGS__)
-
 	class NetMessage;
 
-	
-	class NetMessage 
+	class NetMessage
 	{
 	public:
-		static NetMessage* createNetMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize);
-		static NetMessage* createNetMessage(const NetHead* head);
-
-		static lw_void releaseNetMessage(NetMessage* message);
+		static NetMessage* create(lw_int32 cmd, lw_void* msg, lw_int32 size);
+		static NetMessage* create(const NetHead* head);
+		static lw_void release(NetMessage* message);
 
 	public:
 		lw_void setMessage(lw_char8* msg, lw_int32 size);
@@ -36,19 +32,15 @@ namespace LW
 		std::string debug();
 
 	private:
-		NetMessage(lw_int32 cmd, lw_void* msg = nullptr, lw_int32 size = 0);
-		NetMessage(const NetHead* head);
 		NetMessage();
+		NetMessage(const NetHead* head);
+		NetMessage(lw_int32 cmd, lw_void* msg = nullptr, lw_int32 size = 0);
+		
+	private:
 		~NetMessage();
 
 	private:
 		lw_void setHead(const NetHead* head);
-
-#ifdef LW_ENABLE_POOL_
-	private:
-		void *operator new(std::size_t size);
-		void operator delete(void *ptr);
-#endif
 
 	private:
 		NetHead _msgHead;
@@ -68,7 +60,7 @@ namespace LW
 		{
 			if (_msg != NULL)
 			{
-				NetMessage::releaseNetMessage(_msg);
+				NetMessage::release(_msg);
 			}
 		}
 
@@ -80,7 +72,6 @@ namespace LW
 	private:
 		NetMessage *_msg;
 	};
-
 };
 
-#endif	//__SocketMessage_H__
+#endif	//__NetMessage_H__

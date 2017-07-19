@@ -75,14 +75,14 @@ lw_int32 lw_parse_socket_data(const lw_char8 * buf, lw_int32 size, LW_PARSE_DATA
 
 				lw_char8* buffer = (lw_char8*)(__g_cache_queue.front() + C_NET_HEAD_SIZE);
 				lw_int32 buffer_length = phead->size - C_NET_HEAD_SIZE;
-				NetMessage* msg = NetMessage::createNetMessage(phead);
+				NetMessage* msg = NetMessage::create(phead);
 				if (nullptr != msg)
 				{
 					msg->setMessage(buffer, buffer_length);
 					{
 						func(msg->getHead()->cmd, msg->getBuff(), msg->getBuffSize(), userdata);
 					}
-					NetMessage::releaseNetMessage(msg);
+					NetMessage::release(msg);
 				}
 				__g_cache_queue.pop(phead->size);
 			}
@@ -110,7 +110,7 @@ LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, lw_void* object, lw_int32 ob
 	LW_NET_MESSAGE * p = NULL;
 	
 	{
-		auto_release_net_message msg(NetMessage::createNetMessage(cmd, object, objectSize));
+		auto_release_net_message msg(NetMessage::create(cmd, object, objectSize));
 		p = (LW_NET_MESSAGE*)malloc(sizeof(LW_NET_MESSAGE));
 		p->size = msg->getBuffSize();
 		p->buf = (lw_char8*)malloc(p->size * sizeof(lw_char8));

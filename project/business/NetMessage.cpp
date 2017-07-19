@@ -11,27 +11,33 @@
 #else
 #include <arpa/inet.h>
 #endif
+
 namespace LW
 {
 	static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
 
-	//////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	NetMessage* NetMessage::createNetMessage(lw_int32 cmd, lw_void* msg, lw_int32 msgsize)
+	NetMessage* NetMessage::create(lw_int32 cmd, lw_void* msg, lw_int32 size)
 	{
-		return new NetMessage(cmd, msg, msgsize);
+		return new NetMessage(cmd, msg, size);
 	}
 
-	NetMessage* NetMessage::createNetMessage(const NetHead* head)
+	NetMessage* NetMessage::create(const NetHead* head)
 	{
 		return new NetMessage(head);
 	}
 
-	lw_void NetMessage::releaseNetMessage(NetMessage* message)
+	lw_void NetMessage::release(NetMessage* message)
 	{
 		SAFE_DELETE(message);
 	}
-	
+
+	NetMessage::NetMessage() : _buffsize(0)
+	{
+		_buff = NULL;
+	}
+
 	NetMessage::NetMessage(lw_int32 cmd, lw_void* msg, lw_int32 size) : NetMessage()
 	{
 		this->setMessage(cmd, msg, size);
@@ -42,33 +48,10 @@ namespace LW
 		this->setHead(head);
 	}
 
-	NetMessage::NetMessage() : _buffsize(0)
-	{
-		_buff = NULL;
-	}
-
 	NetMessage::~NetMessage()
 	{
 		free(_buff);
 	}
-
-#ifdef LW_ENABLE_POOL_
-	void *NetMessage::operator new(std::size_t size)
-	{
-		{
-			std::lock_guard < std::mutex > lock(__g_pool_mutex);
-			return __g_pool.allocate();
-		}
-	}
-
-	void NetMessage::operator delete(void *ptr)
-		{
-			{
-				std::lock_guard < std::mutex > lock(__g_pool_mutex);
-				__g_pool.deallocate((NetMessage*)ptrObject);
-			}
-		}
-#endif
 
 	lw_void NetMessage::setHead(const NetHead* head)
 	{

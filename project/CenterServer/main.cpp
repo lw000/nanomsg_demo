@@ -60,7 +60,6 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 		{
 			session->sendData(cmd_heart_beat, s, len);
 		}
-
 	} break;
 	default:
 		break;

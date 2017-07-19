@@ -1,9 +1,10 @@
 #ifndef __SocketClient_H__
 #define __SocketClient_H__
 
-#include "business.h"
-
 #include <string>
+
+#include "business.h"
+#include "object.h"
 
 class SocketSession;
 class SocketTimer;
@@ -11,7 +12,7 @@ class SocketClient;
 
 struct event_base;
 
-class SocketClient final
+class SocketClient : public Object
 {
 public:
 	SocketClient();

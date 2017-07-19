@@ -7,6 +7,10 @@
 
 extern "C" 
 {
+	typedef std::function<bool(lw_int32 cmd, char* buf, lw_int32 bufsize)> SocketCallback;
+
+	#define SOCKET_CALLBACK(__selector__,__target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, ##__VA_ARGS__)
+
 	typedef void(*LW_PARSE_DATA_CALLFUNC)(lw_int32 cmd, lw_char8* buf, lw_int32 bufsize, lw_void* userdata);
 	
 	struct LW_NET_MESSAGE
