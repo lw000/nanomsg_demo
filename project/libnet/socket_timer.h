@@ -15,7 +15,7 @@ public:
 
 public:
 	SocketTimer();
-	~SocketTimer();
+	virtual ~SocketTimer();
 
 public:
 	int create(struct event_base* base);

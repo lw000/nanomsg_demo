@@ -46,11 +46,7 @@
 
 using namespace LW;
 
-SocketServer __g_serv;
-
-struct st_worker_thread_param {
-	sql::Connection *conn;
-};
+/*SocketServer __g_serv;*/
 
 static void* thread_one_action(void *arg);
 
@@ -174,7 +170,7 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 
 static void _start_cb(int what)
 {
-	printf("数据库服务启动完成 [%d]！\n", __g_serv.getPort());
+	//printf("数据库服务启动完成 [%d]！\n", __g_serv.getPort());
 }
 
 int main(int argc, char** argv)

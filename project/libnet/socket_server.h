@@ -23,7 +23,7 @@ class SocketServer : public Object
 
 public:
 	SocketServer();
-	~SocketServer();
+	virtual ~SocketServer();
 
 public:
 	lw_int32 create(u_short port);

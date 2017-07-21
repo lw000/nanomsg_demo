@@ -19,7 +19,7 @@ public:
 
 public:
 	SocketSession(TYPE c);
-	~SocketSession();
+	virtual ~SocketSession();
 
 public:
 	evutil_socket_t getSocket();
