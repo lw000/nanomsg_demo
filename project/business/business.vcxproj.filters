@@ -16,20 +16,11 @@
     <Filter Include="网络层模块">
       <UniqueIdentifier>{96764efe-a2d3-43c3-b968-aef7b58dbe12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="公共库">
-      <UniqueIdentifier>{19cc267e-eb41-4ff8-b3c0-e1f0d643da71}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common\base_type.h">
-      <Filter>公共库</Filter>
-    </ClInclude>
-    <ClInclude Include="common\common_marco.h">
-      <Filter>公共库</Filter>
-    </ClInclude>
     <ClInclude Include="NetHead.h">
       <Filter>网络层模块</Filter>
     </ClInclude>
