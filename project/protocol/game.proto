@@ -15,21 +15,27 @@ message game_msg_end_reponse
 message game_msg_situp_request
 {
 	int32    uid = 1;		// uid
+	int32    seat = 2;		// seat
+	bool     lookup = 3;	// lookup
 }
 
 message game_msg_situp_reponse
 {
 	int32    uid = 1;		// uid
-	int32    pos = 2;		// pos
+	int32    seat = 2;		// seat
+	bool     lookup = 3;	// lookup
 }
 
 message game_msg_sitdown_request
 {
 	int32    uid = 1;		// uid
+	int32    seat = 2;		// seat
+	bool     lookup = 3;	// lookup
 }
 
 message game_msg_sitdown_reponse
 {
 	int32    uid = 1;		// uid
-	int32    pos = 2;		// pos
+	int32    seat = 2;		// seat
+	bool     lookup = 3;	// lookup
 }

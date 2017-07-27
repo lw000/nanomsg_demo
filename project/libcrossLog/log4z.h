@@ -253,7 +253,7 @@ const bool LOG4Z_ALL_SYNCHRONOUS_OUTPUT = false;
 const bool LOG4Z_ALL_DEBUGOUTPUT_DISPLAY = true;
 
 //! default logger output file.
-const char* const LOG4Z_DEFAULT_PATH = "./hnlog/";
+const char* const LOG4Z_DEFAULT_PATH = "./log/";
 //! default log filter level
 const int LOG4Z_DEFAULT_LEVEL = LOG_LEVEL_DEBUG;
 //! default logger display

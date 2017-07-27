@@ -54,7 +54,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;USE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\libutils;..\libproperties-1.0\include;..\protocol;..\business;..\business\common;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protobuf\include;..\libnet;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libutils;..\libproperties-1.0\include;..\protocol;..\business;..\common;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protobuf\include;..\libnet;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -96,16 +96,19 @@
     <ClCompile Include="..\protocol\game.pb.cc" />
     <ClCompile Include="..\protocol\platform.pb.cc" />
     <ClCompile Include="client_http.cpp" />
-    <ClCompile Include="GameDesk.cpp" />
+    <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\base_type.h" />
+    <ClInclude Include="..\common\common_marco.h" />
+    <ClInclude Include="..\common\common_struct.h" />
     <ClInclude Include="..\protocol\command.h" />
     <ClInclude Include="..\protocol\game.pb.h" />
     <ClInclude Include="..\protocol\Message.h" />
     <ClInclude Include="..\protocol\platform.pb.h" />
     <ClInclude Include="client_http.h" />
-    <ClInclude Include="GameDesk.h" />
+    <ClInclude Include="GameServer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\protocol\game.proto" />

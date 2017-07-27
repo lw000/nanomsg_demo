@@ -53,12 +53,76 @@ static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* user
 	}
 }
 
+class TestClient : public ISocketSession
+{
+private:
+	SocketSession* _session;
+
+public:
+	TestClient() : _session(NULL)
+	{
+	}
+
+	virtual ~TestClient()
+	{
+	}
+
+public:
+	virtual int onConnected(SocketSession* session) override
+	{
+		this->_session = session;
+
+		return 0;
+	}
+
+	virtual int onDisConnect(SocketSession* session) override
+	{
+		return 0;
+	}
+
+	virtual int onSocketTimeout() override
+	{
+		return 0;
+	}
+
+	virtual int onSocketError(int error, SocketSession* session) override
+	{
+		return 0;
+	}
+
+public:
+	virtual void onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override
+	{
+		switch (cmd)
+		{
+		case cmd_heart_beat:
+		{
+			platform::msg_heartbeat msg;
+			msg.ParseFromArray(buf, bufsize);
+			printf("heartBeat[%d]\n", msg.time());
+		} break;
+		case cmd_platform_sc_userinfo:
+		{
+			platform::msg_userinfo_reponse msg;
+			msg.ParseFromArray(buf, bufsize);
+			printf("userid: %d age:%d sex:%d name:%s address:%s\n", msg.uid(),
+				msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
+		} break;
+		default:
+			break;
+		}
+	}
+
+private:
+
+};
+
+
+
 void run_rpc_client(lw_int32 port)
 {
-	if (__g_client.create())
+	if (__g_client.create(new TestClient))
 	{
-		__g_client.setRecvHook(on_socket_recv, NULL);
-
 		for (int i = 0; i < 1; i++)
 		{
 			__g_client.startTimer(100+i, 1+i, [](int id) -> bool

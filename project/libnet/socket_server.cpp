@@ -24,7 +24,6 @@
 #include "socket_timer.h"
 
 static void __listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
-static void __event_cb(struct bufferevent *, short, void *);
 static void __signal_cb(evutil_socket_t, short, void *);
 static void __accept_error_cb(struct evconnlistener *, void *);
 
@@ -33,12 +32,6 @@ static void __listener_cb(struct evconnlistener *listener, evutil_socket_t fd, s
 	SocketServer * server = (SocketServer*)user_data;
 	server->listener_cb(listener, fd, sa, socklen);
 }
-
-// static void event_cb(struct bufferevent *bev, short event, void *user_data)
-// {
-// 	SocketServer * server = (SocketServer*)user_data;
-// 	server->eventCB(bev, event);
-// }
 
 static void __accept_error_cb(struct evconnlistener * listener, void * userdata)
 {
@@ -60,19 +53,13 @@ static void __signal_cb(evutil_socket_t fd, short event, void *user_data)
 	event_base_loopexit(base, &delay);
 }
 
-SocketServer::SocketServer() : _base(NULL), _onStart(NULL), _onRecvfunc(NULL)
+SocketServer::SocketServer() : _base(NULL), _onStart(NULL)
 {
 	_timer = new SocketTimer();
 }
 
 SocketServer::~SocketServer()
 {
-	SESSIONS::iterator iter = sessions.begin();
-	for (iter; iter != sessions.end(); ++iter)
-	{
-		delete iter->second;
-	}
-
 	if (_timer != NULL)
 	{
 		delete _timer;
@@ -80,9 +67,10 @@ SocketServer::~SocketServer()
 	}
 }
 
-lw_int32 SocketServer::create(u_short port)
+lw_int32 SocketServer::create(u_short port, ISocketServer* isession)
 {
 	this->_port = port;
+	this->iserver = isession;
 
 #ifdef WIN32
 	struct event_config *cfg = event_config_new();
@@ -106,77 +94,22 @@ void SocketServer::destory()
 	event_base_free(_base);
 }
 
-lw_int32 SocketServer::sendData(SocketSession* session, lw_int32 cmd, void* object, lw_int32 objectSize)
-{
-	lw_int32 result = 0;
-	{
-		result = session->sendData(cmd, object, objectSize);
-	}
-	return result;
-}
-
-void SocketServer::event_cb(struct bufferevent *bev, short event)
-{
-	evutil_socket_t fd = bufferevent_getfd(bev);
-	
-	if (event & BEV_EVENT_READING)
-	{
-		printf("[%d]: EVENT_READING\n", fd);
-	}
-	else if (event & BEV_EVENT_WRITING)
-	{
-		printf("[%d]: BEV_EVENT_WRITING\n", fd);
-	}
-	else if (event & BEV_EVENT_EOF)
-	{
-		printf("[%d]: connection closed.\n", fd);
-	}
-	else if (event & BEV_EVENT_TIMEOUT)
-	{
-		printf("[%d]: BEV_EVENT_TIMEOUT.\n", fd);
-	}
-	else if (event & BEV_EVENT_ERROR)
-	{
-		SESSIONS::iterator iter = sessions.begin();
-		for (iter; iter != sessions.end(); ++iter)
-		{
-			if (iter->first == fd)
-			{
-				printf("leave ([%d] host=%s, port=%d)\n", fd, iter->second->getHost().c_str(), iter->second->getPort());
-				delete iter->second;
-				iter = sessions.erase(iter);
-				break;
-			}
-		}
-	}
-
-	/* None of the other events can happen here, since we haven't enabled
-	* timeouts */
-	bufferevent_free(bev);
-}
-
 void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen)
 {
 	struct event_base *base = evconnlistener_get_base(listener);
 
 	SocketSession* pSession = new SocketSession(SocketSession::TYPE::Server);
-	int r = pSession->create(_base, fd, EV_READ | EV_WRITE);
+	int r = pSession->create(_base, fd, EV_READ | EV_WRITE, this->iserver);
 	if (r == 0)
 	{
-		pSession->setRecvCall(_onRecvfunc);
-
 		char hostBuf[NI_MAXHOST];
 		char portBuf[64];
 		getnameinfo(sa, socklen, hostBuf, sizeof(hostBuf), portBuf, sizeof(portBuf), NI_NUMERICHOST | NI_NUMERICSERV);
 
-		printf("join (host = %s, port = %s)\n", hostBuf, portBuf);
-	
 		pSession->setHost(hostBuf);
 		pSession->setPort(std::stoi(portBuf));
 
-		evutil_socket_t new_fd = pSession->getSocket();
-
-		sessions[new_fd] = pSession;
+		this->iserver->onJoin(pSession);
 	}
 	else
 	{
@@ -188,16 +121,9 @@ void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t 
 	}
 }
 
-lw_int32 SocketServer::run(LW_SERVER_START_COMPLETE start_func, LW_PARSE_DATA_CALLFUNC func)
+lw_int32 SocketServer::run(LW_SERVER_START_COMPLETE start_func)
 {
-	if (NULL == func) return -1;
-
 	if (NULL == start_func) return -1;
-
-	if (func != _onRecvfunc)
-	{
-		_onRecvfunc = func;
-	}
 
 	if (_onStart != start_func)
 	{

@@ -29,14 +29,13 @@
 #include "libproperties.h"
 #include "client_http.h"
 
-#include "GameDesk.h"
+#include "GameServer.h"
 
 using namespace LW;
 
 void run_rpc_client(lw_int32 port)
 {
-	GameDesk * logic = new GameDesk(10000, 1, NULL);
-	logic->start("127.0.0.1", port);
+
 }
 
 // 当向进程发出SIGTERM/SIGHUP/SIGINT/SIGQUIT的时候，终止event的事件侦听循环
@@ -91,7 +90,7 @@ int main(int argc, char** argv)
 	do 
 	{
 		std::string config(argv[1]);
-		transform(config.begin(), config.end(), config.begin(), ::tolower);
+		std::transform(config.begin(), config.end(), config.begin(), ::tolower);
 		config = config.substr(config.size() - 4, 4);
 		if (config.compare(".xml") != 0)
 		{
@@ -111,8 +110,21 @@ int main(int argc, char** argv)
 
 			for (size_t i = 0; i < rpc_times; i++)
 			{
-				std::thread t(run_rpc_client, port);
-				t.detach();
+				DESK_INFO desk_info;
+				desk_info.id = i;
+				desk_info.max_usercount = 6;
+				char buf[64];
+				sprintf(buf, "测试[%d]", i);
+				desk_info.name = std::string(buf);
+				desk_info.rid = 0;
+				desk_info.state = DESK_STATE_Empty;
+
+				GameServer * serv = new GameServer(NULL);
+				if (serv->create(desk_info))
+				{
+					serv->start("127.0.0.1", port);
+				}
+
 				lw_sleep(0.1);
 			}
 

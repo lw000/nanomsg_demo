@@ -79,8 +79,10 @@ void protobuf_AssignDesc_game_2eproto() {
       sizeof(game_msg_end_reponse),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_end_reponse, _internal_metadata_));
   game_msg_situp_request_descriptor_ = file->message_type(2);
-  static const int game_msg_situp_request_offsets_[1] = {
+  static const int game_msg_situp_request_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_situp_request, uid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_situp_request, seat_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_situp_request, lookup_),
   };
   game_msg_situp_request_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -93,9 +95,10 @@ void protobuf_AssignDesc_game_2eproto() {
       sizeof(game_msg_situp_request),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_situp_request, _internal_metadata_));
   game_msg_situp_reponse_descriptor_ = file->message_type(3);
-  static const int game_msg_situp_reponse_offsets_[2] = {
+  static const int game_msg_situp_reponse_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_situp_reponse, uid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_situp_reponse, pos_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_situp_reponse, seat_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_situp_reponse, lookup_),
   };
   game_msg_situp_reponse_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -108,8 +111,10 @@ void protobuf_AssignDesc_game_2eproto() {
       sizeof(game_msg_situp_reponse),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_situp_reponse, _internal_metadata_));
   game_msg_sitdown_request_descriptor_ = file->message_type(4);
-  static const int game_msg_sitdown_request_offsets_[1] = {
+  static const int game_msg_sitdown_request_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_sitdown_request, uid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_sitdown_request, seat_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_sitdown_request, lookup_),
   };
   game_msg_sitdown_request_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -122,9 +127,10 @@ void protobuf_AssignDesc_game_2eproto() {
       sizeof(game_msg_sitdown_request),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_sitdown_request, _internal_metadata_));
   game_msg_sitdown_reponse_descriptor_ = file->message_type(5);
-  static const int game_msg_sitdown_reponse_offsets_[2] = {
+  static const int game_msg_sitdown_reponse_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_sitdown_reponse, uid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_sitdown_reponse, pos_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_sitdown_reponse, seat_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(game_msg_sitdown_reponse, lookup_),
   };
   game_msg_sitdown_reponse_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -209,12 +215,14 @@ void protobuf_AddDesc_game_2eproto_impl() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\ngame.proto\022\003msg\"\'\n\026game_msg_start_repo"
     "nse\022\r\n\005state\030\001 \001(\005\"%\n\024game_msg_end_repon"
-    "se\022\r\n\005state\030\001 \001(\005\"%\n\026game_msg_situp_requ"
-    "est\022\013\n\003uid\030\001 \001(\005\"2\n\026game_msg_situp_repon"
-    "se\022\013\n\003uid\030\001 \001(\005\022\013\n\003pos\030\002 \001(\005\"\'\n\030game_msg"
-    "_sitdown_request\022\013\n\003uid\030\001 \001(\005\"4\n\030game_ms"
-    "g_sitdown_reponse\022\013\n\003uid\030\001 \001(\005\022\013\n\003pos\030\002 "
-    "\001(\005b\006proto3", 291);
+    "se\022\r\n\005state\030\001 \001(\005\"C\n\026game_msg_situp_requ"
+    "est\022\013\n\003uid\030\001 \001(\005\022\014\n\004seat\030\002 \001(\005\022\016\n\006lookup"
+    "\030\003 \001(\010\"C\n\026game_msg_situp_reponse\022\013\n\003uid\030"
+    "\001 \001(\005\022\014\n\004seat\030\002 \001(\005\022\016\n\006lookup\030\003 \001(\010\"E\n\030g"
+    "ame_msg_sitdown_request\022\013\n\003uid\030\001 \001(\005\022\014\n\004"
+    "seat\030\002 \001(\005\022\016\n\006lookup\030\003 \001(\010\"E\n\030game_msg_s"
+    "itdown_reponse\022\013\n\003uid\030\001 \001(\005\022\014\n\004seat\030\002 \001("
+    "\005\022\016\n\006lookup\030\003 \001(\010b\006proto3", 385);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "game.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_game_2eproto);
@@ -734,6 +742,8 @@ inline const game_msg_end_reponse* game_msg_end_reponse::internal_default_instan
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int game_msg_situp_request::kUidFieldNumber;
+const int game_msg_situp_request::kSeatFieldNumber;
+const int game_msg_situp_request::kLookupFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 game_msg_situp_request::game_msg_situp_request()
@@ -755,7 +765,8 @@ game_msg_situp_request::game_msg_situp_request(const game_msg_situp_request& fro
 }
 
 void game_msg_situp_request::SharedCtor() {
-  uid_ = 0;
+  ::memset(&uid_, 0, reinterpret_cast<char*>(&lookup_) -
+    reinterpret_cast<char*>(&uid_) + sizeof(lookup_));
   _cached_size_ = 0;
 }
 
@@ -794,7 +805,27 @@ game_msg_situp_request* game_msg_situp_request::New(::google::protobuf::Arena* a
 
 void game_msg_situp_request::Clear() {
 // @@protoc_insertion_point(message_clear_start:msg.game_msg_situp_request)
-  uid_ = 0;
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(game_msg_situp_request, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<game_msg_situp_request*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&(first), 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(uid_, lookup_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
 }
 
 bool game_msg_situp_request::MergePartialFromCodedStream(
@@ -814,6 +845,36 @@ bool game_msg_situp_request::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &uid_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_seat;
+        break;
+      }
+
+      // optional int32 seat = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_seat:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &seat_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_lookup;
+        break;
+      }
+
+      // optional bool lookup = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_lookup:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &lookup_)));
         } else {
           goto handle_unusual;
         }
@@ -850,6 +911,16 @@ void game_msg_situp_request::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->uid(), output);
   }
 
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->seat(), output);
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->lookup(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:msg.game_msg_situp_request)
 }
 
@@ -860,6 +931,16 @@ void game_msg_situp_request::SerializeWithCachedSizes(
   // optional int32 uid = 1;
   if (this->uid() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->uid(), target);
+  }
+
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->seat(), target);
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->lookup(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:msg.game_msg_situp_request)
@@ -875,6 +956,18 @@ size_t game_msg_situp_request::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->uid());
+  }
+
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->seat());
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -913,6 +1006,12 @@ void game_msg_situp_request::UnsafeMergeFrom(const game_msg_situp_request& from)
   if (from.uid() != 0) {
     set_uid(from.uid());
   }
+  if (from.seat() != 0) {
+    set_seat(from.seat());
+  }
+  if (from.lookup() != 0) {
+    set_lookup(from.lookup());
+  }
 }
 
 void game_msg_situp_request::CopyFrom(const ::google::protobuf::Message& from) {
@@ -940,6 +1039,8 @@ void game_msg_situp_request::Swap(game_msg_situp_request* other) {
 }
 void game_msg_situp_request::InternalSwap(game_msg_situp_request* other) {
   std::swap(uid_, other->uid_);
+  std::swap(seat_, other->seat_);
+  std::swap(lookup_, other->lookup_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -969,6 +1070,34 @@ void game_msg_situp_request::set_uid(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:msg.game_msg_situp_request.uid)
 }
 
+// optional int32 seat = 2;
+void game_msg_situp_request::clear_seat() {
+  seat_ = 0;
+}
+::google::protobuf::int32 game_msg_situp_request::seat() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_request.seat)
+  return seat_;
+}
+void game_msg_situp_request::set_seat(::google::protobuf::int32 value) {
+  
+  seat_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_request.seat)
+}
+
+// optional bool lookup = 3;
+void game_msg_situp_request::clear_lookup() {
+  lookup_ = false;
+}
+bool game_msg_situp_request::lookup() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_request.lookup)
+  return lookup_;
+}
+void game_msg_situp_request::set_lookup(bool value) {
+  
+  lookup_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_request.lookup)
+}
+
 inline const game_msg_situp_request* game_msg_situp_request::internal_default_instance() {
   return &game_msg_situp_request_default_instance_.get();
 }
@@ -978,7 +1107,8 @@ inline const game_msg_situp_request* game_msg_situp_request::internal_default_in
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int game_msg_situp_reponse::kUidFieldNumber;
-const int game_msg_situp_reponse::kPosFieldNumber;
+const int game_msg_situp_reponse::kSeatFieldNumber;
+const int game_msg_situp_reponse::kLookupFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 game_msg_situp_reponse::game_msg_situp_reponse()
@@ -1000,8 +1130,8 @@ game_msg_situp_reponse::game_msg_situp_reponse(const game_msg_situp_reponse& fro
 }
 
 void game_msg_situp_reponse::SharedCtor() {
-  ::memset(&uid_, 0, reinterpret_cast<char*>(&pos_) -
-    reinterpret_cast<char*>(&uid_) + sizeof(pos_));
+  ::memset(&uid_, 0, reinterpret_cast<char*>(&lookup_) -
+    reinterpret_cast<char*>(&uid_) + sizeof(lookup_));
   _cached_size_ = 0;
 }
 
@@ -1056,7 +1186,7 @@ void game_msg_situp_reponse::Clear() {
            ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
 } while (0)
 
-  ZR_(uid_, pos_);
+  ZR_(uid_, lookup_);
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -1083,18 +1213,33 @@ bool game_msg_situp_reponse::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(16)) goto parse_pos;
+        if (input->ExpectTag(16)) goto parse_seat;
         break;
       }
 
-      // optional int32 pos = 2;
+      // optional int32 seat = 2;
       case 2: {
         if (tag == 16) {
-         parse_pos:
+         parse_seat:
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &pos_)));
+                 input, &seat_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_lookup;
+        break;
+      }
+
+      // optional bool lookup = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_lookup:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &lookup_)));
         } else {
           goto handle_unusual;
         }
@@ -1131,9 +1276,14 @@ void game_msg_situp_reponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->uid(), output);
   }
 
-  // optional int32 pos = 2;
-  if (this->pos() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->pos(), output);
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->seat(), output);
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->lookup(), output);
   }
 
   // @@protoc_insertion_point(serialize_end:msg.game_msg_situp_reponse)
@@ -1148,9 +1298,14 @@ void game_msg_situp_reponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->uid(), target);
   }
 
-  // optional int32 pos = 2;
-  if (this->pos() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->pos(), target);
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->seat(), target);
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->lookup(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:msg.game_msg_situp_reponse)
@@ -1168,11 +1323,16 @@ size_t game_msg_situp_reponse::ByteSizeLong() const {
         this->uid());
   }
 
-  // optional int32 pos = 2;
-  if (this->pos() != 0) {
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->pos());
+        this->seat());
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -1211,8 +1371,11 @@ void game_msg_situp_reponse::UnsafeMergeFrom(const game_msg_situp_reponse& from)
   if (from.uid() != 0) {
     set_uid(from.uid());
   }
-  if (from.pos() != 0) {
-    set_pos(from.pos());
+  if (from.seat() != 0) {
+    set_seat(from.seat());
+  }
+  if (from.lookup() != 0) {
+    set_lookup(from.lookup());
   }
 }
 
@@ -1241,7 +1404,8 @@ void game_msg_situp_reponse::Swap(game_msg_situp_reponse* other) {
 }
 void game_msg_situp_reponse::InternalSwap(game_msg_situp_reponse* other) {
   std::swap(uid_, other->uid_);
-  std::swap(pos_, other->pos_);
+  std::swap(seat_, other->seat_);
+  std::swap(lookup_, other->lookup_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -1271,18 +1435,32 @@ void game_msg_situp_reponse::set_uid(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.uid)
 }
 
-// optional int32 pos = 2;
-void game_msg_situp_reponse::clear_pos() {
-  pos_ = 0;
+// optional int32 seat = 2;
+void game_msg_situp_reponse::clear_seat() {
+  seat_ = 0;
 }
-::google::protobuf::int32 game_msg_situp_reponse::pos() const {
-  // @@protoc_insertion_point(field_get:msg.game_msg_situp_reponse.pos)
-  return pos_;
+::google::protobuf::int32 game_msg_situp_reponse::seat() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_reponse.seat)
+  return seat_;
 }
-void game_msg_situp_reponse::set_pos(::google::protobuf::int32 value) {
+void game_msg_situp_reponse::set_seat(::google::protobuf::int32 value) {
   
-  pos_ = value;
-  // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.pos)
+  seat_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.seat)
+}
+
+// optional bool lookup = 3;
+void game_msg_situp_reponse::clear_lookup() {
+  lookup_ = false;
+}
+bool game_msg_situp_reponse::lookup() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_reponse.lookup)
+  return lookup_;
+}
+void game_msg_situp_reponse::set_lookup(bool value) {
+  
+  lookup_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.lookup)
 }
 
 inline const game_msg_situp_reponse* game_msg_situp_reponse::internal_default_instance() {
@@ -1294,6 +1472,8 @@ inline const game_msg_situp_reponse* game_msg_situp_reponse::internal_default_in
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int game_msg_sitdown_request::kUidFieldNumber;
+const int game_msg_sitdown_request::kSeatFieldNumber;
+const int game_msg_sitdown_request::kLookupFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 game_msg_sitdown_request::game_msg_sitdown_request()
@@ -1315,7 +1495,8 @@ game_msg_sitdown_request::game_msg_sitdown_request(const game_msg_sitdown_reques
 }
 
 void game_msg_sitdown_request::SharedCtor() {
-  uid_ = 0;
+  ::memset(&uid_, 0, reinterpret_cast<char*>(&lookup_) -
+    reinterpret_cast<char*>(&uid_) + sizeof(lookup_));
   _cached_size_ = 0;
 }
 
@@ -1354,7 +1535,27 @@ game_msg_sitdown_request* game_msg_sitdown_request::New(::google::protobuf::Aren
 
 void game_msg_sitdown_request::Clear() {
 // @@protoc_insertion_point(message_clear_start:msg.game_msg_sitdown_request)
-  uid_ = 0;
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(game_msg_sitdown_request, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<game_msg_sitdown_request*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&(first), 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(uid_, lookup_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
 }
 
 bool game_msg_sitdown_request::MergePartialFromCodedStream(
@@ -1374,6 +1575,36 @@ bool game_msg_sitdown_request::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &uid_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_seat;
+        break;
+      }
+
+      // optional int32 seat = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_seat:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &seat_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_lookup;
+        break;
+      }
+
+      // optional bool lookup = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_lookup:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &lookup_)));
         } else {
           goto handle_unusual;
         }
@@ -1410,6 +1641,16 @@ void game_msg_sitdown_request::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->uid(), output);
   }
 
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->seat(), output);
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->lookup(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:msg.game_msg_sitdown_request)
 }
 
@@ -1420,6 +1661,16 @@ void game_msg_sitdown_request::SerializeWithCachedSizes(
   // optional int32 uid = 1;
   if (this->uid() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->uid(), target);
+  }
+
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->seat(), target);
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->lookup(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:msg.game_msg_sitdown_request)
@@ -1435,6 +1686,18 @@ size_t game_msg_sitdown_request::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->uid());
+  }
+
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->seat());
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -1473,6 +1736,12 @@ void game_msg_sitdown_request::UnsafeMergeFrom(const game_msg_sitdown_request& f
   if (from.uid() != 0) {
     set_uid(from.uid());
   }
+  if (from.seat() != 0) {
+    set_seat(from.seat());
+  }
+  if (from.lookup() != 0) {
+    set_lookup(from.lookup());
+  }
 }
 
 void game_msg_sitdown_request::CopyFrom(const ::google::protobuf::Message& from) {
@@ -1500,6 +1769,8 @@ void game_msg_sitdown_request::Swap(game_msg_sitdown_request* other) {
 }
 void game_msg_sitdown_request::InternalSwap(game_msg_sitdown_request* other) {
   std::swap(uid_, other->uid_);
+  std::swap(seat_, other->seat_);
+  std::swap(lookup_, other->lookup_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -1529,6 +1800,34 @@ void game_msg_sitdown_request::set_uid(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_request.uid)
 }
 
+// optional int32 seat = 2;
+void game_msg_sitdown_request::clear_seat() {
+  seat_ = 0;
+}
+::google::protobuf::int32 game_msg_sitdown_request::seat() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_request.seat)
+  return seat_;
+}
+void game_msg_sitdown_request::set_seat(::google::protobuf::int32 value) {
+  
+  seat_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_request.seat)
+}
+
+// optional bool lookup = 3;
+void game_msg_sitdown_request::clear_lookup() {
+  lookup_ = false;
+}
+bool game_msg_sitdown_request::lookup() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_request.lookup)
+  return lookup_;
+}
+void game_msg_sitdown_request::set_lookup(bool value) {
+  
+  lookup_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_request.lookup)
+}
+
 inline const game_msg_sitdown_request* game_msg_sitdown_request::internal_default_instance() {
   return &game_msg_sitdown_request_default_instance_.get();
 }
@@ -1538,7 +1837,8 @@ inline const game_msg_sitdown_request* game_msg_sitdown_request::internal_defaul
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int game_msg_sitdown_reponse::kUidFieldNumber;
-const int game_msg_sitdown_reponse::kPosFieldNumber;
+const int game_msg_sitdown_reponse::kSeatFieldNumber;
+const int game_msg_sitdown_reponse::kLookupFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 game_msg_sitdown_reponse::game_msg_sitdown_reponse()
@@ -1560,8 +1860,8 @@ game_msg_sitdown_reponse::game_msg_sitdown_reponse(const game_msg_sitdown_repons
 }
 
 void game_msg_sitdown_reponse::SharedCtor() {
-  ::memset(&uid_, 0, reinterpret_cast<char*>(&pos_) -
-    reinterpret_cast<char*>(&uid_) + sizeof(pos_));
+  ::memset(&uid_, 0, reinterpret_cast<char*>(&lookup_) -
+    reinterpret_cast<char*>(&uid_) + sizeof(lookup_));
   _cached_size_ = 0;
 }
 
@@ -1616,7 +1916,7 @@ void game_msg_sitdown_reponse::Clear() {
            ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
 } while (0)
 
-  ZR_(uid_, pos_);
+  ZR_(uid_, lookup_);
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -1643,18 +1943,33 @@ bool game_msg_sitdown_reponse::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(16)) goto parse_pos;
+        if (input->ExpectTag(16)) goto parse_seat;
         break;
       }
 
-      // optional int32 pos = 2;
+      // optional int32 seat = 2;
       case 2: {
         if (tag == 16) {
-         parse_pos:
+         parse_seat:
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &pos_)));
+                 input, &seat_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_lookup;
+        break;
+      }
+
+      // optional bool lookup = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_lookup:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &lookup_)));
         } else {
           goto handle_unusual;
         }
@@ -1691,9 +2006,14 @@ void game_msg_sitdown_reponse::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->uid(), output);
   }
 
-  // optional int32 pos = 2;
-  if (this->pos() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->pos(), output);
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->seat(), output);
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->lookup(), output);
   }
 
   // @@protoc_insertion_point(serialize_end:msg.game_msg_sitdown_reponse)
@@ -1708,9 +2028,14 @@ void game_msg_sitdown_reponse::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->uid(), target);
   }
 
-  // optional int32 pos = 2;
-  if (this->pos() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->pos(), target);
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->seat(), target);
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->lookup(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:msg.game_msg_sitdown_reponse)
@@ -1728,11 +2053,16 @@ size_t game_msg_sitdown_reponse::ByteSizeLong() const {
         this->uid());
   }
 
-  // optional int32 pos = 2;
-  if (this->pos() != 0) {
+  // optional int32 seat = 2;
+  if (this->seat() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->pos());
+        this->seat());
+  }
+
+  // optional bool lookup = 3;
+  if (this->lookup() != 0) {
+    total_size += 1 + 1;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -1771,8 +2101,11 @@ void game_msg_sitdown_reponse::UnsafeMergeFrom(const game_msg_sitdown_reponse& f
   if (from.uid() != 0) {
     set_uid(from.uid());
   }
-  if (from.pos() != 0) {
-    set_pos(from.pos());
+  if (from.seat() != 0) {
+    set_seat(from.seat());
+  }
+  if (from.lookup() != 0) {
+    set_lookup(from.lookup());
   }
 }
 
@@ -1801,7 +2134,8 @@ void game_msg_sitdown_reponse::Swap(game_msg_sitdown_reponse* other) {
 }
 void game_msg_sitdown_reponse::InternalSwap(game_msg_sitdown_reponse* other) {
   std::swap(uid_, other->uid_);
-  std::swap(pos_, other->pos_);
+  std::swap(seat_, other->seat_);
+  std::swap(lookup_, other->lookup_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -1831,18 +2165,32 @@ void game_msg_sitdown_reponse::set_uid(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.uid)
 }
 
-// optional int32 pos = 2;
-void game_msg_sitdown_reponse::clear_pos() {
-  pos_ = 0;
+// optional int32 seat = 2;
+void game_msg_sitdown_reponse::clear_seat() {
+  seat_ = 0;
 }
-::google::protobuf::int32 game_msg_sitdown_reponse::pos() const {
-  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_reponse.pos)
-  return pos_;
+::google::protobuf::int32 game_msg_sitdown_reponse::seat() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_reponse.seat)
+  return seat_;
 }
-void game_msg_sitdown_reponse::set_pos(::google::protobuf::int32 value) {
+void game_msg_sitdown_reponse::set_seat(::google::protobuf::int32 value) {
   
-  pos_ = value;
-  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.pos)
+  seat_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.seat)
+}
+
+// optional bool lookup = 3;
+void game_msg_sitdown_reponse::clear_lookup() {
+  lookup_ = false;
+}
+bool game_msg_sitdown_reponse::lookup() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_reponse.lookup)
+  return lookup_;
+}
+void game_msg_sitdown_reponse::set_lookup(bool value) {
+  
+  lookup_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.lookup)
 }
 
 inline const game_msg_sitdown_reponse* game_msg_sitdown_reponse::internal_default_instance() {

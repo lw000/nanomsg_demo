@@ -5,6 +5,7 @@
 
 #include "business.h"
 #include "object.h"
+#include "socket_session.h"
 
 class SocketSession;
 class SocketTimer;
@@ -19,16 +20,13 @@ public:
 	~SocketClient();
 
 public:
-	bool create();
+	bool create(ISocketSession* isession);
 	void destory();
 
 public:
 	int run(const char* addr, int port);
 	SocketSession* getSession();
 
-public:
-	int setRecvHook(LW_PARSE_DATA_CALLFUNC func, void* userdata);
-	
 public:
 	int startTimer(int id, int t, std::function<bool(int id)> func);
 	void killTimer(int id);
@@ -40,6 +38,8 @@ private:
 	struct event_base* _base;
 	SocketSession* _session;
 	SocketTimer* _timer;
+
+	ISocketSession* isession;
 };
 
 #endif // !__SocketClient_H__

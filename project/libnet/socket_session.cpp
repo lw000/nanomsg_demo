@@ -29,10 +29,16 @@ static void __event_cb(struct bufferevent *bev, short event, void *arg)
 	session->event_ev(event);
 }
 
+static void __on_parse(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
+{
+	SocketSession *session = (SocketSession *)userdata;
+	session->onParse(cmd, buf, bufsize);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 SocketSession::SocketSession(TYPE c)
 	: _bev(NULL)
-	, _on_recv_func(NULL)
+	, isession(NULL)
 	, _connected(false)
 	, _port(-1)
 {
@@ -44,19 +50,10 @@ SocketSession::~SocketSession()
 	this->destory();
 }
 
-int SocketSession::setRecvCall(LW_PARSE_DATA_CALLFUNC func)
+int SocketSession::create(struct event_base* base, evutil_socket_t fd, short event, ISocketSession* isession)
 {
-	if (func == NULL) return -1;
-	if (_on_recv_func != func)
-	{
-		_on_recv_func = func;
-	}
+	this->isession = isession;
 
-	return 0;
-}
-
-int SocketSession::create(struct event_base* base, evutil_socket_t fd, short event)
-{
 	switch (_c)
 	{
 	case SocketSession::Client:
@@ -96,10 +93,6 @@ int SocketSession::create(struct event_base* base, evutil_socket_t fd, short eve
 
 void SocketSession::destory()
 {
-	if (this->_bev != NULL)
-	{
-		bufferevent_free(this->_bev);
-	}
 	this->_bev = NULL;
 }
 
@@ -155,9 +148,9 @@ lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize
 	{
 		int c = lw_send_socket_data(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
 		{
-			int c = bufferevent_write(_bev, p->buf, p->size);
+			int c1 = bufferevent_write(_bev, p->buf, p->size);
 
-			return c;
+			return c1;
 		});
 		return c;
 	}
@@ -180,13 +173,18 @@ void SocketSession::read_ev()
 		size_t read_len = bufferevent_read(_bev, read_buf, input_len);
 		if (input_len == read_len)
 		{
-			if (lw_parse_socket_data(read_buf, read_len, this->_on_recv_func, this) == 0)
+			if (lw_parse_socket_data(read_buf, read_len, __on_parse, this) == 0)
 			{
 
 			}
 		}
 		free(read_buf);
 	}
+}
+
+void SocketSession::onParse(lw_int32 cmd, char* buf, lw_int32 bufsize)
+{
+	this->isession->onParse(this, cmd, buf, bufsize);
 }
 
 void SocketSession::event_ev(short ev)
@@ -206,23 +204,23 @@ void SocketSession::event_ev(short ev)
 	else if (ev & BEV_EVENT_EOF)
 	{
 		printf("[%d]: connection closed.\n", fd);
+		this->isession->onDisConnect(this);
 	}
 	else if (ev & BEV_EVENT_TIMEOUT)
 	{
 		printf("[%d]: BEV_EVENT_TIMEOUT.\n", fd);
+		this->isession->onSocketError(BEV_EVENT_TIMEOUT, this);
 	}
 	else if (ev & BEV_EVENT_ERROR)
 	{
-		
+		this->isession->onSocketError(BEV_EVENT_ERROR, this);
 	}
 	else if (ev & BEV_EVENT_CONNECTED)
 	{
 		_connected = true;
+		this->isession->onConnected(this);
 		return;
 	}
 
-	/* None of the other events can happen here, since we haven't enabled
-	* timeouts */
-	bufferevent_free(_bev);
 	this->_bev = NULL;
 }

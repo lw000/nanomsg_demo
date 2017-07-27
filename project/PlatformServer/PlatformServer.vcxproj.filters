@@ -19,6 +19,9 @@
     <Filter Include="server">
       <UniqueIdentifier>{168627d2-653a-4e2b-b5fd-77bbc666bc73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{27ef0175-8213-4f6c-9f54-355ca7690245}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -34,6 +37,21 @@
       <Filter>server</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UserMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RoomMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Desk.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="room.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PlatformServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -52,6 +70,30 @@
     </ClInclude>
     <ClInclude Include="..\protocol\command.h">
       <Filter>通讯协议</Filter>
+    </ClInclude>
+    <ClInclude Include="UserMgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RoomMgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Desk.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="room.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\base_type.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\common_marco.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\common_struct.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformServer.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

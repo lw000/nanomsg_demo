@@ -287,11 +287,25 @@ class game_msg_situp_request : public ::google::protobuf::Message /* @@protoc_in
   ::google::protobuf::int32 uid() const;
   void set_uid(::google::protobuf::int32 value);
 
+  // optional int32 seat = 2;
+  void clear_seat();
+  static const int kSeatFieldNumber = 2;
+  ::google::protobuf::int32 seat() const;
+  void set_seat(::google::protobuf::int32 value);
+
+  // optional bool lookup = 3;
+  void clear_lookup();
+  static const int kLookupFieldNumber = 3;
+  bool lookup() const;
+  void set_lookup(bool value);
+
   // @@protoc_insertion_point(class_scope:msg.game_msg_situp_request)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::int32 uid_;
+  ::google::protobuf::int32 seat_;
+  bool lookup_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_game_2eproto_impl();
   friend void  protobuf_AddDesc_game_2eproto_impl();
@@ -373,18 +387,25 @@ class game_msg_situp_reponse : public ::google::protobuf::Message /* @@protoc_in
   ::google::protobuf::int32 uid() const;
   void set_uid(::google::protobuf::int32 value);
 
-  // optional int32 pos = 2;
-  void clear_pos();
-  static const int kPosFieldNumber = 2;
-  ::google::protobuf::int32 pos() const;
-  void set_pos(::google::protobuf::int32 value);
+  // optional int32 seat = 2;
+  void clear_seat();
+  static const int kSeatFieldNumber = 2;
+  ::google::protobuf::int32 seat() const;
+  void set_seat(::google::protobuf::int32 value);
+
+  // optional bool lookup = 3;
+  void clear_lookup();
+  static const int kLookupFieldNumber = 3;
+  bool lookup() const;
+  void set_lookup(bool value);
 
   // @@protoc_insertion_point(class_scope:msg.game_msg_situp_reponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::int32 uid_;
-  ::google::protobuf::int32 pos_;
+  ::google::protobuf::int32 seat_;
+  bool lookup_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_game_2eproto_impl();
   friend void  protobuf_AddDesc_game_2eproto_impl();
@@ -466,11 +487,25 @@ class game_msg_sitdown_request : public ::google::protobuf::Message /* @@protoc_
   ::google::protobuf::int32 uid() const;
   void set_uid(::google::protobuf::int32 value);
 
+  // optional int32 seat = 2;
+  void clear_seat();
+  static const int kSeatFieldNumber = 2;
+  ::google::protobuf::int32 seat() const;
+  void set_seat(::google::protobuf::int32 value);
+
+  // optional bool lookup = 3;
+  void clear_lookup();
+  static const int kLookupFieldNumber = 3;
+  bool lookup() const;
+  void set_lookup(bool value);
+
   // @@protoc_insertion_point(class_scope:msg.game_msg_sitdown_request)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::int32 uid_;
+  ::google::protobuf::int32 seat_;
+  bool lookup_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_game_2eproto_impl();
   friend void  protobuf_AddDesc_game_2eproto_impl();
@@ -552,18 +587,25 @@ class game_msg_sitdown_reponse : public ::google::protobuf::Message /* @@protoc_
   ::google::protobuf::int32 uid() const;
   void set_uid(::google::protobuf::int32 value);
 
-  // optional int32 pos = 2;
-  void clear_pos();
-  static const int kPosFieldNumber = 2;
-  ::google::protobuf::int32 pos() const;
-  void set_pos(::google::protobuf::int32 value);
+  // optional int32 seat = 2;
+  void clear_seat();
+  static const int kSeatFieldNumber = 2;
+  ::google::protobuf::int32 seat() const;
+  void set_seat(::google::protobuf::int32 value);
+
+  // optional bool lookup = 3;
+  void clear_lookup();
+  static const int kLookupFieldNumber = 3;
+  bool lookup() const;
+  void set_lookup(bool value);
 
   // @@protoc_insertion_point(class_scope:msg.game_msg_sitdown_reponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::int32 uid_;
-  ::google::protobuf::int32 pos_;
+  ::google::protobuf::int32 seat_;
+  bool lookup_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_game_2eproto_impl();
   friend void  protobuf_AddDesc_game_2eproto_impl();
@@ -638,6 +680,34 @@ inline void game_msg_situp_request::set_uid(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:msg.game_msg_situp_request.uid)
 }
 
+// optional int32 seat = 2;
+inline void game_msg_situp_request::clear_seat() {
+  seat_ = 0;
+}
+inline ::google::protobuf::int32 game_msg_situp_request::seat() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_request.seat)
+  return seat_;
+}
+inline void game_msg_situp_request::set_seat(::google::protobuf::int32 value) {
+  
+  seat_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_request.seat)
+}
+
+// optional bool lookup = 3;
+inline void game_msg_situp_request::clear_lookup() {
+  lookup_ = false;
+}
+inline bool game_msg_situp_request::lookup() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_request.lookup)
+  return lookup_;
+}
+inline void game_msg_situp_request::set_lookup(bool value) {
+  
+  lookup_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_request.lookup)
+}
+
 inline const game_msg_situp_request* game_msg_situp_request::internal_default_instance() {
   return &game_msg_situp_request_default_instance_.get();
 }
@@ -659,18 +729,32 @@ inline void game_msg_situp_reponse::set_uid(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.uid)
 }
 
-// optional int32 pos = 2;
-inline void game_msg_situp_reponse::clear_pos() {
-  pos_ = 0;
+// optional int32 seat = 2;
+inline void game_msg_situp_reponse::clear_seat() {
+  seat_ = 0;
 }
-inline ::google::protobuf::int32 game_msg_situp_reponse::pos() const {
-  // @@protoc_insertion_point(field_get:msg.game_msg_situp_reponse.pos)
-  return pos_;
+inline ::google::protobuf::int32 game_msg_situp_reponse::seat() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_reponse.seat)
+  return seat_;
 }
-inline void game_msg_situp_reponse::set_pos(::google::protobuf::int32 value) {
+inline void game_msg_situp_reponse::set_seat(::google::protobuf::int32 value) {
   
-  pos_ = value;
-  // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.pos)
+  seat_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.seat)
+}
+
+// optional bool lookup = 3;
+inline void game_msg_situp_reponse::clear_lookup() {
+  lookup_ = false;
+}
+inline bool game_msg_situp_reponse::lookup() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_situp_reponse.lookup)
+  return lookup_;
+}
+inline void game_msg_situp_reponse::set_lookup(bool value) {
+  
+  lookup_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_situp_reponse.lookup)
 }
 
 inline const game_msg_situp_reponse* game_msg_situp_reponse::internal_default_instance() {
@@ -694,6 +778,34 @@ inline void game_msg_sitdown_request::set_uid(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_request.uid)
 }
 
+// optional int32 seat = 2;
+inline void game_msg_sitdown_request::clear_seat() {
+  seat_ = 0;
+}
+inline ::google::protobuf::int32 game_msg_sitdown_request::seat() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_request.seat)
+  return seat_;
+}
+inline void game_msg_sitdown_request::set_seat(::google::protobuf::int32 value) {
+  
+  seat_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_request.seat)
+}
+
+// optional bool lookup = 3;
+inline void game_msg_sitdown_request::clear_lookup() {
+  lookup_ = false;
+}
+inline bool game_msg_sitdown_request::lookup() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_request.lookup)
+  return lookup_;
+}
+inline void game_msg_sitdown_request::set_lookup(bool value) {
+  
+  lookup_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_request.lookup)
+}
+
 inline const game_msg_sitdown_request* game_msg_sitdown_request::internal_default_instance() {
   return &game_msg_sitdown_request_default_instance_.get();
 }
@@ -715,18 +827,32 @@ inline void game_msg_sitdown_reponse::set_uid(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.uid)
 }
 
-// optional int32 pos = 2;
-inline void game_msg_sitdown_reponse::clear_pos() {
-  pos_ = 0;
+// optional int32 seat = 2;
+inline void game_msg_sitdown_reponse::clear_seat() {
+  seat_ = 0;
 }
-inline ::google::protobuf::int32 game_msg_sitdown_reponse::pos() const {
-  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_reponse.pos)
-  return pos_;
+inline ::google::protobuf::int32 game_msg_sitdown_reponse::seat() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_reponse.seat)
+  return seat_;
 }
-inline void game_msg_sitdown_reponse::set_pos(::google::protobuf::int32 value) {
+inline void game_msg_sitdown_reponse::set_seat(::google::protobuf::int32 value) {
   
-  pos_ = value;
-  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.pos)
+  seat_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.seat)
+}
+
+// optional bool lookup = 3;
+inline void game_msg_sitdown_reponse::clear_lookup() {
+  lookup_ = false;
+}
+inline bool game_msg_sitdown_reponse::lookup() const {
+  // @@protoc_insertion_point(field_get:msg.game_msg_sitdown_reponse.lookup)
+  return lookup_;
+}
+inline void game_msg_sitdown_reponse::set_lookup(bool value) {
+  
+  lookup_ = value;
+  // @@protoc_insertion_point(field_set:msg.game_msg_sitdown_reponse.lookup)
 }
 
 inline const game_msg_sitdown_reponse* game_msg_sitdown_reponse::internal_default_instance() {

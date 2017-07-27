@@ -14,7 +14,7 @@ using namespace LW;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-SocketClient::SocketClient()
+SocketClient::SocketClient() : isession(NULL)
 {
 	_session = new SocketSession(SocketSession::TYPE::Client);
 	_timer = new SocketTimer();
@@ -29,7 +29,7 @@ SocketClient::~SocketClient()
 	_timer = NULL;
 }
 
-bool SocketClient::create()
+bool SocketClient::create(ISocketSession* isession)
 {
 	if (this->_base == NULL)
 	{
@@ -37,6 +37,8 @@ bool SocketClient::create()
 
 		_timer->create(this->_base);
 	}
+
+	this->isession = isession;
 
 	return true;
 }
@@ -67,6 +69,7 @@ int SocketClient::run(const char* addr, int port)
 	this->_session->setHost(addr);
 	this->_session->setPort(port);
 
+
 	std::thread t(std::bind(&SocketClient::__run, this));
 	t.detach();
 
@@ -76,13 +79,6 @@ int SocketClient::run(const char* addr, int port)
 SocketSession* SocketClient::getSession()
 {
 	return this->_session;
-}
-
-int SocketClient::setRecvHook(LW_PARSE_DATA_CALLFUNC func, void* userdata)
-{
-	this->_session->setRecvCall(func);
-	this->_session->setUserData(userdata);
-	return 0;
 }
 
 int SocketClient::startTimer(int id, int t, std::function<bool(int id)> func)
@@ -106,7 +102,7 @@ void SocketClient::killTimer(int id)
 
 void SocketClient::__run()
 {
-	int r = this->_session->create(_base, -1, EV_READ | EV_PERSIST);
+	int r = this->_session->create(_base, -1, EV_READ | EV_PERSIST, this->isession);
 
 	event_base_dispatch(this->_base);
 

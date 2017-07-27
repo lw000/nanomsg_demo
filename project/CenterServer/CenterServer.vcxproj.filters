@@ -30,6 +30,9 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CenterServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protocol\game.pb.h">
@@ -43,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="..\protocol\command.h">
       <Filter>通讯协议</Filter>
+    </ClInclude>
+    <ClInclude Include="CenterServer.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
