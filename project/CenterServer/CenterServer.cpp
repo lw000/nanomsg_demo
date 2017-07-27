@@ -38,7 +38,7 @@ int CenterServerHandler::onDisConnect(SocketSession* session)
 	return 0;
 }
 
-int CenterServerHandler::onSocketTimeout()
+int CenterServerHandler::onSocketTimeout(SocketSession* session)
 {
 	return 0;
 }
@@ -48,12 +48,14 @@ int CenterServerHandler::onSocketError(int error, SocketSession* session)
 	SESSIONS::iterator iter = sessions.begin();
 	while (iter != sessions.end())
 	{
-		SocketSession * pSession = *iter;
+		SocketSession *pSession = *iter;
 		if (pSession == session)
 		{
 			printf("leave host=%s, port=%d\n", pSession->getHost().c_str(), pSession->getPort());
 
 			delete pSession;
+			pSession = NULL;
+
 			iter = sessions.erase(iter);
 			break;
 		}
@@ -71,13 +73,15 @@ void CenterServerHandler::onParse(SocketSession* session, lw_int32 cmd, lw_char8
 	{
 		platform::msg_heartbeat msg;
 		msg.set_time(time(NULL));
-
-		lw_int32 len = (lw_int32)msg.ByteSizeLong();
-		lw_char8 s[256] = { 0 };
-		lw_bool ret = msg.SerializeToArray(s, len);
-		if (ret)
+		lw_int32 len = (lw_int32)msg.ByteSize();
 		{
-			session->sendData(cmd_heart_beat, s, len);
+			lw_char8 *s = new lw_char8[len + 1];
+			lw_bool ret = msg.SerializeToArray(s, len);
+			if (ret)
+			{
+				session->sendData(cmd_heart_beat, s, len);
+			}
+			delete s;
 		}
 	} break;
 	default:

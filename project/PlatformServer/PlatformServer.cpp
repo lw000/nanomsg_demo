@@ -38,7 +38,7 @@ int PlatformServerHandler::onDisConnect(SocketSession* session)
 	return 0;
 }
 
-int PlatformServerHandler::onSocketTimeout()
+int PlatformServerHandler::onSocketTimeout(SocketSession* session)
 {
 	return 0;
 }

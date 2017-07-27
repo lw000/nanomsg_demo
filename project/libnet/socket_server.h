@@ -35,7 +35,7 @@ public:
 
 public:
 	lw_int32 create(u_short port, ISocketServer* isession);
-	lw_int32 run(LW_SERVER_START_COMPLETE start_func);
+	lw_int32 run(LW_SERVER_START_COMPLETE func);
 	void destory();
 
 public:

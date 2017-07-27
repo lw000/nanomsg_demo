@@ -16,7 +16,7 @@ using namespace LW;
 
 SocketClient::SocketClient() : isession(NULL)
 {
-	_session = new SocketSession(SocketSession::TYPE::Client);
+	_session = new SocketSession(SESSION_TYPE::Client);
 	_timer = new SocketTimer();
 }
 

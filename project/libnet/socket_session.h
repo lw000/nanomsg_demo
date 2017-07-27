@@ -19,24 +19,25 @@ public:
 public:
 	virtual int onConnected(SocketSession* session) = 0;
 	virtual int onDisConnect(SocketSession* session) = 0;
-	virtual int onSocketTimeout() = 0;
+	virtual int onSocketTimeout(SocketSession* session) = 0;
 	virtual int onSocketError(int error, SocketSession* session) = 0;
 
 public:
 	virtual void onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) = 0;
 };
 
+enum SESSION_TYPE
+{
+	Client = 0,
+	Server = 1,
+};
+
 class SocketSession : public Object
 {
-public:
-	enum TYPE
-	{
-		Client = 0,
-		Server = 1,
-	};
+	friend class CoreSocket;
 
 public:
-	SocketSession(TYPE c);
+	SocketSession(SESSION_TYPE c);
 	virtual ~SocketSession();
 
 public:
@@ -59,17 +60,14 @@ public:
 	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize);
 	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize, SocketCallback cb);
 
-public:
-	void read_ev();
-	void write_ev();
-	void event_ev(short ev);
+private:
+	void onRead();
+	void onWrite();
+	void onEvent(short ev);
 	void onParse(lw_int32 cmd, char* buf, lw_int32 bufsize);
 
 private:
-	TYPE _c;	//session类型
-
-private:
-	struct bufferevent* _bev;
+	SESSION_TYPE _c;	//session类型
 
 private:
 	std::string _host;
@@ -77,7 +75,8 @@ private:
 	bool _connected;
 
 private:
-	ISocketSession * isession;
+	struct bufferevent* _bev;
+	ISocketSession * _isession;
 };
 
 

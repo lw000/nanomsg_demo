@@ -25,7 +25,6 @@
     <ClCompile Include="socket_client.cpp" />
     <ClCompile Include="socket_server.cpp" />
     <ClCompile Include="socket_timer.cpp" />
-    <ClCompile Include="user_session.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
@@ -35,7 +34,6 @@
     <ClInclude Include="socket_client.h" />
     <ClInclude Include="socket_server.h" />
     <ClInclude Include="socket_timer.h" />
-    <ClInclude Include="user_session.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{006686E3-6160-4984-827E-B9200E5B3338}</ProjectGuid>

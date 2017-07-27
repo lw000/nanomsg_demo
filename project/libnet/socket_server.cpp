@@ -98,7 +98,7 @@ void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t 
 {
 	struct event_base *base = evconnlistener_get_base(listener);
 
-	SocketSession* pSession = new SocketSession(SocketSession::TYPE::Server);
+	SocketSession* pSession = new SocketSession(SESSION_TYPE::Server);
 	int r = pSession->create(_base, fd, EV_READ | EV_WRITE, this->iserver);
 	if (r == 0)
 	{
@@ -121,13 +121,13 @@ void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t 
 	}
 }
 
-lw_int32 SocketServer::run(LW_SERVER_START_COMPLETE start_func)
+lw_int32 SocketServer::run(LW_SERVER_START_COMPLETE func)
 {
-	if (NULL == start_func) return -1;
+	if (NULL == func) return -1;
 
-	if (_onStart != start_func)
+	if (_onStart != func)
 	{
-		_onStart = start_func;
+		_onStart = func;
 	}
 
 	std::thread t(std::bind(&SocketServer::__run, this));

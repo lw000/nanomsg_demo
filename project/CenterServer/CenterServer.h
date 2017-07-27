@@ -21,7 +21,7 @@ public:
 public:
 	virtual int onConnected(SocketSession* session) override;
 	virtual int onDisConnect(SocketSession* session) override;
-	virtual int onSocketTimeout() override;
+	virtual int onSocketTimeout(SocketSession* session) override;
 	virtual int onSocketError(int error, SocketSession* session) override;
 
 public:

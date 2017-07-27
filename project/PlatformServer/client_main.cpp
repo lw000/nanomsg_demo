@@ -28,31 +28,6 @@ using namespace LW;
 
 static SocketClient __g_client;
 
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
-
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
-{
-	SocketSession *session = (SocketSession *)userdata;
-	switch (cmd)
-	{
-	case cmd_heart_beat:
-	{
-		platform::msg_heartbeat msg;
-		msg.ParseFromArray(buf, bufsize);
-		printf("heartBeat[%d]\n", msg.time());
-	} break;
-	case cmd_platform_sc_userinfo:
-	{
-		platform::msg_userinfo_reponse msg;
-		msg.ParseFromArray(buf, bufsize);
-		printf("userid: %d age:%d sex:%d name:%s address:%s\n", msg.uid(),
-			msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
-	} break;
-	default:
-		break;
-	}
-}
-
 class TestClient : public ISocketSession
 {
 private:
@@ -80,7 +55,7 @@ public:
 		return 0;
 	}
 
-	virtual int onSocketTimeout() override
+	virtual int onSocketTimeout(SocketSession* session) override
 	{
 		return 0;
 	}
@@ -112,12 +87,7 @@ public:
 			break;
 		}
 	}
-
-private:
-
 };
-
-
 
 void run_rpc_client(lw_int32 port)
 {
@@ -134,7 +104,7 @@ void run_rpc_client(lw_int32 port)
 				lw_bool ret = msg.SerializeToArray(s, len);
 				if (ret)
 				{
-					__g_client.getSession()->sendData(cmd_heart_beat, s, len);					
+					__g_client.getSession()->sendData(cmd_heart_beat, s, len);
 				}
 				return true;
 			});
