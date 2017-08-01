@@ -1,9 +1,9 @@
-#ifndef __PlatformServer_h__
-#define __PlatformServer_h__
+#ifndef __PlatformServer_ServerHandler_h__
+#define __PlatformServer_ServerHandler_h__
 
 #include "socket_server.h"
 
-class PlatformServerHandler : public ISocketServer
+class ServerHandler : public ISocketServer
 {
 public:
 	typedef std::list<SocketSession*> SESSIONS;
@@ -12,8 +12,8 @@ public:
 	SESSIONS sessions;
 
 public:
-	PlatformServerHandler();
-	virtual ~PlatformServerHandler();
+	ServerHandler();
+	virtual ~ServerHandler();
 
 public:
 	virtual void onJoin(SocketSession* session) override;
@@ -30,4 +30,4 @@ public:
 
 
 
-#endif	// !__PlatformServer_h__
+#endif	// !__PlatformServer_ServerHandler_h__

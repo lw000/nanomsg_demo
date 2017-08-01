@@ -5,12 +5,12 @@
 
 using namespace LW;
 
-CenterServerHandler::CenterServerHandler()
+ServerHandler::ServerHandler()
 {
 
 }
 
-CenterServerHandler::~CenterServerHandler()
+ServerHandler::~ServerHandler()
 {
 	SESSIONS::iterator iter = sessions.begin();
 	for (iter; iter != sessions.end(); ++iter)
@@ -22,28 +22,28 @@ CenterServerHandler::~CenterServerHandler()
 	SESSIONS().swap(sessions);
 }
 
-void CenterServerHandler::onJoin(SocketSession* session)
+void ServerHandler::onJoin(SocketSession* session)
 {
 	sessions.push_back(session);
 	printf("join ([%d] host: %s, port:%d)\n", session->getSocket(), session->getHost().c_str(), session->getPort());
 }
 
-int CenterServerHandler::onConnected(SocketSession* session)
+int ServerHandler::onConnected(SocketSession* session)
 {
 	return 0;
 }
 
-int CenterServerHandler::onDisConnect(SocketSession* session)
+int ServerHandler::onDisConnect(SocketSession* session)
 {
 	return 0;
 }
 
-int CenterServerHandler::onSocketTimeout(SocketSession* session)
+int ServerHandler::onSocketTimeout(SocketSession* session)
 {
 	return 0;
 }
 
-int CenterServerHandler::onSocketError(int error, SocketSession* session)
+int ServerHandler::onSocketError(int error, SocketSession* session)
 {
 	SESSIONS::iterator iter = sessions.begin();
 	while (iter != sessions.end())
@@ -65,7 +65,7 @@ int CenterServerHandler::onSocketError(int error, SocketSession* session)
 	return 0;
 }
 
-void CenterServerHandler::onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
+void ServerHandler::onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
 {
 	switch (cmd)
 	{

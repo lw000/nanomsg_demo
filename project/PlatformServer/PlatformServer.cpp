@@ -5,12 +5,12 @@
 
 using namespace LW;
 
-PlatformServerHandler::PlatformServerHandler()
+ServerHandler::ServerHandler()
 {
 
 }
 
-PlatformServerHandler::~PlatformServerHandler()
+ServerHandler::~ServerHandler()
 {
 	SESSIONS::iterator iter = sessions.begin();
 	for (iter; iter != sessions.end(); ++iter)
@@ -22,28 +22,28 @@ PlatformServerHandler::~PlatformServerHandler()
 	SESSIONS().swap(sessions);
 }
 
-void PlatformServerHandler::onJoin(SocketSession* session)
+void ServerHandler::onJoin(SocketSession* session)
 {
 	sessions.push_back(session);
 	printf("join ([%d] host: %s, port:%d)\n", session->getSocket(), session->getHost().c_str(), session->getPort());
 }
 
-int PlatformServerHandler::onConnected(SocketSession* session)
+int ServerHandler::onConnected(SocketSession* session)
 {
 	return 0;
 }
 
-int PlatformServerHandler::onDisConnect(SocketSession* session)
+int ServerHandler::onDisConnect(SocketSession* session)
 {
 	return 0;
 }
 
-int PlatformServerHandler::onSocketTimeout(SocketSession* session)
+int ServerHandler::onSocketTimeout(SocketSession* session)
 {
 	return 0;
 }
 
-int PlatformServerHandler::onSocketError(int error, SocketSession* session)
+int ServerHandler::onSocketError(int error, SocketSession* session)
 {
 	SESSIONS::iterator iter = sessions.begin();
 	while (iter != sessions.end())
@@ -63,7 +63,7 @@ int PlatformServerHandler::onSocketError(int error, SocketSession* session)
 	return 0;
 }
 
-void PlatformServerHandler::onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
+void ServerHandler::onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
 {
 	switch (cmd)
 	{

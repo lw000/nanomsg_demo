@@ -24,13 +24,59 @@
 #include "CenterServer.h"
 #include "lwutil.h"
 
+extern "C"
+{
+	#include "md5.h"
+	#include "base64.h"
+}
+
 using namespace LW;
 
 SocketServer __g_serv;
 
-static void _start_cb(int what)
+void base64_test(char * s)
 {
-	printf("中心服务器服务启动完成 [%d]！\n", __g_serv.getPort());
+	char*b;
+	int l = base64Encode((unsigned char*)s, strlen(s), &b);
+	{
+		unsigned char*b1;
+		int ll = base64Decode((unsigned char*)b, l, &b1);
+		b1[ll] = 0;
+		free(b1);
+	}
+	
+	free(b);
+}
+
+int md5_test()
+{
+	char *md5sum = NULL, buf[65];
+
+	char* s = "11111111111111111111111111111111";
+	char* s1 = "./CenterServer.h";
+	if (strlen(s) != 32)
+		fprintf(stderr, "WARNING: MD5 hash size is wrong.\n");
+
+	md5sum = MD5File(s1, buf);
+	if (!md5sum)
+	{
+		perror("Could not obtain MD5 sum");
+		return -1;
+	}
+
+	if (!strcasecmp(md5sum, s))
+	{
+		fprintf(stderr, "%s: OK\n", s1);
+	}
+	else
+	{
+		fprintf(stderr, "%s: FAILED.  Checksum is %s\n", s1, md5sum);
+	}
+
+	char buf1[64 + 1];
+	std::string sss = MD5Data("11111111111111", strlen("11111111111111"), buf1);
+
+	return 0;
 }
 
 int main(int argc, char** argv)
@@ -38,6 +84,10 @@ int main(int argc, char** argv)
 	if (argc < 2) return 0;
 
 	lw_socket_init();
+
+	md5_test();
+
+	base64_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
 
 	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
 #ifdef WIN32
@@ -62,9 +112,11 @@ int main(int argc, char** argv)
 
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create(port, new CenterServerHandler()) == 0)
+			if (__g_serv.create(port, new ServerHandler()) == 0)
 			{
-				__g_serv.run(_start_cb);
+				__g_serv.run([](int what) {
+					printf("中心服务器服务启动完成 [%d]！\n", __g_serv.getPort());
+				});
 			}
 
 			while (1) { lw_sleep(1); }

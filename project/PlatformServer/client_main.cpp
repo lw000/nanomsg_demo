@@ -28,17 +28,17 @@ using namespace LW;
 
 static SocketClient __g_client;
 
-class TestClient : public ISocketSession
+class ClientHandler : public ISocketSession
 {
 private:
 	SocketSession* _session;
 
 public:
-	TestClient() : _session(NULL)
+	ClientHandler() : _session(NULL)
 	{
 	}
 
-	virtual ~TestClient()
+	virtual ~ClientHandler()
 	{
 	}
 
@@ -91,7 +91,7 @@ public:
 
 void run_rpc_client(lw_int32 port)
 {
-	if (__g_client.create(new TestClient))
+	if (__g_client.create(new ClientHandler))
 	{
 		for (int i = 0; i < 1; i++)
 		{

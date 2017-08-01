@@ -49,13 +49,6 @@ UserMgr __g_umgr;
 std::string __s_center_server_addr;
 std::string __s_center_server_port("19800");
 
-static void _start_cb(int what)
-{
-	printf("RPC服务启动完成 [%d]！\n", __g_serv.getPort());
-
-	__connect_center_server(__s_center_server_addr.c_str(), __s_center_server_port.c_str());
-}
-
 static void _add_user_thread()
 {
 	srand(time(NULL));
@@ -139,9 +132,14 @@ int main(int argc, char** argv)
 			std::string sport = Pro.getProperty("port", "19901");
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create(port, new PlatformServerHandler()) == 0)
+			if (__g_serv.create(port, new ServerHandler()) == 0)
 			{
-				__g_serv.run(_start_cb);
+				__g_serv.run([](int what)
+				{
+					printf("RPC服务启动完成 [%d]！\n", __g_serv.getPort());
+
+					__connect_center_server(__s_center_server_addr.c_str(), __s_center_server_port.c_str());
+				});
 			}
 
 			while (1) { lw_sleep(1); }

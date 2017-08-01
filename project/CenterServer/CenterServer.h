@@ -1,9 +1,9 @@
-#ifndef __CenterServer_h__
-#define __CenterServer_h__
+#ifndef __CenterServer_ServerHandler_h__
+#define __CenterServer_ServerHandler_h__
 
 #include "socket_server.h"
 
-class CenterServerHandler : public ISocketServer
+class ServerHandler : public ISocketServer
 {
 public:
 	typedef std::list<SocketSession*> SESSIONS;
@@ -12,8 +12,8 @@ public:
 	SESSIONS sessions;
 
 public:
-	CenterServerHandler();
-	virtual ~CenterServerHandler();
+	ServerHandler();
+	virtual ~ServerHandler();
 
 public:
 	virtual void onJoin(SocketSession* session) override;
@@ -28,6 +28,4 @@ public:
 	virtual void onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override;
 };
 
-
-
-#endif	// !__CenterServer_h__
+#endif	// !__CenterServer_ServerHandler_h__

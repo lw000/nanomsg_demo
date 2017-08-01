@@ -53,7 +53,7 @@ static void __signal_cb(evutil_socket_t fd, short event, void *user_data)
 	event_base_loopexit(base, &delay);
 }
 
-SocketServer::SocketServer() : _base(NULL), _onStart(NULL)
+SocketServer::SocketServer() : _base(NULL), _onFunc(nullptr)
 {
 	_timer = new SocketTimer();
 }
@@ -121,14 +121,11 @@ void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t 
 	}
 }
 
-lw_int32 SocketServer::run(LW_SERVER_START_COMPLETE func)
+lw_int32 SocketServer::run(std::function<void(lw_int32 what)> func)
 {
-	if (NULL == func) return -1;
+ 	if (nullptr == func) return -1;
 
-	if (_onStart != func)
-	{
-		_onStart = func;
-	}
+	_onFunc = func;
 
 	std::thread t(std::bind(&SocketServer::__run, this));
 	t.detach();
@@ -169,9 +166,9 @@ void SocketServer::__run()
 			_timer->create(this->_base);
 			_timer->startTimer(100, 2, [this](int id) -> bool
 			{
-				if (_onStart != NULL)
+				if (_onFunc != nullptr)
 				{
-					_onStart(0);
+					this->_onFunc(0);
 				}
 
 				return false;

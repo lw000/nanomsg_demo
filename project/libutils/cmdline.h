@@ -44,14 +44,14 @@
 #include <cstdlib>
 
 
-namespace cmdline{
+namespace cmdline {
 
-namespace detail{
+namespace detail {
 
 template <typename Target, typename Source, bool Same>
-class lexical_cast_t{
+class lexical_cast_t {
 public:
-  static Target cast(const Source &arg){
+  static Target cast(const Source &arg) {
     Target ret;
     std::stringstream ss;
     if (!(ss<<arg && ss>>ret && ss.eof()))
@@ -599,7 +599,6 @@ public:
   }
 
 private:
-
   void check(int argc, bool ok){
     if ((argc==1 && !ok) || exist("help")){
       std::cerr<<usage();
