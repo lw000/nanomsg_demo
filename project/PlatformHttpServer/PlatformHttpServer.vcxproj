@@ -52,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libnet;..\libutils;..\json;..\libproperties-1.0\include;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protocol;..\protobuf\include;..\business;..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libnet;..\libutils;..\json;..\libproperties-1.0\include;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protocol;..\protobuf\include;..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

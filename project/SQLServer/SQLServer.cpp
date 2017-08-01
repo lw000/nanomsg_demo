@@ -23,10 +23,6 @@
 #include <event2/util.h>
 #include <event2/thread.h>
 
-#include "business.h"
-
-#include <NetMessage.h>
-
 #include "command.h"
 #include "platform.pb.h"
 

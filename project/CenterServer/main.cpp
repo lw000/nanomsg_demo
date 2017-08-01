@@ -16,8 +16,6 @@
 #include <event2/thread.h>
 #include <event2/util.h>
 
-#include "business.h"
-
 #include "socket_server.h"
 
 #include "libproperties.h"

@@ -17,9 +17,6 @@
 #include <event2/buffer.h>
 #include <event2/util.h>
 
-#include "business.h"
-
-
 #include "command.h"
 #include "platform.pb.h"
 

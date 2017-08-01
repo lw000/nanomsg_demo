@@ -54,7 +54,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;USE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\libutils;..\libproperties-1.0\include;..\protocol;..\business;..\common;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protobuf\include;..\libnet;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libutils;..\libproperties-1.0\include;..\protocol;..\common;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\protobuf\protobuf\include;..\protobuf\include;..\libnet;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
