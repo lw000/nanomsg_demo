@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "business.h"
 #include "object.h"
 #include "socket_session.h"
 

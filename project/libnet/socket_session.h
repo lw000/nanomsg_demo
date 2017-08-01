@@ -5,7 +5,7 @@
 #include <event2/util.h>
 
 #include "base_type.h"
-#include "business.h"
+#include "socket_core.h"
 #include "object.h"
 
 class SocketSession;

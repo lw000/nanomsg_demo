@@ -19,21 +19,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CacheQueue.cpp" />
     <ClCompile Include="http_server.cpp" />
+    <ClCompile Include="NetHead.cpp" />
+    <ClCompile Include="NetMessage.cpp" />
     <ClCompile Include="object.cpp" />
+    <ClCompile Include="socket_core.cpp" />
     <ClCompile Include="socket_session.cpp" />
     <ClCompile Include="socket_client.cpp" />
     <ClCompile Include="socket_server.cpp" />
     <ClCompile Include="socket_timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CacheQueue.h" />
     <ClInclude Include="http_server.h" />
+    <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="net.h" />
+    <ClInclude Include="NetHead.h" />
+    <ClInclude Include="NetMessage.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="socket_core.h" />
     <ClInclude Include="socket_session.h" />
     <ClInclude Include="socket_client.h" />
     <ClInclude Include="socket_server.h" />
     <ClInclude Include="socket_timer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MemoryPool.tcc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{006686E3-6160-4984-827E-B9200E5B3338}</ProjectGuid>
