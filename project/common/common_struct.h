@@ -95,4 +95,4 @@ public:
 
 } ROOM_INFO;
 
-#endif	//!__common_struct_h__
+#endif	// !__common_struct_h__

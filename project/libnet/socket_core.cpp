@@ -17,10 +17,22 @@
 
 using namespace LW;
 
-CacheQueue	__g_cache_queue;
-std::mutex	__g_cache_mutex;
+static CacheQueue	__g_cache_queue;
+static std::mutex	__g_cache_mutex;
 
 static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
+
+
+SocketInit::SocketInit()
+{
+	lw_socket_init();
+}
+
+SocketInit::~SocketInit()
+{
+	lw_socket_clean();
+}
+
 
 int lw_socket_init()
 {
@@ -125,14 +137,4 @@ lw_void lw_free_net_message(LW_NET_MESSAGE* p)
 	free(p->buf);
 	free(p);
 	p = NULL;
-}
-
-SocketInit::SocketInit()
-{
-	lw_socket_init();
-}
-
-SocketInit::~SocketInit()
-{
-	lw_socket_clean();
 }

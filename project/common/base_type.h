@@ -1,5 +1,5 @@
-﻿#ifndef __BaseType_H__
-#define __BaseType_H__
+﻿#ifndef __base_type_h__
+#define __base_type_h__
 
 typedef		void					lw_void;
 
@@ -20,4 +20,4 @@ typedef		unsigned long long		lw_ullong64;
 
 typedef		double					lw_double;
 
-#endif	//__BaseType_H__
+#endif	// !__base_type_h__

@@ -1,5 +1,5 @@
-﻿#ifndef __common_marco_H__
-#define __common_marco_H__
+﻿#ifndef __common_marco_h__
+#define __common_marco_h__
 
 #define CHECK_SOCKET_DATA(_type, _size, _text)	\
 	CCAssert(sizeof (_type) == _size, _text); \
@@ -64,4 +64,4 @@
 		return;\
 }
 
-#endif	//__common_marco_H__
+#endif	// !__common_marco_h__

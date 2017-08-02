@@ -1,18 +1,25 @@
-#ifndef __buniness_H__
-#define __buniness_H__
+#ifndef __buniness_h__
+#define __buniness_h__
 
 #include "base_type.h"
 #include "common_marco.h"
 #include "NetMessage.h"
 
-extern "C" 
+typedef std::function<bool(lw_int32 cmd, char* buf, lw_int32 bufsize)> SocketCallback;
+
+#define SOCKET_CALLBACK(__selector__,__target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, ##__VA_ARGS__)
+
+typedef void(*LW_PARSE_DATA_CALLFUNC)(lw_int32 cmd, lw_char8* buf, lw_int32 bufsize, lw_void* userdata);
+
+class SocketInit
 {
-	typedef std::function<bool(lw_int32 cmd, char* buf, lw_int32 bufsize)> SocketCallback;
+public:
+	SocketInit();
+	~SocketInit();
+};
 
-	#define SOCKET_CALLBACK(__selector__,__target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, ##__VA_ARGS__)
+extern "C" {
 
-	typedef void(*LW_PARSE_DATA_CALLFUNC)(lw_int32 cmd, lw_char8* buf, lw_int32 bufsize, lw_void* userdata);
-	
 	struct LW_NET_MESSAGE
 	{
 		lw_char8* buf;
@@ -28,13 +35,7 @@ extern "C"
 	LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, lw_void* object, lw_int32 objectSize);
 	lw_void lw_free_net_message(LW_NET_MESSAGE* p);
 
-	class SocketInit
-	{
-	public:
-		SocketInit();
-		~SocketInit();
-	};
 }
 
-#endif // !__buniness_H__
+#endif // !__buniness_h__
 

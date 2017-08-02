@@ -141,10 +141,11 @@ lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize
 
 			return c;
 		});
+
 		return c;
 	}
 
-	return 0;
+	return -1;
 }
 
 lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize, SocketCallback cb)
@@ -157,10 +158,11 @@ lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize
 
 			return c1;
 		});
+
 		return c;
 	}
 
-	return 0;
+	return -1;
 }
 
 void SocketSession::onWrite()
