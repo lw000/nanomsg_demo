@@ -21,29 +21,62 @@
 #include "libproperties.h"
 #include "CenterServer.h"
 #include "lwutil.h"
+#include "lw_xxtea.h"
+#include "lw_base64.h"
+
+#include "FileUtils.h"
+
 
 extern "C"
 {
-	#include "md5.h"
-	#include "base64.h"
+#include "ext/md5.h"
 }
+
 
 using namespace LW;
 
 SocketServer __g_serv;
 
+void xxtea_test(char* s)
+{
+	XXTea tea("liwei");
+	tea.encrypt((unsigned char*)s, strlen(s), [&tea](unsigned char* out, unsigned int len)
+	{
+		printf("xxtea encrypt: [%d] -> %s\n", len, out);
+		tea.decrypt(out, len, [](unsigned char* out, unsigned int len)
+		{
+			printf("xxtea decrypt: [%d] -> %s\n", len, out);
+		});
+	});
+
+	tea.encrypt("./CenterServer.h", "./CenterServer.hh");
+	tea.decrypt("./CenterServer.hh", "./CenterServer.hhh");
+}
+
 void base64_test(char * s)
 {
-	char*b;
-	int l = base64Encode((unsigned char*)s, strlen(s), &b);
+	Base64 b64;
+
+	b64.encrypt((unsigned char*)s, strlen(s), [&b64](char* out, unsigned int len)
 	{
-		unsigned char*b1;
-		int ll = base64Decode((unsigned char*)b, l, &b1);
-		b1[ll] = 0;
-		free(b1);
-	}
-	
-	free(b);
+		printf("base64 encrypt: [%d] -> %s\n", len, out);
+		b64.decrypt((unsigned char*)out, len, [](unsigned char* out, unsigned int len)
+		{
+			printf("base64 decrypt: [%d] -> %s\n", len, out);
+		});
+	});
+
+	b64.encrypt("./CenterServer.cpp", [](char* out, unsigned int len)
+	{
+		printf("base64 encrypt file: [%d] -> %s\n", len, out);
+		FileUtils::getInstance()->setDataToFile("./CenterServer.cppp", (unsigned char*)out, len);
+	});
+
+	b64.decrypt("./CenterServer.cppp", [](unsigned char* out, unsigned int len)
+	{
+		printf("base64 encrypt file: [%d] -> %s\n", len, out);
+		FileUtils::getInstance()->setDataToFile("./CenterServer.cpppp", (unsigned char*)out, len);
+	});
 }
 
 int md5_test()
@@ -81,11 +114,12 @@ int main(int argc, char** argv)
 {
 	if (argc < 2) return 0;
 
-	lw_socket_init();
+	SocketInit sinit;
 
 	md5_test();
 
 	base64_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+	xxtea_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
 
 	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
 #ifdef WIN32
@@ -125,8 +159,6 @@ int main(int argc, char** argv)
 		}
 
 	} while (0);
-
-	lw_socket_clean();
 
 	return 0;
 }

@@ -26,6 +26,8 @@
       <Filter>ext</Filter>
     </ClInclude>
     <ClInclude Include="lw_base64.h" />
+    <ClInclude Include="Data.h" />
+    <ClInclude Include="FileUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lwutil.cpp" />
@@ -43,5 +45,7 @@
       <Filter>ext</Filter>
     </ClCompile>
     <ClCompile Include="lw_base64.cpp" />
+    <ClCompile Include="Data.cpp" />
+    <ClCompile Include="FileUtils.cpp" />
   </ItemGroup>
 </Project>

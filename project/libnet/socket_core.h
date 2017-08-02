@@ -27,6 +27,13 @@ extern "C"
 
 	LW_NET_MESSAGE* lw_create_net_message(lw_int32 cmd, lw_void* object, lw_int32 objectSize);
 	lw_void lw_free_net_message(LW_NET_MESSAGE* p);
+
+	class SocketInit
+	{
+	public:
+		SocketInit();
+		~SocketInit();
+	};
 }
 
 #endif // !__buniness_H__

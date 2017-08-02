@@ -5,6 +5,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{58a88064-c036-4217-ac81-6862ca3783c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="http_server.cpp" />
@@ -13,10 +16,18 @@
     <ClCompile Include="socket_timer.cpp" />
     <ClCompile Include="socket_session.cpp" />
     <ClCompile Include="object.cpp" />
-    <ClCompile Include="CacheQueue.cpp" />
-    <ClCompile Include="NetHead.cpp" />
-    <ClCompile Include="NetMessage.cpp" />
-    <ClCompile Include="socket_core.cpp" />
+    <ClCompile Include="CacheQueue.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="NetHead.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="NetMessage.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="socket_core.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
@@ -26,13 +37,25 @@
     <ClInclude Include="socket_session.h" />
     <ClInclude Include="net.h" />
     <ClInclude Include="object.h" />
-    <ClInclude Include="CacheQueue.h" />
-    <ClInclude Include="MemoryPool.h" />
-    <ClInclude Include="NetHead.h" />
-    <ClInclude Include="NetMessage.h" />
-    <ClInclude Include="socket_core.h" />
+    <ClInclude Include="CacheQueue.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryPool.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="NetHead.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="NetMessage.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="socket_core.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="MemoryPool.tcc" />
+    <None Include="MemoryPool.tcc">
+      <Filter>core</Filter>
+    </None>
   </ItemGroup>
 </Project>

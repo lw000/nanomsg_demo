@@ -126,3 +126,13 @@ lw_void lw_free_net_message(LW_NET_MESSAGE* p)
 	free(p);
 	p = NULL;
 }
+
+SocketInit::SocketInit()
+{
+	lw_socket_init();
+}
+
+SocketInit::~SocketInit()
+{
+	lw_socket_clean();
+}
