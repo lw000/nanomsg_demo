@@ -105,7 +105,6 @@
     <ClInclude Include="..\common\common_struct.h" />
     <ClInclude Include="..\protocol\command.h" />
     <ClInclude Include="..\protocol\game.pb.h" />
-    <ClInclude Include="..\protocol\Message.h" />
     <ClInclude Include="..\protocol\platform.pb.h" />
     <ClInclude Include="client_http.h" />
     <ClInclude Include="GameServer.h" />

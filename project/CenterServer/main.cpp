@@ -144,9 +144,9 @@ int main(int argc, char** argv)
 
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create(port, new ServerHandler()) == 0)
+			if (__g_serv.create(new ServerHandler()))
 			{
-				__g_serv.run([](int what) {
+				__g_serv.run(port, [](int what) {
 					printf("中心服务器服务启动完成 [%d]！\n", __g_serv.getPort());
 				});
 			}

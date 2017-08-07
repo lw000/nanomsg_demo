@@ -8,6 +8,13 @@ message msg_heartbeat
 	int64     time = 1;  // time
 }
 
+// 链接成功消息
+message msg_connected
+{
+	int32     state = 1;  // state
+	int64     time = 2;  // time
+}
+
 // 登录消息
 message msg_login_request
 {

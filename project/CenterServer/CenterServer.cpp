@@ -12,28 +12,26 @@ ServerHandler::ServerHandler()
 
 ServerHandler::~ServerHandler()
 {
-	SESSIONS::iterator iter = sessions.begin();
-	for (iter; iter != sessions.end(); ++iter)
-	{
-		SocketSession * pSession = *iter;
-		delete pSession;
-	}
-
-	SESSIONS().swap(sessions);
+	
 }
 
-void ServerHandler::onJoin(SocketSession* session)
+void ServerHandler::onListener(SocketSession* session)
 {
-	sessions.push_back(session);
+	Sessions.add(session);
+	SocketSession* s = Sessions.find([](SocketSession* s) -> bool
+	{
+		return true;
+	});
+
 	printf("join ([%d] host: %s, port:%d)\n", session->getSocket(), session->getHost().c_str(), session->getPort());
 }
 
-int ServerHandler::onConnected(SocketSession* session)
+int ServerHandler::onSocketConnected(SocketSession* session)
 {
 	return 0;
 }
 
-int ServerHandler::onDisConnect(SocketSession* session)
+int ServerHandler::onSocketDisConnect(SocketSession* session)
 {
 	return 0;
 }
@@ -43,29 +41,14 @@ int ServerHandler::onSocketTimeout(SocketSession* session)
 	return 0;
 }
 
-int ServerHandler::onSocketError(int error, SocketSession* session)
+int ServerHandler::onSocketError(SocketSession* session)
 {
-	SESSIONS::iterator iter = sessions.begin();
-	while (iter != sessions.end())
-	{
-		SocketSession *pSession = *iter;
-		if (pSession == session)
-		{
-			printf("leave host=%s, port=%d\n", pSession->getHost().c_str(), pSession->getPort());
-
-			delete pSession;
-			pSession = NULL;
-
-			iter = sessions.erase(iter);
-			break;
-		}
-		++iter;
-	}
+	Sessions.remove(session);
 
 	return 0;
 }
 
-void ServerHandler::onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
+void ServerHandler::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
 {
 	switch (cmd)
 	{

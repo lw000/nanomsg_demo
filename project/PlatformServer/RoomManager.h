@@ -6,14 +6,14 @@
 
 class Room;
 
-class RoomMgr
+class RoomManager
 {
 private:
 	std::list<Room> _rooms;
 
 public:
-	RoomMgr();
-	~RoomMgr();
+	RoomManager();
+	~RoomManager();
 };
 
 #endif	// !__room_mgr_h__

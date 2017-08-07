@@ -41,9 +41,6 @@
     <ClInclude Include="..\protocol\platform.pb.h">
       <Filter>通讯协议</Filter>
     </ClInclude>
-    <ClInclude Include="..\protocol\Message.h">
-      <Filter>通讯协议</Filter>
-    </ClInclude>
     <ClInclude Include="..\protocol\command.h">
       <Filter>通讯协议</Filter>
     </ClInclude>

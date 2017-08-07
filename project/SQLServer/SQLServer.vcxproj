@@ -84,24 +84,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\protocol\game.pb.cc" />
-    <ClCompile Include="..\protocol\platform.pb.cc" />
     <ClCompile Include="SQLConnPool.cpp" />
     <ClCompile Include="SQLMgr.cpp" />
-    <ClCompile Include="SQLServer.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\protocol\command.h" />
-    <ClInclude Include="..\protocol\game.pb.h" />
-    <ClInclude Include="..\protocol\Message.h" />
-    <ClInclude Include="..\protocol\platform.pb.h" />
     <ClInclude Include="SQLConnPool.h" />
     <ClInclude Include="SQLMgr.h" />
     <ClInclude Include="SQLTable.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\protocol\game.proto" />
-    <None Include="..\protocol\platform.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

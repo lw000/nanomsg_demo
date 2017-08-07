@@ -100,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protocol\game.pb.h" />
-    <ClInclude Include="..\protocol\Message.h" />
     <ClInclude Include="..\protocol\command.h" />
     <ClInclude Include="..\protocol\platform.pb.h" />
     <ClInclude Include="CenterServer.h" />

@@ -1,39 +1,53 @@
 #include "PlatformServer.h"
-
+	
 #include "command.h"
 #include "platform.pb.h"
+
+#include "UserManager.h"
 
 using namespace LW;
 
 ServerHandler::ServerHandler()
 {
-
+	usermanager = new UserManager();
 }
 
 ServerHandler::~ServerHandler()
 {
-	SESSIONS::iterator iter = sessions.begin();
-	for (iter; iter != sessions.end(); ++iter)
-	{
-		SocketSession * pSession = *iter;
-		delete pSession;
-	}
 
-	SESSIONS().swap(sessions);
 }
 
-void ServerHandler::onJoin(SocketSession* session)
+void ServerHandler::onListener(SocketSession* session)
 {
-	sessions.push_back(session);
+	static int i = 0;
+	USER_INFO user;
+	user.id = i++;
+	usermanager->add(user, session);
+
+	platform::msg_connected msg;
+	lw_llong64 t = time(NULL);
+	msg.set_time(t);
+	int len = msg.ByteSize();
+	{
+		char *s = new char[len + 1];
+
+		bool ret = msg.SerializeToArray(s, len);
+		if (ret)
+		{
+			session->sendData(cmd_connected, s, len);
+		}
+		delete s;
+	}
+
 	printf("join ([%d] host: %s, port:%d)\n", session->getSocket(), session->getHost().c_str(), session->getPort());
 }
 
-int ServerHandler::onConnected(SocketSession* session)
+int ServerHandler::onSocketConnected(SocketSession* session)
 {
 	return 0;
 }
 
-int ServerHandler::onDisConnect(SocketSession* session)
+int ServerHandler::onSocketDisConnect(SocketSession* session)
 {
 	return 0;
 }
@@ -43,27 +57,13 @@ int ServerHandler::onSocketTimeout(SocketSession* session)
 	return 0;
 }
 
-int ServerHandler::onSocketError(int error, SocketSession* session)
+int ServerHandler::onSocketError(SocketSession* session)
 {
-	SESSIONS::iterator iter = sessions.begin();
-	while (iter != sessions.end())
-	{
-		SocketSession * pSession = *iter;
-		if (pSession == session)
-		{
-			printf("leave host=%s, port=%d\n", pSession->getHost().c_str(), pSession->getPort());
-
-			delete pSession;
-			iter = sessions.erase(iter);
-			break;
-		}
-		++iter;
-	}
-
+	usermanager->remove(session);
 	return 0;
 }
 
-void ServerHandler::onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
+void ServerHandler::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
 {
 	switch (cmd)
 	{

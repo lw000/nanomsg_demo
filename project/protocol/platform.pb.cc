@@ -24,6 +24,9 @@ namespace {
 const ::google::protobuf::Descriptor* msg_heartbeat_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   msg_heartbeat_reflection_ = NULL;
+const ::google::protobuf::Descriptor* msg_connected_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  msg_connected_reflection_ = NULL;
 const ::google::protobuf::Descriptor* msg_login_request_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   msg_login_request_reflection_ = NULL;
@@ -73,7 +76,22 @@ void protobuf_AssignDesc_platform_2eproto() {
       -1,
       sizeof(msg_heartbeat),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_heartbeat, _internal_metadata_));
-  msg_login_request_descriptor_ = file->message_type(1);
+  msg_connected_descriptor_ = file->message_type(1);
+  static const int msg_connected_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_connected, state_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_connected, time_),
+  };
+  msg_connected_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      msg_connected_descriptor_,
+      msg_connected::internal_default_instance(),
+      msg_connected_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(msg_connected),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_connected, _internal_metadata_));
+  msg_login_request_descriptor_ = file->message_type(2);
   static const int msg_login_request_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_request, device_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_request, username_),
@@ -89,7 +107,7 @@ void protobuf_AssignDesc_platform_2eproto() {
       -1,
       sizeof(msg_login_request),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_request, _internal_metadata_));
-  msg_login_reponse_descriptor_ = file->message_type(2);
+  msg_login_reponse_descriptor_ = file->message_type(3);
   static const int msg_login_reponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_reponse, msg_),
   };
@@ -103,7 +121,7 @@ void protobuf_AssignDesc_platform_2eproto() {
       -1,
       sizeof(msg_login_reponse),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_login_reponse, _internal_metadata_));
-  msg_logout_request_descriptor_ = file->message_type(3);
+  msg_logout_request_descriptor_ = file->message_type(4);
   static const int msg_logout_request_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_request, device_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_request, uid_),
@@ -118,7 +136,7 @@ void protobuf_AssignDesc_platform_2eproto() {
       -1,
       sizeof(msg_logout_request),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_request, _internal_metadata_));
-  msg_logout_reponse_descriptor_ = file->message_type(4);
+  msg_logout_reponse_descriptor_ = file->message_type(5);
   static const int msg_logout_reponse_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_reponse, msg_),
   };
@@ -132,7 +150,7 @@ void protobuf_AssignDesc_platform_2eproto() {
       -1,
       sizeof(msg_logout_reponse),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_logout_reponse, _internal_metadata_));
-  msg_chat_request_descriptor_ = file->message_type(5);
+  msg_chat_request_descriptor_ = file->message_type(6);
   static const int msg_chat_request_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_request, device_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_request, from_uid_),
@@ -149,7 +167,7 @@ void protobuf_AssignDesc_platform_2eproto() {
       -1,
       sizeof(msg_chat_request),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_request, _internal_metadata_));
-  msg_chat_reponse_descriptor_ = file->message_type(6);
+  msg_chat_reponse_descriptor_ = file->message_type(7);
   static const int msg_chat_reponse_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_reponse, from_uid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_reponse, to_uid_),
@@ -165,7 +183,7 @@ void protobuf_AssignDesc_platform_2eproto() {
       -1,
       sizeof(msg_chat_reponse),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_chat_reponse, _internal_metadata_));
-  msg_userinfo_request_descriptor_ = file->message_type(7);
+  msg_userinfo_request_descriptor_ = file->message_type(8);
   static const int msg_userinfo_request_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_request, uid_),
   };
@@ -179,7 +197,7 @@ void protobuf_AssignDesc_platform_2eproto() {
       -1,
       sizeof(msg_userinfo_request),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_request, _internal_metadata_));
-  msg_userinfo_reponse_descriptor_ = file->message_type(8);
+  msg_userinfo_reponse_descriptor_ = file->message_type(9);
   static const int msg_userinfo_reponse_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_reponse, uid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(msg_userinfo_reponse, age_),
@@ -213,6 +231,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       msg_heartbeat_descriptor_, msg_heartbeat::internal_default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      msg_connected_descriptor_, msg_connected::internal_default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       msg_login_request_descriptor_, msg_login_request::internal_default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       msg_login_reponse_descriptor_, msg_login_reponse::internal_default_instance());
@@ -235,6 +255,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void protobuf_ShutdownFile_platform_2eproto() {
   msg_heartbeat_default_instance_.Shutdown();
   delete msg_heartbeat_reflection_;
+  msg_connected_default_instance_.Shutdown();
+  delete msg_connected_reflection_;
   msg_login_request_default_instance_.Shutdown();
   delete msg_login_request_reflection_;
   msg_login_reponse_default_instance_.Shutdown();
@@ -257,6 +279,7 @@ void protobuf_InitDefaults_platform_2eproto_impl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   msg_heartbeat_default_instance_.DefaultConstruct();
+  msg_connected_default_instance_.DefaultConstruct();
   ::google::protobuf::internal::GetEmptyString();
   msg_login_request_default_instance_.DefaultConstruct();
   ::google::protobuf::internal::GetEmptyString();
@@ -271,6 +294,7 @@ void protobuf_InitDefaults_platform_2eproto_impl() {
   ::google::protobuf::internal::GetEmptyString();
   msg_userinfo_reponse_default_instance_.DefaultConstruct();
   msg_heartbeat_default_instance_.get_mutable()->InitAsDefaultInstance();
+  msg_connected_default_instance_.get_mutable()->InitAsDefaultInstance();
   msg_login_request_default_instance_.get_mutable()->InitAsDefaultInstance();
   msg_login_reponse_default_instance_.get_mutable()->InitAsDefaultInstance();
   msg_logout_request_default_instance_.get_mutable()->InitAsDefaultInstance();
@@ -292,19 +316,20 @@ void protobuf_AddDesc_platform_2eproto_impl() {
   protobuf_InitDefaults_platform_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\016platform.proto\022\010platform\"\035\n\rmsg_heartb"
-    "eat\022\014\n\004time\030\001 \001(\003\"F\n\021msg_login_request\022\016"
-    "\n\006device\030\001 \001(\005\022\020\n\010username\030\002 \001(\t\022\017\n\007user"
-    "psd\030\003 \001(\t\" \n\021msg_login_reponse\022\013\n\003msg\030\001 "
-    "\001(\t\"1\n\022msg_logout_request\022\016\n\006device\030\001 \001("
-    "\005\022\013\n\003uid\030\002 \001(\005\"!\n\022msg_logout_reponse\022\013\n\003"
-    "msg\030\001 \001(\t\"Q\n\020msg_chat_request\022\016\n\006device\030"
-    "\001 \001(\005\022\020\n\010from_uid\030\002 \001(\005\022\016\n\006to_uid\030\003 \001(\005\022"
-    "\013\n\003msg\030\004 \001(\t\"D\n\020msg_chat_reponse\022\020\n\010from"
-    "_uid\030\001 \001(\005\022\016\n\006to_uid\030\002 \001(\005\022\016\n\006result\030\003 \001"
-    "(\005\"#\n\024msg_userinfo_request\022\013\n\003uid\030\001 \001(\005\""
-    "\\\n\024msg_userinfo_reponse\022\013\n\003uid\030\001 \001(\005\022\013\n\003"
-    "age\030\002 \001(\005\022\013\n\003sex\030\003 \001(\005\022\014\n\004name\030\004 \001(\t\022\017\n\007"
-    "address\030\005 \001(\tb\006proto3", 541);
+    "eat\022\014\n\004time\030\001 \001(\003\",\n\rmsg_connected\022\r\n\005st"
+    "ate\030\001 \001(\005\022\014\n\004time\030\002 \001(\003\"F\n\021msg_login_req"
+    "uest\022\016\n\006device\030\001 \001(\005\022\020\n\010username\030\002 \001(\t\022\017"
+    "\n\007userpsd\030\003 \001(\t\" \n\021msg_login_reponse\022\013\n\003"
+    "msg\030\001 \001(\t\"1\n\022msg_logout_request\022\016\n\006devic"
+    "e\030\001 \001(\005\022\013\n\003uid\030\002 \001(\005\"!\n\022msg_logout_repon"
+    "se\022\013\n\003msg\030\001 \001(\t\"Q\n\020msg_chat_request\022\016\n\006d"
+    "evice\030\001 \001(\005\022\020\n\010from_uid\030\002 \001(\005\022\016\n\006to_uid\030"
+    "\003 \001(\005\022\013\n\003msg\030\004 \001(\t\"D\n\020msg_chat_reponse\022\020"
+    "\n\010from_uid\030\001 \001(\005\022\016\n\006to_uid\030\002 \001(\005\022\016\n\006resu"
+    "lt\030\003 \001(\005\"#\n\024msg_userinfo_request\022\013\n\003uid\030"
+    "\001 \001(\005\"\\\n\024msg_userinfo_reponse\022\013\n\003uid\030\001 \001"
+    "(\005\022\013\n\003age\030\002 \001(\005\022\013\n\003sex\030\003 \001(\005\022\014\n\004name\030\004 \001"
+    "(\t\022\017\n\007address\030\005 \001(\tb\006proto3", 587);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "platform.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_platform_2eproto);
@@ -573,6 +598,322 @@ void msg_heartbeat::set_time(::google::protobuf::int64 value) {
 
 inline const msg_heartbeat* msg_heartbeat::internal_default_instance() {
   return &msg_heartbeat_default_instance_.get();
+}
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int msg_connected::kStateFieldNumber;
+const int msg_connected::kTimeFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+msg_connected::msg_connected()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (this != internal_default_instance()) protobuf_InitDefaults_platform_2eproto();
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:platform.msg_connected)
+}
+
+void msg_connected::InitAsDefaultInstance() {
+}
+
+msg_connected::msg_connected(const msg_connected& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  UnsafeMergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:platform.msg_connected)
+}
+
+void msg_connected::SharedCtor() {
+  ::memset(&time_, 0, reinterpret_cast<char*>(&state_) -
+    reinterpret_cast<char*>(&time_) + sizeof(state_));
+  _cached_size_ = 0;
+}
+
+msg_connected::~msg_connected() {
+  // @@protoc_insertion_point(destructor:platform.msg_connected)
+  SharedDtor();
+}
+
+void msg_connected::SharedDtor() {
+}
+
+void msg_connected::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* msg_connected::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return msg_connected_descriptor_;
+}
+
+const msg_connected& msg_connected::default_instance() {
+  protobuf_InitDefaults_platform_2eproto();
+  return *internal_default_instance();
+}
+
+::google::protobuf::internal::ExplicitlyConstructed<msg_connected> msg_connected_default_instance_;
+
+msg_connected* msg_connected::New(::google::protobuf::Arena* arena) const {
+  msg_connected* n = new msg_connected;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void msg_connected::Clear() {
+// @@protoc_insertion_point(message_clear_start:platform.msg_connected)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(msg_connected, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<msg_connected*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&(first), 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(time_, state_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
+}
+
+bool msg_connected::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:platform.msg_connected)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 state = 1;
+      case 1: {
+        if (tag == 8) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &state_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_time;
+        break;
+      }
+
+      // optional int64 time = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_time:
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &time_)));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:platform.msg_connected)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:platform.msg_connected)
+  return false;
+#undef DO_
+}
+
+void msg_connected::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:platform.msg_connected)
+  // optional int32 state = 1;
+  if (this->state() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->state(), output);
+  }
+
+  // optional int64 time = 2;
+  if (this->time() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(2, this->time(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:platform.msg_connected)
+}
+
+::google::protobuf::uint8* msg_connected::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:platform.msg_connected)
+  // optional int32 state = 1;
+  if (this->state() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->state(), target);
+  }
+
+  // optional int64 time = 2;
+  if (this->time() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(2, this->time(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:platform.msg_connected)
+  return target;
+}
+
+size_t msg_connected::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:platform.msg_connected)
+  size_t total_size = 0;
+
+  // optional int32 state = 1;
+  if (this->state() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->state());
+  }
+
+  // optional int64 time = 2;
+  if (this->time() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int64Size(
+        this->time());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void msg_connected::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:platform.msg_connected)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const msg_connected* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const msg_connected>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:platform.msg_connected)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:platform.msg_connected)
+    UnsafeMergeFrom(*source);
+  }
+}
+
+void msg_connected::MergeFrom(const msg_connected& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:platform.msg_connected)
+  if (GOOGLE_PREDICT_TRUE(&from != this)) {
+    UnsafeMergeFrom(from);
+  } else {
+    MergeFromFail(__LINE__);
+  }
+}
+
+void msg_connected::UnsafeMergeFrom(const msg_connected& from) {
+  GOOGLE_DCHECK(&from != this);
+  if (from.state() != 0) {
+    set_state(from.state());
+  }
+  if (from.time() != 0) {
+    set_time(from.time());
+  }
+}
+
+void msg_connected::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:platform.msg_connected)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void msg_connected::CopyFrom(const msg_connected& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:platform.msg_connected)
+  if (&from == this) return;
+  Clear();
+  UnsafeMergeFrom(from);
+}
+
+bool msg_connected::IsInitialized() const {
+
+  return true;
+}
+
+void msg_connected::Swap(msg_connected* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void msg_connected::InternalSwap(msg_connected* other) {
+  std::swap(state_, other->state_);
+  std::swap(time_, other->time_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata msg_connected::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = msg_connected_descriptor_;
+  metadata.reflection = msg_connected_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// msg_connected
+
+// optional int32 state = 1;
+void msg_connected::clear_state() {
+  state_ = 0;
+}
+::google::protobuf::int32 msg_connected::state() const {
+  // @@protoc_insertion_point(field_get:platform.msg_connected.state)
+  return state_;
+}
+void msg_connected::set_state(::google::protobuf::int32 value) {
+  
+  state_ = value;
+  // @@protoc_insertion_point(field_set:platform.msg_connected.state)
+}
+
+// optional int64 time = 2;
+void msg_connected::clear_time() {
+  time_ = GOOGLE_LONGLONG(0);
+}
+::google::protobuf::int64 msg_connected::time() const {
+  // @@protoc_insertion_point(field_get:platform.msg_connected.time)
+  return time_;
+}
+void msg_connected::set_time(::google::protobuf::int64 value) {
+  
+  time_ = value;
+  // @@protoc_insertion_point(field_set:platform.msg_connected.time)
+}
+
+inline const msg_connected* msg_connected::internal_default_instance() {
+  return &msg_connected_default_instance_.get();
 }
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 

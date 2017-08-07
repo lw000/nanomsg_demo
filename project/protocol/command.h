@@ -6,13 +6,11 @@ namespace LW
 	enum NET_CMD
 	{
 		cmd_heart_beat				= 100,
+		cmd_connected				= 101,
 
 		/*
 			平台消息
 		*/
-
-		cmd_platform_connected		= 101,
-
 		cmd_platform_cs_login		= 10100001,
 		cmd_platform_sc_login		= 10110000,
 
@@ -34,8 +32,6 @@ namespace LW
 			游戏框架消息
 		*/
 		
-		cmd_game_connected		= 402,
-
 		cmd_game_frame_cs_game_start = 40400001,
 		cmd_game_frame_sc_game_end = 40410000,
 

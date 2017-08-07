@@ -20,8 +20,6 @@
 #include <event2/util.h>
 #include <event2/thread.h>
 
-#include <NetMessage.h>
-
 #include "command.h"
 #include "platform.pb.h"
 
@@ -35,14 +33,14 @@
 #include "libproperties.h"
 
 #include "lwutil.h"
-#include "UserMgr.h"
+#include "UserManager.h"
 
 #include "..\libcrossLog\FastLog.h"
 
 using namespace LW;
 
 SocketServer __g_serv;
-UserMgr __g_umgr;
+UserManager __g_umgr;
 
 std::string __s_center_server_addr;
 std::string __s_center_server_port("19800");
@@ -56,7 +54,7 @@ static void _add_user_thread()
 		{
 			USER_INFO info;
 			info.id = i + rand() + 1000;
-			__g_umgr.addUser(&info);
+			__g_umgr.add(info, nullptr);
 		}
 // 		lw_sleep(1);
 	}
@@ -130,9 +128,9 @@ int main(int argc, char** argv)
 			std::string sport = Pro.getProperty("port", "19901");
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create(port, new ServerHandler()) == 0)
+			if (__g_serv.create(new ServerHandler()))
 			{
-				__g_serv.run([](int what)
+				__g_serv.run(port, [](int what)
 				{
 					printf("RPC服务启动完成 [%d]！\n", __g_serv.getPort());
 

@@ -2,30 +2,28 @@
 #define __CenterServer_ServerHandler_h__
 
 #include "socket_server.h"
+#include "SessionManager.h"
 
-class ServerHandler : public ISocketServer
+class ServerHandler : public ISocketServerHandler
 {
 public:
-	typedef std::list<SocketSession*> SESSIONS;
-
-public:
-	SESSIONS sessions;
+	ManagerT<SocketSession> Sessions;
 
 public:
 	ServerHandler();
 	virtual ~ServerHandler();
 
 public:
-	virtual void onJoin(SocketSession* session) override;
+	virtual void onListener(SocketSession* session) override;
 
-public:
-	virtual int onConnected(SocketSession* session) override;
-	virtual int onDisConnect(SocketSession* session) override;
+protected:
+	virtual int onSocketConnected(SocketSession* session) override;
+	virtual int onSocketDisConnect(SocketSession* session) override;
 	virtual int onSocketTimeout(SocketSession* session) override;
-	virtual int onSocketError(int error, SocketSession* session) override;
+	virtual int onSocketError(SocketSession* session) override;
 
-public:
-	virtual void onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override;
+protected:
+	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override;
 };
 
 #endif	// !__CenterServer_ServerHandler_h__

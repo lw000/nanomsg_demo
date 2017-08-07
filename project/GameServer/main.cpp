@@ -84,6 +84,8 @@ int main(int argc, char** argv)
 // 		http_times = a.get<int>("http_times");
 // 	}
 
+	GameServer* gServer[1024];
+
 	do 
 	{
 		std::string config(argv[1]);
@@ -116,11 +118,13 @@ int main(int argc, char** argv)
 				desk_info.rid = 0;
 				desk_info.state = DESK_STATE_Empty;
 
-				GameServer * serv = new GameServer(NULL);
+				GameServer * serv = new GameServer(nullptr);
 				if (serv->create(desk_info))
 				{
 					serv->start("127.0.0.1", port);
 				}
+
+				gServer[i] = serv;
 
 				lw_sleep(0.1);
 			}

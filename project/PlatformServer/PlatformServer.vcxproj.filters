@@ -39,12 +39,6 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="UserMgr.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="RoomMgr.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Desk.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -52,6 +46,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="PlatformServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UserManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RoomManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,17 +65,8 @@
     <ClInclude Include="client_main.h">
       <Filter>server</Filter>
     </ClInclude>
-    <ClInclude Include="..\protocol\Message.h">
-      <Filter>通讯协议</Filter>
-    </ClInclude>
     <ClInclude Include="..\protocol\command.h">
       <Filter>通讯协议</Filter>
-    </ClInclude>
-    <ClInclude Include="UserMgr.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="RoomMgr.h">
-      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Desk.h">
       <Filter>头文件</Filter>
@@ -93,6 +84,12 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="PlatformServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UserManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RoomManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

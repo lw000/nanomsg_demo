@@ -36,7 +36,7 @@ typedef struct _tagUSER_INFO
 	std::string name;	// 用户姓名
 	std::string addr;	// 用户地址
 	std::string ext;	// 用户扩展信息
-
+	
 public:
 	_tagUSER_INFO()
 	{

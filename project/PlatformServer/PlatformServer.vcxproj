@@ -100,23 +100,22 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlatformServer.cpp" />
     <ClCompile Include="room.cpp" />
-    <ClCompile Include="RoomMgr.cpp" />
-    <ClCompile Include="UserMgr.cpp" />
+    <ClCompile Include="RoomManager.cpp" />
+    <ClCompile Include="UserManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\base_type.h" />
     <ClInclude Include="..\common\common_marco.h" />
     <ClInclude Include="..\common\common_struct.h" />
     <ClInclude Include="..\protocol\game.pb.h" />
-    <ClInclude Include="..\protocol\Message.h" />
     <ClInclude Include="..\protocol\command.h" />
     <ClInclude Include="..\protocol\platform.pb.h" />
     <ClInclude Include="client_main.h" />
     <ClInclude Include="Desk.h" />
     <ClInclude Include="PlatformServer.h" />
     <ClInclude Include="room.h" />
-    <ClInclude Include="RoomMgr.h" />
-    <ClInclude Include="UserMgr.h" />
+    <ClInclude Include="RoomManager.h" />
+    <ClInclude Include="UserManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\protocol\game.proto" />

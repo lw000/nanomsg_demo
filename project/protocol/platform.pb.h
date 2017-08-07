@@ -39,6 +39,7 @@ void protobuf_ShutdownFile_platform_2eproto();
 
 class msg_chat_reponse;
 class msg_chat_request;
+class msg_connected;
 class msg_heartbeat;
 class msg_login_reponse;
 class msg_login_request;
@@ -132,6 +133,99 @@ class msg_heartbeat : public ::google::protobuf::Message /* @@protoc_insertion_p
   void InitAsDefaultInstance();
 };
 extern ::google::protobuf::internal::ExplicitlyConstructed<msg_heartbeat> msg_heartbeat_default_instance_;
+
+// -------------------------------------------------------------------
+
+class msg_connected : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:platform.msg_connected) */ {
+ public:
+  msg_connected();
+  virtual ~msg_connected();
+
+  msg_connected(const msg_connected& from);
+
+  inline msg_connected& operator=(const msg_connected& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const msg_connected& default_instance();
+
+  static const msg_connected* internal_default_instance();
+
+  void Swap(msg_connected* other);
+
+  // implements Message ----------------------------------------------
+
+  inline msg_connected* New() const { return New(NULL); }
+
+  msg_connected* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const msg_connected& from);
+  void MergeFrom(const msg_connected& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  size_t ByteSizeLong() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const {
+    return InternalSerializeWithCachedSizesToArray(false, output);
+  }
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(msg_connected* other);
+  void UnsafeMergeFrom(const msg_connected& from);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 state = 1;
+  void clear_state();
+  static const int kStateFieldNumber = 1;
+  ::google::protobuf::int32 state() const;
+  void set_state(::google::protobuf::int32 value);
+
+  // optional int64 time = 2;
+  void clear_time();
+  static const int kTimeFieldNumber = 2;
+  ::google::protobuf::int64 time() const;
+  void set_time(::google::protobuf::int64 value);
+
+  // @@protoc_insertion_point(class_scope:platform.msg_connected)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::int64 time_;
+  ::google::protobuf::int32 state_;
+  mutable int _cached_size_;
+  friend void  protobuf_InitDefaults_platform_2eproto_impl();
+  friend void  protobuf_AddDesc_platform_2eproto_impl();
+  friend void protobuf_AssignDesc_platform_2eproto();
+  friend void protobuf_ShutdownFile_platform_2eproto();
+
+  void InitAsDefaultInstance();
+};
+extern ::google::protobuf::internal::ExplicitlyConstructed<msg_connected> msg_connected_default_instance_;
 
 // -------------------------------------------------------------------
 
@@ -967,6 +1061,41 @@ inline const msg_heartbeat* msg_heartbeat::internal_default_instance() {
 }
 // -------------------------------------------------------------------
 
+// msg_connected
+
+// optional int32 state = 1;
+inline void msg_connected::clear_state() {
+  state_ = 0;
+}
+inline ::google::protobuf::int32 msg_connected::state() const {
+  // @@protoc_insertion_point(field_get:platform.msg_connected.state)
+  return state_;
+}
+inline void msg_connected::set_state(::google::protobuf::int32 value) {
+  
+  state_ = value;
+  // @@protoc_insertion_point(field_set:platform.msg_connected.state)
+}
+
+// optional int64 time = 2;
+inline void msg_connected::clear_time() {
+  time_ = GOOGLE_LONGLONG(0);
+}
+inline ::google::protobuf::int64 msg_connected::time() const {
+  // @@protoc_insertion_point(field_get:platform.msg_connected.time)
+  return time_;
+}
+inline void msg_connected::set_time(::google::protobuf::int64 value) {
+  
+  time_ = value;
+  // @@protoc_insertion_point(field_set:platform.msg_connected.time)
+}
+
+inline const msg_connected* msg_connected::internal_default_instance() {
+  return &msg_connected_default_instance_.get();
+}
+// -------------------------------------------------------------------
+
 // msg_login_request
 
 // optional int32 device = 1;
@@ -1512,6 +1641,8 @@ inline const msg_userinfo_reponse* msg_userinfo_reponse::internal_default_instan
   return &msg_userinfo_reponse_default_instance_.get();
 }
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -26,13 +26,13 @@ using namespace LW;
 
 static SocketClient __g_client;
 
-class ClientHandler : public ISocketSession
+class ClientHandler : public ISocketSessionHanlder
 {
 private:
 	SocketSession* _session;
 
 public:
-	ClientHandler() : _session(NULL)
+	ClientHandler() : _session(nullptr)
 	{
 	}
 
@@ -41,14 +41,14 @@ public:
 	}
 
 public:
-	virtual int onConnected(SocketSession* session) override
+	virtual int onSocketConnected(SocketSession* session) override
 	{
 		this->_session = session;
 
 		return 0;
 	}
 
-	virtual int onDisConnect(SocketSession* session) override
+	virtual int onSocketDisConnect(SocketSession* session) override
 	{
 		return 0;
 	}
@@ -58,13 +58,13 @@ public:
 		return 0;
 	}
 
-	virtual int onSocketError(int error, SocketSession* session) override
+	virtual int onSocketError(SocketSession* session) override
 	{
 		return 0;
 	}
 
 public:
-	virtual void onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override
+	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override
 	{
 		switch (cmd)
 		{
@@ -93,7 +93,7 @@ void run_rpc_client(lw_int32 port)
 	{
 		for (int i = 0; i < 1; i++)
 		{
-			__g_client.startTimer(100+i, 1+i, [](int id) -> bool
+			__g_client.getTimer()->start(100+i, 1+i, [](int id) -> bool
 			{
 				platform::msg_heartbeat msg;
 				msg.set_time(time(NULL));
@@ -102,7 +102,14 @@ void run_rpc_client(lw_int32 port)
 				lw_bool ret = msg.SerializeToArray(s, len);
 				if (ret)
 				{
-					__g_client.getSession()->sendData(cmd_heart_beat, s, len);
+					__g_client.getSession()->sendData(cmd_heart_beat, s, len, cmd_heart_beat, [](lw_char8* buf, lw_int32 bufsize) -> bool
+					{
+						platform::msg_heartbeat msg;
+						msg.ParseFromArray(buf, bufsize);
+						printf("heartBeat[%d]\n", msg.time());
+
+						return false;
+					});
 				}
 				return true;
 			});
