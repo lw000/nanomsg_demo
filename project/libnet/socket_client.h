@@ -3,42 +3,40 @@
 
 #include <string>
 
-#include "object.h"
+#include "event_object.h"
 #include "socket_session.h"
+#include "socket_timer.h"
 
-class SocketSession;
-class SocketTimer;
 class SocketClient;
 
 struct event_base;
 
-class SocketClient : public Object
+class SocketClient : public EventObject
 {
 public:
 	SocketClient();
-	~SocketClient();
+	virtual ~SocketClient();
 
 public:
-	bool create(ISocketSession* isession);
-	void destory();
+	bool create(ISocketSessionHanlder* isession);
+	void destroy();
 
 public:
 	int run(const char* addr, int port);
-	SocketSession* getSession();
 
 public:
-	int startTimer(int id, int t, std::function<bool(int id)> func);
-	void killTimer(int id);
+	SocketSession* getSession();
+	SocketTimer* getTimer();
 
 private:
 	void __run();
 
 private:
-	struct event_base* _base;
 	SocketSession* _session;
 	SocketTimer* _timer;
 
-	ISocketSession* isession;
+private:
+	ISocketSessionHanlder* isession;
 };
 
 #endif // !__SocketClient_H__

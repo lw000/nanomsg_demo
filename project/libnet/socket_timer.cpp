@@ -14,11 +14,11 @@ struct TIMER_ITEM
 	SocketTimer* owner;
 	struct event* ev;
 	int t;
-	int id;
+	int tid;
 	int state;	// 默认 -1，启动 1，删除 0
 
 public:
-	TIMER_ITEM(SocketTimer* owner) : owner(owner), t(0), id(-1), state(-1)
+	TIMER_ITEM(SocketTimer* owner) : owner(owner), t(0), tid(-1), state(-1)
 	{
 		ev = new struct event;
 	}
@@ -29,37 +29,21 @@ public:
 	}
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////
 
-static void __timer_cb(evutil_socket_t fd, short event, void *arg)
+class TimerCore
 {
-	if (event & BEV_EVENT_READING)
+public:
+	static void __timer_cb__(evutil_socket_t fd, short event, void *arg)
 	{
+		TIMER_ITEM *pCurrentTimer = (TIMER_ITEM*)arg;
+		pCurrentTimer->owner->__timer_cb(pCurrentTimer, event);
 	}
-	else if (event & BEV_EVENT_WRITING)
-	{
-	}
-	else if (event & BEV_EVENT_EOF)
-	{
-	}
-	else if (event & BEV_EVENT_TIMEOUT)
-	{
-	}
-	else if (event & BEV_EVENT_ERROR)
-	{
+};
 
-	}
-	else if (event & BEV_EVENT_CONNECTED)
-	{
+//////////////////////////////////////////////////////////////////////////////////////////
 
-	}
-
-	TIMER_ITEM *pCurrentTimer = (TIMER_ITEM*)arg;
-	pCurrentTimer->owner->timer_cb(pCurrentTimer, event);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-SocketTimer::SocketTimer() : _base(NULL)
+SocketTimer::SocketTimer() : _base(nullptr)
 {
 	
 }
@@ -76,90 +60,88 @@ int SocketTimer::create(struct event_base* base)
 	return true;
 }
 
-void SocketTimer::destory()
+void SocketTimer::destroy()
 {
 
 }
 
-int SocketTimer::startTimer(int id, int t, std::function<bool(int id)> func)
+int SocketTimer::start(int tid, int t, std::function<bool(int id)> func)
 {
-	if (id <= 0) return -1;
+	if (tid <= 0) return -1;
 
 	this->_on_timer = func;
 
-	int r = 0;
-
-	TIMER_ITEM* timer = (TIMER_ITEM*)this->_timers[id];
-	if (timer == NULL)
+	TIMER_ITEM* timer = (TIMER_ITEM*)this->_timers[tid];
+	if (timer == nullptr)
 	{
-		TIMER_ITEM* new_timer = new TIMER_ITEM(this);
-		new_timer->id = id;
-		new_timer->t = t;
-		new_timer->state = 1;
-
-		// 设置定时器
-		r = event_assign(new_timer->ev, this->_base, -1, 0, ::__timer_cb, new_timer);
-		//event_assign(&this->_timer, this->_base, -1, EV_PERSIST, ::time_cb, this);
-
-		struct timeval tv;
-		evutil_timerclear(&tv);
-		tv.tv_sec = t;
-		tv.tv_usec = 0;
-
-		r = event_add(new_timer->ev, &tv);
-
-		_timers[id] = new_timer;
+		timer = new TIMER_ITEM(this);
+		_timers[tid] = timer;
 	}
-	else
-	{
-		timer->id = id;
-		timer->t = t;
-		timer->state = 1;
+	timer->tid = tid;
+	timer->t = t;
+	timer->state = 1;
 
-		// 设置定时器
-		r = event_assign(timer->ev, this->_base, -1, 0, ::__timer_cb, timer);
-		//event_assign(&this->_timer, this->_base, -1, EV_PERSIST, ::time_cb, this);
+	// 设置定时器
+	int r = 0;
+	r = event_assign(timer->ev, this->_base, -1, 0, TimerCore::__timer_cb__, timer);
+	//event_assign(&this->_timer, this->_base, -1, EV_PERSIST, ::time_cb, this);
 
-		struct timeval tv;
-		evutil_timerclear(&tv);
-		tv.tv_sec = t;
-		tv.tv_usec = 0;
-		r = event_add(timer->ev, &tv);
-	}	
+	struct timeval tv;
+	evutil_timerclear(&tv);
+	tv.tv_sec = t;
+	tv.tv_usec = 0;
 
+	r = event_add(timer->ev, &tv);
+	
 	return r;
 }
 
-void SocketTimer::killTimer(int id)
+void SocketTimer::kill(int tid)
 {
-	if (id <= 0) return;
+	if (tid <= 0) return;
 
-	TIMER_ITEM* ptimer = (TIMER_ITEM*)_timers[id];
-	if (ptimer != NULL)
+	TIMER_ITEM* ptimer = (TIMER_ITEM*)this->_timers[tid];
+	if (ptimer != nullptr)
 	{
 		ptimer->state = 0;
 	}
 }
 
-void SocketTimer::timer_cb(void* timer, short ev)
+void SocketTimer::__timer_cb(void* timer, short ev)
 {
 	TIMER_ITEM* pTimer = (TIMER_ITEM*)timer;
-	bool r = this->_on_timer(pTimer->id);
-	if (r)
+	if (pTimer->tid == 0)
 	{
-		startTimer(pTimer->id, pTimer->t, this->_on_timer);
+		if (pTimer->state == 0)
+		{
+			__clean();
+		}
 	}
 	else
 	{
-		pTimer->state = 0;
-	}
+		bool r = this->_on_timer(pTimer->tid);
+		if (r)
+		{
+			start(pTimer->tid, pTimer->t, this->_on_timer);
+		}
+		else
+		{
+			pTimer->state = 0;
+		}
 
+		__clean();
+	}
+}
+
+void SocketTimer::__clean()
+{
 	TIMERS::iterator iter = _timers.begin();
 	while (iter != _timers.end())
 	{
 		TIMER_ITEM* pTimer = (TIMER_ITEM*)(iter->second);
-		if (pTimer->t == 0)
+		if (pTimer->state == 0)
 		{
+			event_del(pTimer->ev);
 			delete pTimer;
 			iter = _timers.erase(iter);
 			continue;

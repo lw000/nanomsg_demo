@@ -7,64 +7,83 @@
 #include "base_type.h"
 #include "socket_core.h"
 #include "object.h"
+#include <unordered_map>
 
 class SocketSession;
-class ISocketSession;
+class ISocketSessionHanlder;
 
-class ISocketSession
+typedef std::function<bool(char* buf, lw_int32 bufsize)> SocketCallback;
+
+class ISocketSessionHanlder
 {
-public:
-	virtual ~ISocketSession() {}
+	friend class SocketSession;
 
 public:
-	virtual int onConnected(SocketSession* session) = 0;
-	virtual int onDisConnect(SocketSession* session) = 0;
+	virtual ~ISocketSessionHanlder() {}
+
+protected:
+	virtual int onSocketConnected(SocketSession* session) = 0;
+	virtual int onSocketDisConnect(SocketSession* session) = 0;
 	virtual int onSocketTimeout(SocketSession* session) = 0;
-	virtual int onSocketError(int error, SocketSession* session) = 0;
+	virtual int onSocketError(SocketSession* session) = 0;
 
-public:
-	virtual void onParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) = 0;
+protected:
+	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) = 0;
 };
 
 enum SESSION_TYPE
 {
-	Client = 0,
-	Server = 1,
+	NONE = 0,
+	Client = 1,
+	Server = 2,
 };
 
-class SocketSession : public Object
+class SocketSession : public Object, public ISocketSessionHanlder
 {
 	friend class CoreSocket;
 
 public:
-	SocketSession(SESSION_TYPE c);
+	SocketSession();
 	virtual ~SocketSession();
 
 public:
 	evutil_socket_t getSocket();
 
 public:
-	int create(struct event_base* base, evutil_socket_t fd, short event, ISocketSession* isession);
-	void destory();
+	int create(SESSION_TYPE c, struct event_base* base, evutil_socket_t fd, short event, ISocketSessionHanlder* isession);
+	void destroy();
 
 public:
-	void setHost(std::string host);
+	void setHost(const std::string& host);
 	std::string getHost();
 
 	void setPort(int port);
 	int getPort();
 
+public:
 	bool connected();
 
 public:
 	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize);
-	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize, SocketCallback cb);
+	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize, lw_int32 recvcmd, SocketCallback cb);
 
 private:
 	void onRead();
 	void onWrite();
 	void onEvent(short ev);
-	void onParse(lw_int32 cmd, char* buf, lw_int32 bufsize);
+	void reset();
+
+protected:
+	virtual int onSocketConnected(SocketSession* session) override;
+	virtual int onSocketDisConnect(SocketSession* session) override;
+	virtual int onSocketTimeout(SocketSession* session) override;
+	virtual int onSocketError(SocketSession* session) override;
+
+protected:
+	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, char* buf, lw_int32 bufsize) override;
+
+private:
+	std::unordered_map<lw_int32, SocketCallback> _cmd_event_map;
 
 private:
 	SESSION_TYPE _c;	//session¿‡–Õ
@@ -76,7 +95,7 @@ private:
 
 private:
 	struct bufferevent* _bev;
-	ISocketSession * _isession;
+	ISocketSessionHanlder * _isession;
 };
 
 

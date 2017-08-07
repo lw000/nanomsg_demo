@@ -25,27 +25,23 @@
 
 static void __listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
 static void __signal_cb(evutil_socket_t, short, void *);
-static void __accept_error_cb(struct evconnlistener *, void *);
+static void __listener_error_cb(struct evconnlistener *, void *);
 
-static void __listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *user_data)
+static void __listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen, void *userdata)
 {
-	SocketServer * server = (SocketServer*)user_data;
+	SocketServer * server = (SocketServer*)userdata;
 	server->listener_cb(listener, fd, sa, socklen);
 }
 
-static void __accept_error_cb(struct evconnlistener * listener, void * userdata)
+static void __listener_error_cb(struct evconnlistener * listener, void * userdata)
 {
-	struct event_base *base = evconnlistener_get_base(listener);
-	int err = EVUTIL_SOCKET_ERROR();
-
-	printf("got an error %d (%s) on the listener. shutting down.\n", err, evutil_socket_error_to_string(err));
-	
-	event_base_loopexit(base, NULL);
+	SocketServer * server = (SocketServer*)userdata;
+	server->listener_error_cb(listener);
 }
 
-static void __signal_cb(evutil_socket_t fd, short event, void *user_data)
+static void __signal_cb(evutil_socket_t fd, short event, void *userdata)
 {
-	struct event_base *base = (struct event_base *)user_data;
+	struct event_base *base = (struct event_base *)userdata;
 	struct timeval delay = { 1, 0 };
 
 	printf("caught an interrupt signal; exiting cleanly in two seconds.\n");
@@ -53,53 +49,41 @@ static void __signal_cb(evutil_socket_t fd, short event, void *user_data)
 	event_base_loopexit(base, &delay);
 }
 
-SocketServer::SocketServer() : _base(NULL), _onFunc(nullptr)
+SocketServer::SocketServer() : _onFunc(nullptr)
 {
-	_timer = new SocketTimer();
+	this->_timer = new SocketTimer();
 }
 
 SocketServer::~SocketServer()
 {
-	if (_timer != NULL)
+	if (_timer != nullptr)
 	{
-		delete _timer;
-		_timer = NULL;
+		delete this->_timer;
+		this->_timer = nullptr;
 	}
 }
 
-lw_int32 SocketServer::create(u_short port, ISocketServer* isession)
+bool SocketServer::create(ISocketServerHandler* isession)
 {
-	this->_port = port;
 	this->iserver = isession;
 
-#ifdef WIN32
-	struct event_config *cfg = event_config_new();
-	event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
-	if (cfg)
-	{
-		_base = event_base_new_with_config(cfg);
-		event_config_free(cfg);
-	}
-#else
-	_base = event_base_new();
-#endif
-	
-	if (!_base) return -1;
+	bool r = this->openEvent();
 
-	return 0;
+	return r;
 }
 
-void SocketServer::destory()
+void SocketServer::destroy()
 {
-	event_base_free(_base);
+	this->_timer->destroy();
+	this->closeEvent();
 }
 
 void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *sa, int socklen)
 {
 	struct event_base *base = evconnlistener_get_base(listener);
 
-	SocketSession* pSession = new SocketSession(SESSION_TYPE::Server);
-	int r = pSession->create(_base, fd, EV_READ | EV_WRITE, this->iserver);
+	SocketSession* pSession = new SocketSession();
+	int r = pSession->create(SESSION_TYPE::Server, base, fd, EV_READ | EV_WRITE, this->iserver);
 	if (r == 0)
 	{
 		char hostBuf[NI_MAXHOST];
@@ -109,23 +93,33 @@ void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t 
 		pSession->setHost(hostBuf);
 		pSession->setPort(std::stoi(portBuf));
 
-		this->iserver->onJoin(pSession);
+		this->iserver->onListener(pSession);
 	}
 	else
 	{
 		delete pSession;
-
-		fprintf(stderr, "error constructing bufferevent!");
-
-		event_base_loopbreak(base);
+		this->loopbreak();
+		fprintf(stderr, "error constructing SocketSession!");
 	}
 }
 
-lw_int32 SocketServer::run(std::function<void(lw_int32 what)> func)
+void SocketServer::listener_error_cb(struct evconnlistener * listener)
+{
+	struct event_base *base = evconnlistener_get_base(listener);
+
+	int err = EVUTIL_SOCKET_ERROR();
+
+	printf("got an error %d (%s) on the listener. shutting down.\n", err, evutil_socket_error_to_string(err));
+
+	this->loopexit();
+}
+
+lw_int32 SocketServer::run(u_short port, std::function<void(lw_int32 what)> func)
 {
  	if (nullptr == func) return -1;
 
-	_onFunc = func;
+	this->_port = port;
+	this->_onFunc = func;
 
 	std::thread t(std::bind(&SocketServer::__run, this));
 	t.detach();
@@ -133,40 +127,40 @@ lw_int32 SocketServer::run(std::function<void(lw_int32 what)> func)
 	return 0;
 }
 
-struct evconnlistener * SocketServer::createConnListener(int port)
+struct evconnlistener * SocketServer::__createConnListener(int port)
 {
-	struct evconnlistener *listener = NULL;
+	struct evconnlistener *listener = nullptr;
 	struct sockaddr_in sin;
 	sin.sin_family = AF_INET;
 	sin.sin_addr.s_addr = htonl(0);	//绑定0.0.0.0地址
 	sin.sin_port = htons(port);
 	//inet_pton(AF_INET, "127.0.0.1", &sin.sin_addr.s_addr);
-	listener = evconnlistener_new_bind(_base, ::__listener_cb, this,
+	listener = evconnlistener_new_bind(this->_base, ::__listener_cb, this,
 		LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE, -1, (struct sockaddr*)&sin, sizeof(sin));
 	return listener;
 }
 
 void SocketServer::__run()
 {
-	struct event *signal_event;
-	signal_event = evsignal_new(_base, SIGINT, ::__signal_cb, (void *)_base);
-	if (!signal_event || event_add(signal_event, nullptr) < 0)
+	struct event *evsignal;
+	evsignal = evsignal_new(this->_base, SIGINT, ::__signal_cb, (void *)_base);
+	if (!evsignal || event_add(evsignal, nullptr) < 0)
 	{
 		fprintf(stderr, "could not create/add a signal event!\n");
 		return;
 	}
 
-	struct evconnlistener *listener = createConnListener(_port);
-	if (listener != NULL)
+	struct evconnlistener *listener = __createConnListener(this->_port);
+	if (listener != nullptr)
 	{
-		evconnlistener_set_error_cb(listener, __accept_error_cb);
+		evconnlistener_set_error_cb(listener, __listener_error_cb);
 
 		// 初始化完成定时器
 		{
-			_timer->create(this->_base);
-			_timer->startTimer(100, 2, [this](int id) -> bool
+			this->_timer->create(this->_base);
+			this->_timer->start(100, 2, [this](int id) -> bool
 			{
-				if (_onFunc != nullptr)
+				if (this->_onFunc != nullptr)
 				{
 					this->_onFunc(0);
 				}
@@ -175,20 +169,20 @@ void SocketServer::__run()
 			});
 		}
 
-		int r = event_base_dispatch(_base);
+		int r = this->dispatch();
 
-		if (signal_event != NULL)
+		if (evsignal != nullptr)
 		{
-			event_free(signal_event);
+			event_free(evsignal);
 		}
 
-		if (listener != NULL)
+		if (listener != nullptr)
 		{
 			evconnlistener_free(listener);
 		}
 	}	
 
-	event_base_free(_base);
+	this->destroy();
 
 	return;
 }

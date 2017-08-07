@@ -7,7 +7,7 @@
 #include <event2/util.h>
 
 #include "socket_core.h"
-#include "object.h"
+#include "event_object.h"
 #include "socket_session.h"
 #include <functional>
 
@@ -19,46 +19,48 @@ struct evconnlistener;
 
 typedef void(*LW_SERVER_START_COMPLETE)(lw_int32 what);
 
-class ISocketServer : public ISocketSession
+class ISocketServerHandler : public ISocketSessionHanlder
 {
 public:
-	virtual ~ISocketServer() {}
+	virtual ~ISocketServerHandler() {}
 
 public:
-	virtual void onJoin(SocketSession* session) = 0;
+	virtual void onListener(SocketSession* session) = 0;
 };
 
-class SocketServer : public Object
+class SocketServer : public EventObject
 {
 public:
 	SocketServer();
 	virtual ~SocketServer();
 
 public:
-	lw_int32 create(u_short port, ISocketServer* isession);
-	lw_int32 run(std::function<void(lw_int32 what)> func);
-	void destory();
+	bool create(ISocketServerHandler* isession);
+	void destroy();
+
+public:
+	lw_int32 run(u_short port, std::function<void(lw_int32 what)> func);
 
 public:
 	int getPort() const { return this->_port; }
 
 public:
 	void listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int);
+	void listener_error_cb(struct evconnlistener *);
 
 private:
-	struct evconnlistener * createConnListener(int port);
+	struct evconnlistener * __createConnListener(int port);
 
 private:
 	void __run();
 
 private:
 	lw_int32 _port;
-	struct event_base* _base;
 	SocketTimer* _timer;
 
 private:
 	std::function<void(lw_int32 what)> _onFunc;
-	ISocketServer* iserver;
+	ISocketServerHandler* iserver;
 };
 
 #endif // !__SocketServer_H__

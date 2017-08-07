@@ -28,6 +28,8 @@
     <ClCompile Include="socket_core.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="SessionManager.cpp" />
+    <ClCompile Include="event_object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
@@ -52,6 +54,8 @@
     <ClInclude Include="socket_core.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="SessionManager.h" />
+    <ClInclude Include="event_object.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MemoryPool.tcc">

@@ -2,7 +2,7 @@
 
 Object::Object()
 {
-	_data = NULL;
+	_data = nullptr;
 	_tag = -1;
 }
 

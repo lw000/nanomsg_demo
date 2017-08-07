@@ -10,6 +10,8 @@ struct event_base;
 
 class SocketTimer : public Object
 {
+	friend class TimerCore;
+
 public:
 	typedef std::unordered_map<lw_int32, void*> TIMERS;
 
@@ -19,12 +21,15 @@ public:
 
 public:
 	int create(struct event_base* base);
-	void destory();
+	void destroy();
 
 public:
-	int startTimer(int id, int t, std::function<bool(int id)> func);
-	void killTimer(int id);
-	void timer_cb(void* timer, short ev);
+	int start(int tid, int t, std::function<bool(int id)> func);
+	void kill(int tid);
+
+private:
+	void __clean();
+	void __timer_cb(void* timer, short ev);
 
 private:
 	struct event_base* _base;

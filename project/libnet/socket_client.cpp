@@ -7,34 +7,30 @@
 #include "event2/event.h"
 
 #include "socket_core.h"
-#include "socket_session.h"
-#include "socket_timer.h"
 
 using namespace LW;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-SocketClient::SocketClient() : isession(NULL)
+SocketClient::SocketClient() : isession(nullptr)
 {
-	_session = new SocketSession(SESSION_TYPE::Client);
+	_session = new SocketSession();
 	_timer = new SocketTimer();
 }
 
 SocketClient::~SocketClient()
 {
 	delete _session;
-	_session = NULL;
+	_session = nullptr;
 
 	delete _timer;
-	_timer = NULL;
+	_timer = nullptr;
 }
 
-bool SocketClient::create(ISocketSession* isession)
-{
-	if (this->_base == NULL)
+bool SocketClient::create(ISocketSessionHanlder* isession)
+{	
+	if (this->openEvent(false))
 	{
-		this->_base = event_base_new();
-
 		_timer->create(this->_base);
 	}
 
@@ -43,28 +39,24 @@ bool SocketClient::create(ISocketSession* isession)
 	return true;
 }
 
-void SocketClient::destory()
+void SocketClient::destroy()
 {
-	if (_timer != NULL)
+	if (_timer != nullptr)
 	{
-		_timer->destory();
+		_timer->destroy();
 	}
 
-	if (_session != NULL)
+	if (_session != nullptr)
 	{
-		_session->destory();
+		_session->destroy();
 	}
 
-	if (this->_base != NULL)
-	{
-		event_base_free(this->_base);
-		this->_base = NULL;
-	}
+	this->closeEvent();
 }
 
 int SocketClient::run(const char* addr, int port)
 {
-	if (addr == NULL) return -1;
+	if (addr == nullptr) return -1;
 
 	this->_session->setHost(addr);
 	this->_session->setPort(port);
@@ -81,33 +73,23 @@ SocketSession* SocketClient::getSession()
 	return this->_session;
 }
 
-int SocketClient::startTimer(int id, int t, std::function<bool(int id)> func)
+SocketTimer* SocketClient::getTimer()
 {
-	assert(_timer != NULL);
-	if (_timer != NULL)
-	{
-		_timer->startTimer(id, t, func);
-	}	
-	return 0;
-}
-
-void SocketClient::killTimer(int id)
-{
-	assert(_timer != NULL);
-	if (_timer != NULL)
-	{
-		_timer->killTimer(id);
-	}
+	return this->_timer;
 }
 
 void SocketClient::__run()
 {
-	int r = this->_session->create(_base, -1, EV_READ | EV_PERSIST, this->isession);
+	int r = this->_session->create(SESSION_TYPE::Client, _base, -1, EV_READ | EV_PERSIST, this->isession);
 
-	event_base_dispatch(this->_base);
+	if (r == 0)
+	{
+		this->dispatch();
 
-	this->_session->destory();
-	this->destory();
+		this->_session->destroy();
+	}
+	
+	this->destroy();
 
 	return;
 }

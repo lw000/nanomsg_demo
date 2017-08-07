@@ -20,10 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CacheQueue.cpp" />
+    <ClCompile Include="event_object.cpp" />
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="NetHead.cpp" />
     <ClCompile Include="NetMessage.cpp" />
     <ClCompile Include="object.cpp" />
+    <ClCompile Include="SessionManager.cpp" />
     <ClCompile Include="socket_core.cpp" />
     <ClCompile Include="socket_session.cpp" />
     <ClCompile Include="socket_client.cpp" />
@@ -32,12 +34,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CacheQueue.h" />
+    <ClInclude Include="event_object.h" />
     <ClInclude Include="http_server.h" />
     <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="net.h" />
     <ClInclude Include="NetHead.h" />
     <ClInclude Include="NetMessage.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="SessionManager.h" />
     <ClInclude Include="socket_core.h" />
     <ClInclude Include="socket_session.h" />
     <ClInclude Include="socket_client.h" />
