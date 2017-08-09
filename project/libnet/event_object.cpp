@@ -1,7 +1,8 @@
 #include "event_object.h"
 
-#include "event2/event.h"
-
+#include <event2/event.h>
+#include <event2/event_struct.h>
+#include <event2/event_compat.h>
 EventObject::EventObject()
 {
 }
@@ -10,24 +11,27 @@ EventObject::~EventObject()
 {
 }
 
-bool EventObject::openEvent(bool fast)
+bool EventObject::openClient()
+{
+	if (this->_base == nullptr)
+	{
+		this->_base = event_base_new();
+	}
+
+	return true;
+}
+
+bool EventObject::openServer()
 {
 	if (this->_base == nullptr)
 	{
 #ifdef WIN32
-		if (fast)
+		struct event_config *cfg = event_config_new();
+		event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
+		if (cfg)
 		{
-			struct event_config *cfg = event_config_new();
-			event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
-			if (cfg)
-			{
-				this->_base = event_base_new_with_config(cfg);
-				event_config_free(cfg);
-			}
-		}
-		else
-		{
-			this->_base = event_base_new();
+			this->_base = event_base_new_with_config(cfg);
+			event_config_free(cfg);
 		}
 #else
 		this->_base = event_base_new();
@@ -37,13 +41,18 @@ bool EventObject::openEvent(bool fast)
 	return true;
 }
 
-void EventObject::closeEvent()
+void EventObject::close()
 {
 	if (this->_base != nullptr)
 	{
 		event_base_free(this->_base);
 		this->_base = nullptr;
 	}
+}
+
+struct event_base* EventObject::getBase()
+{ 
+	return this->_base;
 }
 
 int EventObject::dispatch()
@@ -58,8 +67,9 @@ int EventObject::loopbreak()
 	return r;
 }
 
-int EventObject::loopexit(struct timeval delay)
+int EventObject::loopexit()
 {
+	struct timeval delay = { 1, 0 };
 	int r = event_base_loopexit(this->_base, &delay);
 	return r;
 }

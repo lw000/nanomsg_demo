@@ -1,40 +1,59 @@
 #ifndef __SocketTimer_H__
 #define __SocketTimer_H__
 
-#include <unordered_map>
-
-#include "socket_core.h"
 #include "object.h"
 
-struct event_base;
+#include <unordered_map>
+#include <functional>
 
-class SocketTimer : public Object
+class EventObject;
+
+struct TIMER_ITEM;
+
+typedef std::function<bool(int tid, unsigned int tms)> TIMER_CALLBACK;
+
+class ITimer
 {
 	friend class TimerCore;
 
 public:
-	typedef std::unordered_map<lw_int32, void*> TIMERS;
+	typedef std::unordered_map<lw_int32, TIMER_ITEM*> TIMERS;
+	typedef std::unordered_map<lw_int32, TIMER_ITEM*>::iterator iterator;
+	typedef std::unordered_map<lw_int32, TIMER_ITEM*>::const_iterator const_iterator;
 
 public:
-	SocketTimer();
-	virtual ~SocketTimer();
+	virtual ~ITimer() {}
 
 public:
-	int create(struct event_base* base);
+	virtual int create(EventObject* base = nullptr) = 0;
+	virtual void destroy() = 0;
+
+public:
+	virtual int start(int tid, int tms, TIMER_CALLBACK func) = 0;
+	virtual int start_once(int tid, int tms, TIMER_CALLBACK func) = 0;
+	virtual void kill(int tid) = 0;
+
+protected:
+	virtual void _timer_cb(TIMER_ITEM* timer) = 0;
+};
+
+class Timer : public Object
+{
+public:
+	Timer();
+	virtual ~Timer();
+
+public:
+	int create(EventObject* base = nullptr);
 	void destroy();
 
 public:
-	int start(int tid, int t, std::function<bool(int id)> func);
+	int start(int tid, int tms, TIMER_CALLBACK func);
+	int start_once(int tid, int tms, TIMER_CALLBACK func);
 	void kill(int tid);
 
 private:
-	void __clean();
-	void __timer_cb(void* timer, short ev);
-
-private:
-	struct event_base* _base;
-	TIMERS _timers;
-	std::function<bool(int id)> _on_timer;
+	ITimer* _timer;
 };
 
 #endif // !__SocketTimer_H__

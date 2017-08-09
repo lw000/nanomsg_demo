@@ -17,15 +17,19 @@ public:
 	virtual ~EventObject();
 
 public:
-	bool openEvent(bool fast = true);
-	void closeEvent();
+	bool openClient();
+	bool openServer();
+	void close();
+
+public:
+	struct event_base* getBase();
 
 public:
 	int dispatch();
 
 public:
 	int loopbreak();
-	int loopexit(struct timeval delay = { 1, 0 });
+	int loopexit();
 
 public:
 	virtual std::string debug();

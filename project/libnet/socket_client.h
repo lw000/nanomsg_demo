@@ -3,40 +3,69 @@
 
 #include <string>
 
-#include "event_object.h"
 #include "socket_session.h"
 #include "socket_timer.h"
 
+class ISocketClient;
 class SocketClient;
+class EventObject;
 
 struct event_base;
 
-class SocketClient : public EventObject
+class ISocketClient
+{
+	friend class SocketClient;
+
+public:
+	virtual ~ISocketClient() {}
+
+protected:
+	virtual int onSocketConnected() = 0;
+	virtual int onSocketDisConnect() = 0;
+	virtual int onSocketTimeout() = 0;
+	virtual int onSocketError() = 0;
+
+protected:
+	virtual void onSocketParse(lw_int32 cmd, char* buf, lw_int32 bufsize) = 0;
+};
+
+class SocketClient : public Object, public ISocketSessionHanlder
 {
 public:
-	SocketClient();
+	SocketClient(EventObject* evObject, ISocketClient* isession);
 	virtual ~SocketClient();
 
 public:
-	bool create(ISocketSessionHanlder* isession);
+	bool create();
 	void destroy();
 
 public:
-	int run(const char* addr, int port);
+	int run(const std::string& addr, int port);
 
 public:
 	SocketSession* getSession();
-	SocketTimer* getTimer();
+
+public:
+	virtual std::string debug() override;
+
+protected:
+	virtual int onSocketConnected(SocketSession* session) override;
+	virtual int onSocketDisConnect(SocketSession* session) override;
+	virtual int onSocketTimeout(SocketSession* session) override;
+	virtual int onSocketError(SocketSession* session) override;
+
+protected:
+	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, char* buf, lw_int32 bufsize) override;
 
 private:
 	void __run();
 
 private:
+	EventObject* _evObject;
 	SocketSession* _session;
-	SocketTimer* _timer;
 
 private:
-	ISocketSessionHanlder* isession;
+	ISocketClient* _isession;
 };
 
 #endif // !__SocketClient_H__

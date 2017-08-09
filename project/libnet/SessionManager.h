@@ -30,14 +30,15 @@ public:
 template<class T>
 class ManagerT
 {
-	typedef std::list<T*> LT;
+	typedef typename std::list<T*> LMT;
+	typedef typename std::list<T*>::iterator iterator;
+	typedef typename std::list<T*>::const_iterator const_iterator;
 
 private:
 	std::mutex _m;
 
 private:
-	LT _live;
-	LT _die;
+	LMT _live;
 
 public:
 	ManagerT()
@@ -49,18 +50,8 @@ public:
 	{
 		{
 			std::lock_guard < std::mutex > l(_m);
-			LT::iterator iter = _live.begin();
+			LMT::iterator iter = _live.begin();
 			for (; iter != _live.end(); ++iter)
-			{
-				T* t = (*iter);
-				delete t;
-			}
-		}
-
-		{
-			std::lock_guard < std::mutex > l(_m);
-			LT::iterator iter = _die.begin();
-			for (; iter != _die.end(); ++iter)
 			{
 				T* t = (*iter);
 				delete t;
@@ -71,13 +62,10 @@ public:
 public:
 	T* add(const T* t)
 	{
-		// 如果用户不存在，创建对象，添加用户
-		// 如果用户存在，更新用户信息
-
 		T* pT = nullptr;
 		{
 			std::lock_guard < std::mutex > l(_m);
-			LT::iterator iter = _live.begin();
+			LMT::iterator iter = _live.begin();
 			for (; iter != _live.end(); ++iter)
 			{
 				if (t == *iter)
@@ -86,25 +74,9 @@ public:
 				}
 			}
 
-			if (pT == NULL)
+			if (pT == nullptr)
 			{
-				{
-					// 缓存中取出对象
-					if (!_die.empty())
-					{
-						pT = _die.front();
-						_die.pop_front();
-					}
-				}
-
-				if (pT == NULL)
-				{
-					pT = new T();
-				}
-
-				*pT = *t;
-
-				_live.push_back(const_cast<T*>(pT));
+				_live.push_back(const_cast<T*>(t));
 			}
 			else
 			{
@@ -120,20 +92,20 @@ public:
 		{
 			std::lock_guard < std::mutex > l(_m);
 			T* pT = nullptr;
-			LT::iterator iter = _live.begin();
+			LMT::iterator iter = _live.begin();
 			for (; iter != _live.end(); ++iter)
 			{
-				if (pT == (*iter))
+				if (t == (*iter))
 				{
-					pT = *iter;
+					pT = (*iter);
+					
+					delete pT;
+					pT = nullptr;
+
 					_live.erase(iter);
+
 					break;
 				}
-			}
-
-			if (pT != nullptr)
-			{
-				_die.push_back(pT);
 			}
 		}
 	}
@@ -143,7 +115,7 @@ public:
 		T* pT = nullptr;
 		{
 			std::lock_guard < std::mutex > l(_m);
-			LT::iterator iter = _live.begin();
+			LMT::iterator iter = _live.begin();
 			for (; iter != _live.end(); ++iter)
 			{
 				pT = *iter;
@@ -155,28 +127,31 @@ public:
 			}
 		}
 
+		return pT; 
+	}
+
+	T* operator[](int i)
+	{
+		if ((i < 0) || (i > _live.size()))
+		{
+			return nullptr;
+		}
+
+		T* pT = nullptr;
+		int j = 0;
+		iterator iter = _live.begin();
+		while (iter != _live.end())
+		{
+			if (j == i)
+			{
+				pT = (*iter);
+				break;
+			}
+			++iter;
+		}
+
 		return pT;
 	}
-
-public:
-	void restoreCache()
-	{
-		{
-			std::lock_guard < std::mutex > l(_m);
-
-			{
-				LT::iterator iter = _die.begin();
-				for (; iter != _die.end(); ++iter)
-				{
-					T* p = (*iter);
-					delete p;
-				}
-
-				LT().swap(_die);
-			}
-		}
-	}
-
 };
 
 #endif	// !__SessionManager_h__

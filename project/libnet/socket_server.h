@@ -12,7 +12,7 @@
 #include <functional>
 
 class SocketSession;
-class SocketTimer;
+class Timer;
 
 struct event_base;
 struct evconnlistener;
@@ -28,14 +28,14 @@ public:
 	virtual void onListener(SocketSession* session) = 0;
 };
 
-class SocketServer : public EventObject
+class SocketServer : public Object
 {
 public:
-	SocketServer();
+	SocketServer(EventObject* evObject, ISocketServerHandler* isession);
 	virtual ~SocketServer();
 
 public:
-	bool create(ISocketServerHandler* isession);
+	bool create();
 	void destroy();
 
 public:
@@ -48,6 +48,9 @@ public:
 	void listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int);
 	void listener_error_cb(struct evconnlistener *);
 
+public:
+	virtual std::string debug() override;
+
 private:
 	struct evconnlistener * __createConnListener(int port);
 
@@ -55,12 +58,13 @@ private:
 	void __run();
 
 private:
+	EventObject* _evObject;
 	lw_int32 _port;
-	SocketTimer* _timer;
+	Timer* _timer;
 
 private:
 	std::function<void(lw_int32 what)> _onFunc;
 	ISocketServerHandler* iserver;
 };
 
-#endif // !__SocketServer_H__
+#endif // !__SocketServer_H__ 

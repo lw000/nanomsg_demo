@@ -5,11 +5,11 @@
 #endif // WIN32
 
 #include <event2/event.h>
-#include <event2/event_struct.h>
-#include <event2/event_compat.h>
 #include <event2/bufferevent.h>
 #include <event2/buffer.h>
 #include <event2/util.h>
+
+#include "event_object.h"
 
 class CoreSocket
 {
@@ -50,7 +50,7 @@ SocketSession::~SocketSession()
 	this->reset();
 }
 
-int SocketSession::create(SESSION_TYPE c, struct event_base* base, evutil_socket_t fd, short event, ISocketSessionHanlder* isession)
+int SocketSession::create(SESSION_TYPE c, EventObject* base, evutil_socket_t fd, short event, ISocketSessionHanlder* isession)
 {
 	this->_isession = isession;
 	this->_c = c;
@@ -59,7 +59,7 @@ int SocketSession::create(SESSION_TYPE c, struct event_base* base, evutil_socket
 	{
 	case SESSION_TYPE::Server:
 	{
-		this->_bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
+		this->_bev = bufferevent_socket_new(base->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
 		bufferevent_setcb(this->_bev, CoreSocket::__read_cb, CoreSocket::__write_cb, CoreSocket::__event_cb, this);
 		bufferevent_enable(this->_bev, EV_READ | EV_WRITE);
 		_connected = true;
@@ -72,7 +72,7 @@ int SocketSession::create(SESSION_TYPE c, struct event_base* base, evutil_socket
 		saddr.sin_addr.s_addr = inet_addr(this->_host.c_str());
 		saddr.sin_port = htons(this->_port);
 
-		this->_bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
+		this->_bev = bufferevent_socket_new(base->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
 		int con = bufferevent_socket_connect(this->_bev, (struct sockaddr *)&saddr, sizeof(saddr));
 		if (con >= 0)
 		{
@@ -134,7 +134,8 @@ bool SocketSession::connected()
 
 evutil_socket_t SocketSession::getSocket() 
 { 
-	return bufferevent_getfd(this->_bev);
+	evutil_socket_t fd = bufferevent_getfd(this->_bev);
+	return fd;
 }
 
 lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)
@@ -244,15 +245,20 @@ void SocketSession::onSocketParse(SocketSession* session, lw_int32 cmd, char* bu
 
 void SocketSession::onEvent(short ev)
 {
-	evutil_socket_t fd = bufferevent_getfd(this->_bev);
+	if (ev & BEV_EVENT_CONNECTED)
+	{
+		_connected = true;
+		this->_isession->onSocketConnected(this);
+		return;
+	}
 
 	if (ev & BEV_EVENT_READING)
 	{
-		printf("[%d]: EVENT_READING\n", fd);
+		this->onSocketError(this);
 	}
 	else if (ev & BEV_EVENT_WRITING)
 	{
-		printf("[%d]: BEV_EVENT_WRITING\n", fd);
+		this->onSocketError(this);
 	}
 	else if (ev & BEV_EVENT_EOF)
 	{
@@ -266,12 +272,7 @@ void SocketSession::onEvent(short ev)
 	{
 		this->onSocketError(this);
 	}
-	else if (ev & BEV_EVENT_CONNECTED)
-	{
-		_connected = true;
-		this->_isession->onSocketConnected(this);
-		return;
-	}
+
 	this->_connected = false;
 	this->_bev = nullptr;
 }

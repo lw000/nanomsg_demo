@@ -11,6 +11,7 @@
 
 class SocketSession;
 class ISocketSessionHanlder;
+class EventObject;
 
 typedef std::function<bool(char* buf, lw_int32 bufsize)> SocketCallback;
 
@@ -50,7 +51,7 @@ public:
 	evutil_socket_t getSocket();
 
 public:
-	int create(SESSION_TYPE c, struct event_base* base, evutil_socket_t fd, short event, ISocketSessionHanlder* isession);
+	int create(SESSION_TYPE c, EventObject* base, evutil_socket_t fd, short event, ISocketSessionHanlder* isession);
 	void destroy();
 
 public:

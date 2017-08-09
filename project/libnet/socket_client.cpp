@@ -7,60 +7,57 @@
 #include "event2/event.h"
 
 #include "socket_core.h"
+#include "event_object.h"
 
 using namespace LW;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-SocketClient::SocketClient() : isession(nullptr)
+SocketClient::SocketClient(EventObject* evObject, ISocketClient* isession) : _isession(nullptr)
 {
 	_session = new SocketSession();
-	_timer = new SocketTimer();
+	_evObject = evObject;
+	this->_isession = isession;
 }
 
 SocketClient::~SocketClient()
 {
 	delete _session;
 	_session = nullptr;
-
-	delete _timer;
-	_timer = nullptr;
 }
 
-bool SocketClient::create(ISocketSessionHanlder* isession)
+bool SocketClient::create()
 {	
-	if (this->openEvent(false))
-	{
-		_timer->create(this->_base);
-	}
-
-	this->isession = isession;
+	bool r = _evObject->openClient();
 
 	return true;
 }
 
 void SocketClient::destroy()
 {
-	if (_timer != nullptr)
-	{
-		_timer->destroy();
-	}
-
 	if (_session != nullptr)
 	{
 		_session->destroy();
 	}
 
-	this->closeEvent();
+	if (_isession != nullptr)
+	{
+		delete _isession;
+		_isession = nullptr;
+	}
+
+	_evObject->close();
 }
 
-int SocketClient::run(const char* addr, int port)
+std::string SocketClient::debug()
 {
-	if (addr == nullptr) return -1;
+	return std::string("SocketClient");
+}
 
+int SocketClient::run(const std::string& addr, int port)
+{
 	this->_session->setHost(addr);
 	this->_session->setPort(port);
-
 
 	std::thread t(std::bind(&SocketClient::__run, this));
 	t.detach();
@@ -73,18 +70,13 @@ SocketSession* SocketClient::getSession()
 	return this->_session;
 }
 
-SocketTimer* SocketClient::getTimer()
-{
-	return this->_timer;
-}
-
 void SocketClient::__run()
 {
-	int r = this->_session->create(SESSION_TYPE::Client, _base, -1, EV_READ | EV_PERSIST, this->isession);
+	int r = this->_session->create(SESSION_TYPE::Client, _evObject, -1, EV_READ | EV_PERSIST, this);
 
 	if (r == 0)
 	{
-		this->dispatch();
+		_evObject->dispatch();
 
 		this->_session->destroy();
 	}
@@ -92,4 +84,34 @@ void SocketClient::__run()
 	this->destroy();
 
 	return;
+}
+
+
+int SocketClient::onSocketConnected(SocketSession* session)
+{
+	this->_isession->onSocketConnected();
+	return 0;
+}
+
+int SocketClient::onSocketDisConnect(SocketSession* session)
+{
+	this->_isession->onSocketDisConnect();
+	return 0;
+}
+
+int SocketClient::onSocketTimeout(SocketSession* session)
+{
+	this->_isession->onSocketTimeout();
+	return 0;
+}
+
+int SocketClient::onSocketError(SocketSession* session)
+{
+	this->_isession->onSocketError();
+	return 0;
+}
+
+void SocketClient::onSocketParse(SocketSession* session, lw_int32 cmd, char* buf, lw_int32 bufsize)
+{
+	this->_isession->onSocketParse(cmd, buf, bufsize);
 }
