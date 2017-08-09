@@ -6,8 +6,6 @@
 #include "base_type.h"
 #include "object.h"
 
-#include <event2/util.h>
-
 struct event_base;
 
 class EventObject : public Object

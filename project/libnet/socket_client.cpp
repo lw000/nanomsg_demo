@@ -8,6 +8,7 @@
 
 #include "socket_core.h"
 #include "event_object.h"
+#include "socket_session.h"
 
 using namespace LW;
 

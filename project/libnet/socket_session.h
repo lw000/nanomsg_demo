@@ -5,32 +5,16 @@
 #include <event2/util.h>
 
 #include "base_type.h"
-#include "socket_core.h"
 #include "object.h"
+#include "socket_core.h"
+#include "socket_hanlder.h"
+
 #include <unordered_map>
 
 class SocketSession;
-class ISocketSessionHanlder;
 class EventObject;
 
 typedef std::function<bool(char* buf, lw_int32 bufsize)> SocketCallback;
-
-class ISocketSessionHanlder
-{
-	friend class SocketSession;
-
-public:
-	virtual ~ISocketSessionHanlder() {}
-
-protected:
-	virtual int onSocketConnected(SocketSession* session) = 0;
-	virtual int onSocketDisConnect(SocketSession* session) = 0;
-	virtual int onSocketTimeout(SocketSession* session) = 0;
-	virtual int onSocketError(SocketSession* session) = 0;
-
-protected:
-	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) = 0;
-};
 
 enum SESSION_TYPE
 {

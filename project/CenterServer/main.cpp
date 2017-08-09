@@ -113,8 +113,10 @@ int md5_test()
 	return 0;
 }
 
+static Timer		__g_timer;
 static EventObject	__g_event;
 static SocketServer	__g_serv(&__g_event, new ServerHandler());
+
 
 int main(int argc, char** argv)
 {
@@ -160,12 +162,11 @@ int main(int argc, char** argv)
 				});
 			}
 
-			Timer timer;
-			timer.create(&__g_event);
-			int exec_times = 1000;
+			__g_timer.create(&__g_event);
+			int exec_times = 10000;
 			for (int i = 1; i < exec_times; i++)
 			{
-				timer.start(i, 1000, [](int tid, unsigned int tms) -> bool
+				__g_timer.start(i, 1000, [](int tid, unsigned int tms) -> bool
 				{
 					char s[512];
 					sprintf(s, "tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
@@ -185,7 +186,7 @@ int main(int argc, char** argv)
 
 			for (int i = 1; i < exec_times; i++)
 			{
-				timer.kill(i);
+				__g_timer.kill(i);
 			}
 
 			{

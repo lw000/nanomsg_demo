@@ -1,5 +1,7 @@
 #include "PlatformServer.h"
 	
+#include "socket_session.h"
+
 #include "command.h"
 #include "platform.pb.h"
 

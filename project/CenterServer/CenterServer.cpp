@@ -1,8 +1,9 @@
 #include "CenterServer.h"
 
+#include "socket_session.h"
+
 #include "command.h"
 #include "platform.pb.h"
-
 using namespace LW;
 
 ServerHandler::ServerHandler()

@@ -8,25 +8,15 @@
 
 #include "socket_core.h"
 #include "event_object.h"
-#include "socket_session.h"
+#include "socket_hanlder.h"
+
 #include <functional>
 
 class SocketSession;
 class Timer;
-
-struct event_base;
 struct evconnlistener;
 
 typedef void(*LW_SERVER_START_COMPLETE)(lw_int32 what);
-
-class ISocketServerHandler : public ISocketSessionHanlder
-{
-public:
-	virtual ~ISocketServerHandler() {}
-
-public:
-	virtual void onListener(SocketSession* session) = 0;
-};
 
 class SocketServer : public Object
 {

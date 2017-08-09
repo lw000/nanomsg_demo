@@ -2,32 +2,12 @@
 #define __SocketClient_H__
 
 #include <string>
-
-#include "socket_session.h"
-#include "socket_timer.h"
+#include "object.h"
+#include "socket_hanlder.h"
 
 class ISocketClient;
 class SocketClient;
 class EventObject;
-
-struct event_base;
-
-class ISocketClient
-{
-	friend class SocketClient;
-
-public:
-	virtual ~ISocketClient() {}
-
-protected:
-	virtual int onSocketConnected() = 0;
-	virtual int onSocketDisConnect() = 0;
-	virtual int onSocketTimeout() = 0;
-	virtual int onSocketError() = 0;
-
-protected:
-	virtual void onSocketParse(lw_int32 cmd, char* buf, lw_int32 bufsize) = 0;
-};
 
 class SocketClient : public Object, public ISocketSessionHanlder
 {
@@ -63,8 +43,6 @@ private:
 private:
 	EventObject* _evObject;
 	SocketSession* _session;
-
-private:
 	ISocketClient* _isession;
 };
 

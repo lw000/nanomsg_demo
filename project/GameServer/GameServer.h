@@ -10,6 +10,7 @@
 #include "socket_client.h"
 
 class EventObject;
+class Timer;
 
 class IGameServer
 {
