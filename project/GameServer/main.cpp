@@ -110,7 +110,7 @@ int main(int argc, char** argv)
 			for (size_t i = 0; i < rpc_times; i++)
 			{
 				DESK_INFO desk_info;
-				desk_info.id = i;
+				desk_info.did = i;
 				desk_info.max_usercount = 6;
 				char buf[64];
 				sprintf(buf, "²âÊÔ[%d]", i);

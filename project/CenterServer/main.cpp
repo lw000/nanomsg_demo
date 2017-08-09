@@ -26,16 +26,19 @@
 
 #include "FileUtils.h"
 
+#include "socket_timer.h"
 
 extern "C"
 {
 #include "ext/md5.h"
 }
 
+#include "..\libcrossLog\log4z.h"
+#include "libcrossLog/FastLog.h"
+
 
 using namespace LW;
 
-SocketServer __g_serv;
 
 void xxtea_test(char* s)
 {
@@ -110,23 +113,27 @@ int md5_test()
 	return 0;
 }
 
+static EventObject	__g_event;
+static SocketServer	__g_serv(&__g_event, new ServerHandler());
+
 int main(int argc, char** argv)
 {
 	if (argc < 2) return 0;
 
 	SocketInit sinit;
 
-	md5_test();
-
-	base64_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
-	xxtea_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+// 	md5_test();
+// 
+// 	base64_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+// 	xxtea_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
 
 	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
 #ifdef WIN32
 	evthread_use_windows_threads();
 #endif
 
-	event_enable_debug_mode();
+	hn_start_fastlog();
+
 	do 
 	{
 		std::string config(argv[1]);
@@ -144,11 +151,45 @@ int main(int argc, char** argv)
 
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create(new ServerHandler()))
+			if (__g_serv.create())
 			{
 				__g_serv.run(port, [](int what) {
-					printf("中心服务器服务启动完成 [%d]！\n", __g_serv.getPort());
+					char s[512];
+					sprintf(s, "中心服务器服务启动完成 [%d]", __g_serv.getPort());
+					LOGD(s);
 				});
+			}
+
+			Timer timer;
+			timer.create(&__g_event);
+			int exec_times = 1000;
+			for (int i = 1; i < exec_times; i++)
+			{
+				timer.start(i, 1000, [](int tid, unsigned int tms) -> bool
+				{
+					char s[512];
+					sprintf(s, "tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
+
+					if (tid > 15)
+					{
+						LOGD(s);
+					}
+
+					return true;
+				});
+			}
+
+			{
+				char c = getchar();
+			}
+
+			for (int i = 1; i < exec_times; i++)
+			{
+				timer.kill(i);
+			}
+
+			{
+				char c = getchar();
 			}
 
 			while (1) { lw_sleep(1); }

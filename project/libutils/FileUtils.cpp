@@ -252,7 +252,7 @@ static Data getData(const std::string& filename, bool forString)
 	{
 		std::string msg = "Get data from file(";
 		msg.append(filename).append(") failed!");
-		printf("%s", msg.c_str());
+		printf("%s\n", msg.c_str());
 	}
 	else
 	{

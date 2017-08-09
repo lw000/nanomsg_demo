@@ -21,18 +21,14 @@
 
 #include "socket_client.h"
 #include "socket_session.h"
+#include "event_object.h"
 
 using namespace LW;
 
-static SocketClient __g_client;
-
-class ClientHandler : public ISocketSessionHanlder
+class ClientHandler : public ISocketClient
 {
-private:
-	SocketSession* _session;
-
 public:
-	ClientHandler() : _session(nullptr)
+	ClientHandler()
 	{
 	}
 
@@ -41,30 +37,28 @@ public:
 	}
 
 public:
-	virtual int onSocketConnected(SocketSession* session) override
-	{
-		this->_session = session;
-
-		return 0;
-	}
-
-	virtual int onSocketDisConnect(SocketSession* session) override
+	virtual int onSocketConnected() override
 	{
 		return 0;
 	}
 
-	virtual int onSocketTimeout(SocketSession* session) override
+	virtual int onSocketDisConnect() override
 	{
 		return 0;
 	}
 
-	virtual int onSocketError(SocketSession* session) override
+	virtual int onSocketTimeout() override
+	{
+		return 0;
+	}
+
+	virtual int onSocketError() override
 	{
 		return 0;
 	}
 
 public:
-	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override
+	virtual void onSocketParse(lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override
 	{
 		switch (cmd)
 		{
@@ -87,43 +81,41 @@ public:
 	}
 };
 
-void run_rpc_client(lw_int32 port)
-{
-	if (__g_client.create(new ClientHandler))
-	{
-		for (int i = 0; i < 1; i++)
-		{
-			__g_client.getTimer()->start(100+i, 1+i, [](int id) -> bool
-			{
-				platform::msg_heartbeat msg;
-				msg.set_time(time(NULL));
-				lw_int32 len = (lw_int32)msg.ByteSizeLong();
-				lw_char8 s[256] = { 0 };
-				lw_bool ret = msg.SerializeToArray(s, len);
-				if (ret)
-				{
-					__g_client.getSession()->sendData(cmd_heart_beat, s, len, cmd_heart_beat, [](lw_char8* buf, lw_int32 bufsize) -> bool
-					{
-						platform::msg_heartbeat msg;
-						msg.ParseFromArray(buf, bufsize);
-						printf("heartBeat[%d]\n", msg.time());
+//////////////////////////////////////////////////////////////////////////////////////////
 
-						return false;
-					});
-				}
-				return true;
-			});
-		}
-	
-		int ret = __g_client.run("127.0.0.1", port);
-	}
-}
+static Timer __g_timer;
+static EventObject __g_event;
+static SocketClient __g_client(&__g_event, new ClientHandler());
 
 int __connect_center_server(const lw_char8* addr, const lw_char8* sport)
 {
 	lw_short16 port = std::atoi(sport);
-	std::thread t(run_rpc_client, port);
-	t.detach();
+	if (__g_client.create())
+	{
+		__g_timer.create(&__g_event);
+		__g_timer.start(100, 2000, [](int tid, unsigned int tms) -> bool
+		{
+			platform::msg_heartbeat msg;
+			msg.set_time(time(NULL));
+			lw_int32 c = (lw_int32)msg.ByteSizeLong();
+			std::unique_ptr<char[]> s(new char[c + 1]());
+			lw_bool ret = msg.SerializeToArray(s.get(), c);
+			if (ret)
+			{
+				__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c, cmd_heart_beat, [](lw_char8* buf, lw_int32 bufsize) -> bool
+				{
+					platform::msg_heartbeat msg;
+					msg.ParseFromArray(buf, bufsize);
+					printf("heartBeat[%d]\n", msg.time());
+
+					return false;
+				});
+			}
+			return true;
+		});
+
+		int ret = __g_client.run("127.0.0.1", port);
+	}
 
 	return 0;
 }

@@ -25,7 +25,7 @@
 
 typedef struct _tagUSER_INFO
 {
-	int id;		// 用户ID
+	int uid;	// 用户ID
 	int rid;	// 房间编号
 	int seat;	// 座位编号
 	int state;	// 用户状态
@@ -40,7 +40,7 @@ typedef struct _tagUSER_INFO
 public:
 	_tagUSER_INFO()
 	{
-		id = -1;	// 用户ID
+		uid = -1;	// 用户ID
 		sex = -1;	// 用户性别
 		age = -1;	// 用户年龄
 
@@ -54,7 +54,7 @@ public:
 typedef struct _tagDESK_INFO
 {
 	int rid;		// 房间编号
-	int id;			// 桌位编号
+	int did;		// 桌位编号
 	int state;		// 桌子状态
 	int max_usercount;	// 最大用户个数
 
@@ -65,7 +65,7 @@ public:
 	_tagDESK_INFO()
 	{
 		rid = -1;		// 房间编号
-		id = -1;		// 桌位编号
+		did = -1;		// 桌位编号
 		state = -1;		// 桌子状态
 		max_usercount = -1;	// 最大用户个数
 	}
@@ -74,7 +74,7 @@ public:
 
 typedef struct _tagROOM_INFO
 {
-	int id;		// 房间编号
+	int rid;	// 房间编号
 	int state;	// 房间状态
 	int deskcount;	// 桌子个数
 	int usercount;	// 用户个数
@@ -85,7 +85,7 @@ typedef struct _tagROOM_INFO
 public:
 	_tagROOM_INFO()
 	{
-		id = -1;		// 房间编号
+		rid = -1;		// 房间编号
 		state = -1;		// 房间状态
 		deskcount = -1;	// 桌子个数
 

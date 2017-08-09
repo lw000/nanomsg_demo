@@ -3,13 +3,14 @@
 #include "command.h"
 #include "platform.pb.h"
 
-#include "UserManager.h"
+#include "Users.h"
+#include <memory>
 
 using namespace LW;
 
 ServerHandler::ServerHandler()
 {
-	usermanager = new UserManager();
+	iuser = new Users();
 }
 
 ServerHandler::~ServerHandler()
@@ -21,8 +22,10 @@ void ServerHandler::onListener(SocketSession* session)
 {
 	static int i = 0;
 	USER_INFO user;
-	user.id = i++;
-	usermanager->add(user, session);
+	user.uid = i++;
+	iuser->add(user, session);
+
+	UserSession* us = iuser->find(user.uid);
 
 	platform::msg_connected msg;
 	lw_llong64 t = time(NULL);
@@ -49,17 +52,19 @@ int ServerHandler::onSocketConnected(SocketSession* session)
 
 int ServerHandler::onSocketDisConnect(SocketSession* session)
 {
+	iuser->remove(session);
 	return 0;
 }
 
 int ServerHandler::onSocketTimeout(SocketSession* session)
 {
+	iuser->remove(session);
 	return 0;
 }
 
 int ServerHandler::onSocketError(SocketSession* session)
 {
-	usermanager->remove(session);
+	iuser->remove(session);
 	return 0;
 }
 
@@ -67,6 +72,10 @@ void ServerHandler::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8
 {
 	switch (cmd)
 	{
+	case cmd_connected:
+	{
+		printf("cmd_connected: %d\n", session->getSocket());
+	} break;
 	case cmd_heart_beat:
 	{
 		platform::msg_heartbeat msg;
@@ -74,13 +83,12 @@ void ServerHandler::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8
 		msg.set_time(t);
 		int len = msg.ByteSize();
 		{
-			char *s = new char[len + 1];
-			bool ret = msg.SerializeToArray(s, len);
+			std::unique_ptr<char[]> s(new char[len + 1]);
+			bool ret = msg.SerializeToArray(s.get(), len);
 			if (ret)
 			{
-				session->sendData(cmd_heart_beat, s, len);
+				session->sendData(cmd_heart_beat, s.get(), len);
 			}
-			delete s;
 		}
 	} break;
 	case cmd_platform_cs_userinfo:
@@ -94,15 +102,12 @@ void ServerHandler::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8
 		userinfo.set_sex(1);
 		userinfo.set_name("liwei");
 		userinfo.set_address("guangdong");
-		int len = userinfo.ByteSize();
+		int c = userinfo.ByteSize();
+		std::unique_ptr<char[]> s(new char[c + 1]);
+		bool ret = userinfo.SerializeToArray(s.get(), c);
+		if (ret)
 		{
-			char *s = new char[len + 1];
-			bool ret = userinfo.SerializePartialToArray(s, len);
-			if (ret)
-			{
-				session->sendData(cmd_platform_sc_userinfo, s, strlen(s));
-			}
-			delete s;
+			session->sendData(cmd_platform_sc_userinfo, s.get(), c);
 		}
 	} break;
 	default:

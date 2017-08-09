@@ -48,10 +48,10 @@
     <ClCompile Include="PlatformServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="UserManager.cpp">
+    <ClCompile Include="RoomManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RoomManager.cpp">
+    <ClCompile Include="Users.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,10 +86,10 @@
     <ClInclude Include="PlatformServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="UserManager.h">
+    <ClInclude Include="RoomManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="RoomManager.h">
+    <ClInclude Include="Users.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

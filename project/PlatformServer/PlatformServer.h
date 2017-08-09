@@ -4,12 +4,12 @@
 #include "socket_server.h"
 #include "SessionManager.h"
 
-class IUserManager;
+class IUser;
 
 class ServerHandler : public ISocketServerHandler
 {
 public:
-	IUserManager* usermanager;
+	IUser* iuser;
 
 public:
 	ServerHandler();

@@ -5,12 +5,11 @@
 #include <vector>
 
 #include "base_type.h"
-#include "platform.pb.h"
-#include "game.pb.h"
 #include "common_struct.h"
 #include "socket_session.h"
+#include "socket_client.h"
 
-class SocketClient;
+class EventObject;
 
 class IGameServer
 {
@@ -31,7 +30,7 @@ public:
 	virtual int onGameMessage(int cmd, void* data, int datasize) = 0;
 };
 
-class GameServer : public IGameServer, public ISocketSessionHanlder
+class GameServer : public IGameServer, public ISocketClient
 {
 private:
 	IGameServer* iDesk;
@@ -55,12 +54,12 @@ private:
 	void sendData(lw_int32 cmd, void* object, lw_int32 objectSize);
 
 protected:
-	virtual int onSocketConnected(SocketSession* session) override;
-	virtual int onSocketDisConnect(SocketSession* session) override;
-	virtual int onSocketTimeout(SocketSession* session) override;
-	virtual int onSocketError(SocketSession* session) override;
+	virtual int onSocketConnected() override;
+	virtual int onSocketDisConnect() override;
+	virtual int onSocketTimeout() override;
+	virtual int onSocketError() override;
 
-	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize);
+	virtual void onSocketParse(lw_int32 cmd, lw_char8* buf, lw_int32 bufsize);
 
 public:
 	int frameMessage(int cmd, void* data, int datasize);
@@ -80,6 +79,8 @@ public:
 
 private:
 	SocketClient* client;
+	EventObject* _evObject;
+	Timer* timer;
 };
 
 #endif	//__GameLogic_H__

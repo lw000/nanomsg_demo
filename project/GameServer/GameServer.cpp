@@ -3,37 +3,33 @@
 #include "socket_session.h"
 #include "socket_client.h"
 
+#include "event_object.h"
+
 #include "command.h"
+#include "platform.pb.h"
+#include "game.pb.h"
 
 using namespace LW;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-GameServer::GameServer(IGameServer* idesk) : client(NULL)
+GameServer::GameServer(IGameServer* idesk) : iDesk(idesk)
 {
-	this->iDesk = idesk;
+	_evObject = new EventObject;
+	timer = new Timer();
+	client = new SocketClient(_evObject, this);
 }
 
 GameServer::~GameServer()
 {
 	this->destroy();
-}
 
-bool GameServer::create(const DESK_INFO& info)
-{
-	this->_desk_info = info;
-
-	if (client == nullptr)
+	if (timer == nullptr)
 	{
-		client = new SocketClient;
+		delete timer;
+		timer = nullptr;
 	}
 	
-	return true;
-}
-
-void GameServer::destroy()
-{
-	client->destroy();
 	if (client != nullptr)
 	{
 		delete client;
@@ -41,29 +37,44 @@ void GameServer::destroy()
 	}
 }
 
+bool GameServer::create(const DESK_INFO& info)
+{
+	this->_desk_info = info;
+
+	timer->create(_evObject);
+	
+	return true;
+}
+
+void GameServer::destroy()
+{
+	timer->destroy();
+	client->destroy();
+}
+
 void GameServer::start(const std::string& host, int port)
 {
-	if (client->create(this))
+	do 
 	{
-		for (int i = 0; i < 1; i++)
+		if (!client->create()) break;
+		timer->start(100, 1000, [this](int tid, unsigned int tms) -> bool
 		{
-			client->getTimer()->start(100 + i, 1 + i, [this, i](int id) -> bool
+			platform::msg_userinfo_request msg;
+			msg.set_uid(400000);
+			int c = msg.ByteSizeLong();
+			std::unique_ptr<char[]> s(new char[c + 1]());
+			bool ret = msg.SerializeToArray(s.get(), c);
+			if (ret)
 			{
-				platform::msg_userinfo_request msg;
-				msg.set_uid(400000 + i);
-				int len = (int)msg.ByteSizeLong();
-				char s[256] = { 0 };
-				bool ret = msg.SerializeToArray(s, len);
-				if (ret)
-				{
-					client->getSession()->sendData(cmd_platform_cs_userinfo, s, len);
-				}
+				client->getSession()->sendData(cmd_platform_cs_userinfo, s.get(), c);
+			}
 
-				return true;
-			});
-		}
-		int ret = client->run(host.c_str(), port);
-	}
+			return true;
+		});
+		
+		int ret = client->run(host, port);
+
+	} while (0);
 }
 
 void GameServer::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)
@@ -71,33 +82,33 @@ void GameServer::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)
 	client->getSession()->sendData(cmd, object, objectSize);
 }
 
-int GameServer::onSocketConnected(SocketSession* session)
+int GameServer::onSocketConnected()
 {
 	return 0;
 }
 
-int GameServer::onSocketDisConnect(SocketSession* session)
+int GameServer::onSocketDisConnect()
 {
 	return 0;
 }
 
-int GameServer::onSocketTimeout(SocketSession* session)
+int GameServer::onSocketTimeout()
 {
 	return 0;
 }
 
-int GameServer::onSocketError(SocketSession* session)
+int GameServer::onSocketError()
 {
 	return 0;
 }
 
-void GameServer::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
+void GameServer::onSocketParse(lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
 {
 	switch (cmd)
 	{
 	case cmd_connected:
 	{
-		printf("cmd_connected: %d\n", session->getSocket());
+		printf("cmd_connected: %d\n", client->getSession()->getSocket());
 	} break;
 	case cmd_game_frame_cs_game_start:
 	case cmd_game_frame_sc_game_end:
@@ -192,12 +203,9 @@ void GameServer::sendSitup()
 	msg::game_msg_situp_request situp;
 	situp.set_uid(1);
 	int c = situp.ByteSizeLong();
-	{
-		char * s = (char*)malloc(c + 1);
-		bool ret = situp.SerializeToArray(s, c);
-		client->getSession()->sendData(cmd_game_frame_cs_sit_up, s, c);
-		free(s);
-	}
+	std::unique_ptr<char[]> s(new char[c + 1]);
+	bool ret = situp.SerializeToArray(s.get(), c);
+	client->getSession()->sendData(cmd_game_frame_cs_sit_up, s.get(), c);
 }
 
 void GameServer::sendSitdown()
@@ -205,10 +213,7 @@ void GameServer::sendSitdown()
 	msg::game_msg_sitdown_request sitdown;
 	sitdown.set_uid(1);
 	int c = sitdown.ByteSizeLong();
-	{
-		char * s = (char*)malloc(c + 1);
-		bool ret = sitdown.SerializeToArray(s, c);
-		client->getSession()->sendData(cmd_game_frame_cs_sit_down, s, c);
-		free(s);
-	}
+	std::unique_ptr<char[]> s(new char[c + 1]);
+	bool ret = sitdown.SerializeToArray(s.get(), c);
+	client->getSession()->sendData(cmd_game_frame_cs_sit_down, s.get(), c);
 }

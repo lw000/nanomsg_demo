@@ -101,7 +101,7 @@
     <ClCompile Include="PlatformServer.cpp" />
     <ClCompile Include="room.cpp" />
     <ClCompile Include="RoomManager.cpp" />
-    <ClCompile Include="UserManager.cpp" />
+    <ClCompile Include="Users.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\base_type.h" />
@@ -115,7 +115,7 @@
     <ClInclude Include="PlatformServer.h" />
     <ClInclude Include="room.h" />
     <ClInclude Include="RoomManager.h" />
-    <ClInclude Include="UserManager.h" />
+    <ClInclude Include="Users.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\protocol\game.proto" />

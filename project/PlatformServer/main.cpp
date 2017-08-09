@@ -33,27 +33,30 @@
 #include "libproperties.h"
 
 #include "lwutil.h"
-#include "UserManager.h"
+#include "Users.h"
 
 #include "..\libcrossLog\FastLog.h"
+#include "NetMessage.h"
 
 using namespace LW;
 
-SocketServer __g_serv;
-UserManager __g_umgr;
 
 std::string __s_center_server_addr;
 std::string __s_center_server_port("19800");
+
+static Users			__g_umgr;
+static EventObject		__g_event;
+static SocketServer		__g_serv(&__g_event, new ServerHandler());
 
 static void _add_user_thread()
 {
 	srand(time(NULL));
 	while (1)
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 50000; i++)
 		{
 			USER_INFO info;
-			info.id = i + rand() + 1000;
+			info.uid = /*rand() + */10000000 + i;
 			__g_umgr.add(info, nullptr);
 		}
 // 		lw_sleep(1);
@@ -64,7 +67,12 @@ static void _remove_user_thread()
 {
 	while (1)
 	{
-		__g_umgr.removeUserTest();
+		for (int i = 0; i < 10000; i++)
+		{
+			int uid = rand() + 10000000;
+			//__g_umgr.removeUserTest();
+			__g_umgr.remove(uid);
+		}
 // 		lw_sleep(1);
 	}
 }
@@ -82,20 +90,21 @@ int main(int argc, char** argv)
 
 	event_enable_debug_mode();
 
-	/*int create_times = 10000000;
-	{
-	clock_t t = clock();
-	for (size_t i = 0; i < create_times; i++)
-	{
-	NetMessage* msg = NetMessage::createNetMessage();
-	if (nullptr != msg)
-	{
-	NetMessage::releaseNetMessage(msg);
-	}
-	}
-	clock_t t1 = clock();
-	printf("NetMessage create[%d] : %f \n", create_times, ((double)t1 - t) / CLOCKS_PER_SEC);
-	}*/	
+// 	int create_times = 10000000;
+// 	{
+// 		clock_t t = clock();
+// 		for (size_t i = 0; i < create_times; i++)
+// 		{
+// 			NetHead head;
+// 			NetMessage* msg = NetMessage::create(&head);
+// 			if (nullptr != msg)
+// 			{
+// 				NetMessage::release(msg);
+// 			}
+// 		}
+// 		clock_t t1 = clock();
+// 		printf("NetMessage create[%d] : %f, %f\n", create_times, ((double)t1 - t) / CLOCKS_PER_SEC, (((double)t1 - t) / CLOCKS_PER_SEC) / create_times);
+// 	}	
 
 	hn_start_fastlog();
 
@@ -107,7 +116,7 @@ int main(int argc, char** argv)
 	do 
 	{
 		std::string config(argv[1]);
-		transform(config.begin(), config.end(), config.begin(), ::tolower);
+		std::transform(config.begin(), config.end(), config.begin(), ::tolower);
 		config = config.substr(config.size() - 4, 4);
 		if (config.compare(".xml") != 0)
 		{
@@ -128,7 +137,7 @@ int main(int argc, char** argv)
 			std::string sport = Pro.getProperty("port", "19901");
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create(new ServerHandler()))
+			if (__g_serv.create())
 			{
 				__g_serv.run(port, [](int what)
 				{
