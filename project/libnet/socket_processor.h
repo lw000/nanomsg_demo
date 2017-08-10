@@ -8,15 +8,14 @@
 
 struct event_base;
 
-class EventObject : public Object
+class SocketProcessor : public Object
 {
 public:
-	EventObject();
-	virtual ~EventObject();
+	SocketProcessor();
+	virtual ~SocketProcessor();
 
 public:
-	bool openClient();
-	bool openServer();
+	bool open(bool enableServer);
 	void close();
 
 public:

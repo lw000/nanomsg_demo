@@ -5,18 +5,17 @@
 #include "object.h"
 #include "socket_hanlder.h"
 
-class ISocketClient;
 class SocketClient;
-class EventObject;
+class SocketProcessor;
 
-class SocketClient : public Object, public ISocketSessionHanlder
+class SocketClient : public Object
 {
 public:
-	SocketClient(EventObject* evObject, ISocketClient* isession);
+	SocketClient();
 	virtual ~SocketClient();
 
 public:
-	bool create();
+	bool create(SocketProcessor* processor, ISocketSessionHanlder* isession);
 	void destroy();
 
 public:
@@ -28,22 +27,12 @@ public:
 public:
 	virtual std::string debug() override;
 
-protected:
-	virtual int onSocketConnected(SocketSession* session) override;
-	virtual int onSocketDisConnect(SocketSession* session) override;
-	virtual int onSocketTimeout(SocketSession* session) override;
-	virtual int onSocketError(SocketSession* session) override;
-
-protected:
-	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, char* buf, lw_int32 bufsize) override;
-
 private:
 	void __run();
 
 private:
-	EventObject* _evObject;
+	SocketProcessor* _processor;
 	SocketSession* _session;
-	ISocketClient* _isession;
 };
 
 #endif // !__SocketClient_H__

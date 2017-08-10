@@ -12,7 +12,7 @@
 #include <unordered_map>
 
 class SocketSession;
-class EventObject;
+class SocketProcessor;
 
 typedef std::function<bool(char* buf, lw_int32 bufsize)> SocketCallback;
 
@@ -28,14 +28,15 @@ class SocketSession : public Object, public ISocketSessionHanlder
 	friend class CoreSocket;
 
 public:
-	SocketSession();
+	SocketSession(ISocketSessionHanlder* isession);
 	virtual ~SocketSession();
 
 public:
 	evutil_socket_t getSocket();
 
 public:
-	int create(SESSION_TYPE c, EventObject* base, evutil_socket_t fd, short event, ISocketSessionHanlder* isession);
+	int create(SESSION_TYPE c, SocketProcessor* base, evutil_socket_t fd, short event);
+	int create(SESSION_TYPE c, SocketProcessor* base, evutil_socket_t fd, short event, ISocketSessionHanlder* isession);
 	void destroy();
 
 public:

@@ -11,7 +11,7 @@
 
 #include <thread>
 
-#include "event_object.h"
+#include "socket_processor.h"
 
 struct TIMER_ITEM
 {
@@ -105,7 +105,7 @@ public:
 	virtual ~TimerWin32();
 
 public:
-	virtual int create(EventObject* base = nullptr) override;
+	virtual int create(SocketProcessor* base = nullptr) override;
 	virtual void destroy() override;
 
 public:
@@ -149,7 +149,7 @@ TimerWin32::~TimerWin32()
 	UINT r = ::timeEndPeriod(10);
 }
 
-int TimerWin32::create(EventObject* base)
+int TimerWin32::create(SocketProcessor* base)
 {
 	return true;
 }
@@ -260,7 +260,7 @@ public:
 	virtual ~TimerLinux();
 
 public:
-	virtual int create(EventObject* base = nullptr) override;
+	virtual int create(SocketProcessor* processor = nullptr) override;
 	virtual void destroy() override;
 
 public:
@@ -272,14 +272,14 @@ protected:
 	virtual void _timer_cb(TIMER_ITEM* timer) override;
 
 private:
-	EventObject* _base;
+	SocketProcessor* _processor;
 	TIMERS _timers;
 	TIMER_CALLBACK _on_timer;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-TimerLinux::TimerLinux() : _base(nullptr)
+TimerLinux::TimerLinux() : _processor(nullptr)
 {
 
 }
@@ -289,9 +289,9 @@ TimerLinux::~TimerLinux()
 
 }
 
-int TimerLinux::create(EventObject* base)
+int TimerLinux::create(SocketProcessor* processor)
 {
-	this->_base = base;
+	this->_processor = processor;
 
 	return true;
 }
@@ -338,7 +338,7 @@ int TimerLinux::start(int tid, int tms, TIMER_CALLBACK func)
 	//r = event_assign(ptimer->ev, this->_base, -1, 0, TimerCore::__timer_cb__, ptimer);
 
 	/* 定时器只执行无限次执行*/
-	r = event_assign(ptimer->ev, this->_base->getBase(), -1, EV_PERSIST, TimerCore::__timer_cb__, ptimer);
+	r = event_assign(ptimer->ev, this->_processor->getBase(), -1, EV_PERSIST, TimerCore::__timer_cb__, ptimer);
 
 	struct timeval tv;
 	evutil_timerclear(&tv);
@@ -409,9 +409,9 @@ Timer::~Timer()
 	
 }
 
-int Timer::create(EventObject* base)
+int Timer::create(SocketProcessor* processor)
 {
-	return _timer->create(base);
+	return _timer->create(processor);
 }
 
 void Timer::destroy()

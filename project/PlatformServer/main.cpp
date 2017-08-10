@@ -36,7 +36,10 @@
 #include "Users.h"
 
 #include "..\libcrossLog\FastLog.h"
+
 #include "NetMessage.h"
+#include "socket_core.h"
+#include "socket_processor.h"
 
 using namespace LW;
 
@@ -45,8 +48,8 @@ std::string __s_center_server_addr;
 std::string __s_center_server_port("19800");
 
 static Users			__g_umgr;
-static EventObject		__g_event;
-static SocketServer		__g_serv(&__g_event, new ServerHandler());
+static SocketProcessor	__g_processor;
+static SocketServer		__g_serv;
 
 static void _add_user_thread()
 {
@@ -82,13 +85,6 @@ int main(int argc, char** argv)
 	if (argc < 2) return 0;
 
 	lw_socket_init();
-
-	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
-#ifdef WIN32
-	evthread_use_windows_threads();
-#endif
-
-	event_enable_debug_mode();
 
 // 	int create_times = 10000000;
 // 	{
@@ -137,7 +133,7 @@ int main(int argc, char** argv)
 			std::string sport = Pro.getProperty("port", "19901");
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create())
+			if (__g_serv.create(&__g_processor, new ServerHandler()))
 			{
 				__g_serv.run(port, [](int what)
 				{

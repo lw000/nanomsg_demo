@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CacheQueue.cpp" />
-    <ClCompile Include="event_object.cpp" />
+    <ClCompile Include="socket_processor.cpp" />
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="NetHead.cpp" />
     <ClCompile Include="NetMessage.cpp" />
@@ -34,7 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CacheQueue.h" />
-    <ClInclude Include="event_object.h" />
+    <ClInclude Include="socket_processor.h" />
     <ClInclude Include="http_server.h" />
     <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="net.h" />

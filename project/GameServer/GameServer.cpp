@@ -1,6 +1,6 @@
 #include "GameServer.h"
 
-#include "event_object.h"
+#include "socket_processor.h"
 #include "socket_session.h"
 #include "socket_client.h"
 #include "socket_timer.h"
@@ -15,9 +15,9 @@ using namespace LW;
 
 GameServer::GameServer(IGameServer* idesk) : iDesk(idesk)
 {
-	_evObject = new EventObject;
+	_processor = new SocketProcessor;
 	timer = new Timer();
-	client = new SocketClient(_evObject, this);
+	client = new SocketClient();
 }
 
 GameServer::~GameServer()
@@ -41,9 +41,18 @@ bool GameServer::create(const DESK_INFO& info)
 {
 	this->_desk_info = info;
 
-	timer->create(_evObject);
-	
-	return true;
+	bool ret = false;
+	do 
+	{
+		if (!client->create(_processor, this)) break;
+
+		timer->create(_processor);
+
+		ret = true;
+
+	} while (0);
+
+	return ret;
 }
 
 void GameServer::destroy()
@@ -56,7 +65,6 @@ void GameServer::start(const std::string& host, int port)
 {
 	do 
 	{
-		if (!client->create()) break;
 		timer->start(100, 1000, [this](int tid, unsigned int tms) -> bool
 		{
 			platform::msg_userinfo_request msg;
@@ -82,27 +90,27 @@ void GameServer::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)
 	client->getSession()->sendData(cmd, object, objectSize);
 }
 
-int GameServer::onSocketConnected()
+int GameServer::onSocketConnected(SocketSession* session)
 {
 	return 0;
 }
 
-int GameServer::onSocketDisConnect()
+int GameServer::onSocketDisConnect(SocketSession* session)
 {
 	return 0;
 }
 
-int GameServer::onSocketTimeout()
+int GameServer::onSocketTimeout(SocketSession* session)
 {
 	return 0;
 }
 
-int GameServer::onSocketError()
+int GameServer::onSocketError(SocketSession* session)
 {
 	return 0;
 }
 
-void GameServer::onSocketParse(lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
+void GameServer::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize)
 {
 	switch (cmd)
 	{

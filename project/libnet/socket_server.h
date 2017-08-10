@@ -5,27 +5,25 @@
 #include <list>
 #include <unordered_map>
 #include <event2/util.h>
+#include "object.h"
 
-#include "socket_core.h"
-#include "event_object.h"
 #include "socket_hanlder.h"
 
 #include <functional>
 
-class SocketSession;
 class Timer;
+class SocketSession;
+class SocketProcessor;
 struct evconnlistener;
-
-typedef void(*LW_SERVER_START_COMPLETE)(lw_int32 what);
 
 class SocketServer : public Object
 {
 public:
-	SocketServer(EventObject* evObject, ISocketServerHandler* isession);
+	SocketServer();
 	virtual ~SocketServer();
 
 public:
-	bool create();
+	bool create(SocketProcessor* processor, ISocketServerHandler* isession);
 	void destroy();
 
 public:
@@ -48,7 +46,7 @@ private:
 	void __run();
 
 private:
-	EventObject* _evObject;
+	SocketProcessor* _processor;
 	lw_int32 _port;
 	Timer* _timer;
 

@@ -26,19 +26,19 @@
 
 #include "FileUtils.h"
 
+#include "socket_core.h"
 #include "socket_timer.h"
+#include "socket_processor.h"
 
 extern "C"
 {
-#include "ext/md5.h"
+	#include "ext/md5.h"
 }
 
 #include "..\libcrossLog\log4z.h"
 #include "libcrossLog/FastLog.h"
 
-
 using namespace LW;
-
 
 void xxtea_test(char* s)
 {
@@ -113,10 +113,13 @@ int md5_test()
 	return 0;
 }
 
-static Timer		__g_timer;
-static EventObject	__g_event;
-static SocketServer	__g_serv(&__g_event, new ServerHandler());
+static Timer			__g_timer;
+static SocketProcessor	__g_processor;
 
+static Timer			__g_timer1;
+static SocketProcessor	__g_processor1;
+
+static SocketServer		__g_serv;
 
 int main(int argc, char** argv)
 {
@@ -129,10 +132,6 @@ int main(int argc, char** argv)
 // 	base64_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
 // 	xxtea_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
-#ifdef WIN32
-	evthread_use_windows_threads();
-#endif
 
 	hn_start_fastlog();
 
@@ -153,7 +152,7 @@ int main(int argc, char** argv)
 
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create())
+			if (__g_serv.create(&__g_processor, new ServerHandler()))
 			{
 				__g_serv.run(port, [](int what) {
 					char s[512];
@@ -162,33 +161,65 @@ int main(int argc, char** argv)
 				});
 			}
 
-			__g_timer.create(&__g_event);
-			int exec_times = 10000;
-			for (int i = 1; i < exec_times; i++)
 			{
-				__g_timer.start(i, 1000, [](int tid, unsigned int tms) -> bool
+				__g_timer.create(&__g_processor);
+				int exec_times = 1000;
+				for (int i = 1; i < exec_times; i++)
 				{
-					char s[512];
-					sprintf(s, "tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
-
-					if (tid > 15)
+					__g_timer.start(i, 1000, [](int tid, unsigned int tms) -> bool
 					{
-						LOGD(s);
-					}
+						char s[512];
+						sprintf(s, "timer tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
 
-					return true;
-				});
+						if (tid > 15)
+						{
+							LOGD(s);
+						}
+
+						return true;
+					});
+				}
+
+				{
+					char c = getchar();
+				}
+
+				for (int i = 1; i < exec_times; i++)
+				{
+					__g_timer.kill(i);
+				}
+
 			}
 
 			{
-				char c = getchar();
-			}
+				__g_timer1.create(&__g_processor1);
+				int exec_times = 1000;
+				for (int i = 1; i < exec_times; i++)
+				{
+					__g_timer1.start(i, 1000, [](int tid, unsigned int tms) -> bool
+					{
+						char s[512];
+						sprintf(s, "timer1 tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
 
-			for (int i = 1; i < exec_times; i++)
-			{
-				__g_timer.kill(i);
-			}
+						if (tid > 15)
+						{
+							LOGD(s);
+						}
 
+						return true;
+					});
+				}
+
+				{
+					char c = getchar();
+				}
+
+				for (int i = 1; i < exec_times; i++)
+				{
+					__g_timer1.kill(i);
+				}
+			}
+			
 			{
 				char c = getchar();
 			}

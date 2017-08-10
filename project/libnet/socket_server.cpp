@@ -22,6 +22,8 @@
 #include "common_marco.h"
 #include "socket_session.h"
 #include "socket_timer.h"
+#include "socket_core.h"
+#include "socket_processor.h"
 
 static void __listener_cb(struct evconnlistener *, evutil_socket_t, struct sockaddr *, int, void *);
 static void __listener_error_cb(struct evconnlistener *, void *);
@@ -38,11 +40,9 @@ static void __listener_error_cb(struct evconnlistener * listener, void * userdat
 	server->listener_error_cb(listener);
 }
 
-SocketServer::SocketServer(EventObject* evObject, ISocketServerHandler* isession) : _onFunc(nullptr)
+SocketServer::SocketServer() : _onFunc(nullptr)
 {
 	this->_timer = new Timer();
-	_evObject = evObject;
-	this->iserver = isession;
 }
 
 SocketServer::~SocketServer()
@@ -54,12 +54,15 @@ SocketServer::~SocketServer()
 	}
 }
 
-bool SocketServer::create()
+bool SocketServer::create(SocketProcessor* processor, ISocketServerHandler* isession)
 {
-	bool r = _evObject->openServer();
+	this->_processor = processor;
+	this->iserver = isession;
+
+	bool r = _processor->open(true);
 	if (r)
 	{
-		this->_timer->create(_evObject);
+		this->_timer->create(_processor);
 	}
 	return r;
 }
@@ -71,7 +74,7 @@ void SocketServer::destroy()
 		_timer->destroy();
 	}
 
-	_evObject->close();
+	_processor->close();
 }
 
 std::string SocketServer::debug()
@@ -83,8 +86,8 @@ void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t 
 {
 	//struct event_base *base = evconnlistener_get_base(listener);
 
-	SocketSession* pSession = new SocketSession();
-	int r = pSession->create(SESSION_TYPE::Server, _evObject, fd, EV_READ | EV_WRITE, this->iserver);
+	SocketSession* pSession = new SocketSession(this->iserver);
+	int r = pSession->create(SESSION_TYPE::Server, _processor, fd, EV_READ | EV_WRITE);
 	if (r == 0)
 	{
 		char hostBuf[NI_MAXHOST];
@@ -99,7 +102,7 @@ void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t 
 	else
 	{
 		delete pSession;
-		_evObject->loopbreak();
+		_processor->loopbreak();
 		fprintf(stderr, "error constructing SocketSession!");
 	}
 }
@@ -112,7 +115,7 @@ void SocketServer::listener_error_cb(struct evconnlistener * listener)
 
 	printf("got an error %d (%s) on the listener. shutting down.\n", err, evutil_socket_error_to_string(err));
 
-	_evObject->loopexit();
+	_processor->loopexit();
 }
 
 lw_int32 SocketServer::run(u_short port, std::function<void(lw_int32 what)> func)
@@ -136,7 +139,7 @@ struct evconnlistener * SocketServer::__createConnListener(int port)
 	sin.sin_addr.s_addr = htonl(0);	//绑定0.0.0.0地址
 	sin.sin_port = htons(port);
 	//inet_pton(AF_INET, "127.0.0.1", &sin.sin_addr.s_addr);
-	listener = evconnlistener_new_bind(_evObject->getBase(), ::__listener_cb, this,
+	listener = evconnlistener_new_bind(_processor->getBase(), ::__listener_cb, this,
 		LEV_OPT_REUSEABLE | LEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE, -1, (struct sockaddr*)&sin, sizeof(sin));
 	return listener;
 }
@@ -161,7 +164,7 @@ void SocketServer::__run()
 			});
 		}
 
-		int r = _evObject->dispatch();
+		int r = _processor->dispatch();
 
 		if (listener != nullptr)
 		{

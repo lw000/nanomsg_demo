@@ -44,7 +44,7 @@ SocketSession* SessionManager::add(const SocketSession* session)
 			}
 		}
 
-		if (pSession == NULL)
+		if (pSession == nullptr)
 		{
 			{
 				// 缓存中取出对象
@@ -57,7 +57,7 @@ SocketSession* SessionManager::add(const SocketSession* session)
 
 			if (pSession == NULL)
 			{
-				pSession = new SocketSession();
+				pSession = new SocketSession(nullptr);
 			}
 
 			*pSession = *session;

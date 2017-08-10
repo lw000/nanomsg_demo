@@ -19,14 +19,14 @@
 #include "command.h"
 #include "platform.pb.h"
 
-#include "event_object.h"
+#include "socket_processor.h"
 #include "socket_client.h"
 #include "socket_session.h"
 #include "socket_timer.h"
 
 using namespace LW;
 
-class ClientHandler : public ISocketClient
+class ClientHandler : public ISocketSessionHanlder
 {
 public:
 	ClientHandler()
@@ -38,28 +38,28 @@ public:
 	}
 
 public:
-	virtual int onSocketConnected() override
+	virtual int onSocketConnected(SocketSession* session) override
 	{
 		return 0;
 	}
 
-	virtual int onSocketDisConnect() override
+	virtual int onSocketDisConnect(SocketSession* session) override
 	{
 		return 0;
 	}
 
-	virtual int onSocketTimeout() override
+	virtual int onSocketTimeout(SocketSession* session) override
 	{
 		return 0;
 	}
 
-	virtual int onSocketError() override
+	virtual int onSocketError(SocketSession* session) override
 	{
 		return 0;
 	}
 
 public:
-	virtual void onSocketParse(lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override
+	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override
 	{
 		switch (cmd)
 		{
@@ -84,16 +84,16 @@ public:
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+static SocketProcessor __g_processor;
+static SocketClient __g_client;
 static Timer __g_timer;
-static EventObject __g_event;
-static SocketClient __g_client(&__g_event, new ClientHandler());
 
 int __connect_center_server(const lw_char8* addr, const lw_char8* sport)
 {
 	lw_short16 port = std::atoi(sport);
-	if (__g_client.create())
+	if (__g_client.create(&__g_processor, new ClientHandler()))
 	{
-		__g_timer.create(&__g_event);
+		__g_timer.create(&__g_processor);
 		__g_timer.start(100, 2000, [](int tid, unsigned int tms) -> bool
 		{
 			platform::msg_heartbeat msg;

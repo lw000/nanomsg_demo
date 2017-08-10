@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <functional>
 
-class EventObject;
+class SocketProcessor;
 
 struct TIMER_ITEM;
 
@@ -25,7 +25,7 @@ public:
 	virtual ~ITimer() {}
 
 public:
-	virtual int create(EventObject* base = nullptr) = 0;
+	virtual int create(SocketProcessor* processor = nullptr) = 0;
 	virtual void destroy() = 0;
 
 public:
@@ -44,7 +44,7 @@ public:
 	virtual ~Timer();
 
 public:
-	int create(EventObject* base = nullptr);
+	int create(SocketProcessor* processor = nullptr);
 	void destroy();
 
 public:

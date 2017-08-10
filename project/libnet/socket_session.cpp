@@ -9,7 +9,7 @@
 #include <event2/buffer.h>
 #include <event2/util.h>
 
-#include "event_object.h"
+#include "socket_processor.h"
 
 class CoreSocket
 {
@@ -40,9 +40,13 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SocketSession::SocketSession()
+SocketSession::SocketSession(ISocketSessionHanlder* isession) : _isession(isession)
 {
-	this->reset();
+	this->_connected = false;
+	this->_bev = nullptr;
+	this->_host.clear();
+	this->_port = -1;
+	this->_c = SESSION_TYPE::NONE;
 }
 
 SocketSession::~SocketSession()
@@ -50,9 +54,8 @@ SocketSession::~SocketSession()
 	this->reset();
 }
 
-int SocketSession::create(SESSION_TYPE c, EventObject* base, evutil_socket_t fd, short event, ISocketSessionHanlder* isession)
+int SocketSession::create(SESSION_TYPE c, SocketProcessor* base, evutil_socket_t fd, short event)
 {
-	this->_isession = isession;
 	this->_c = c;
 
 	switch (this->_c)
