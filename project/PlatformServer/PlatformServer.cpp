@@ -8,6 +8,8 @@
 #include "Users.h"
 #include <memory>
 
+#include <iostream>
+
 using namespace LW;
 
 ServerHandler::ServerHandler()
@@ -44,7 +46,7 @@ void ServerHandler::onListener(SocketSession* session)
 		delete s;
 	}
 
-	printf("join ([%d] host: %s, port:%d)\n", session->getSocket(), session->getHost().c_str(), session->getPort());
+	std::cout << *session << std::endl;
 }
 
 int ServerHandler::onSocketConnected(SocketSession* session)
@@ -76,20 +78,20 @@ void ServerHandler::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8
 	{
 	case cmd_connected:
 	{
-		printf("cmd_connected: %d\n", session->getSocket());
+		printf("connected: %d\n", session->getSocket());
 	} break;
 	case cmd_heart_beat:
 	{
 		platform::msg_heartbeat msg;
 		lw_llong64 t = time(NULL);
 		msg.set_time(t);
-		int len = msg.ByteSize();
+		int c = msg.ByteSize();
 		{
-			std::unique_ptr<char[]> s(new char[len + 1]);
-			bool ret = msg.SerializeToArray(s.get(), len);
+			std::unique_ptr<char[]> s(new char[c + 1]);
+			bool ret = msg.SerializeToArray(s.get(), c);
 			if (ret)
 			{
-				session->sendData(cmd_heart_beat, s.get(), len);
+				session->sendData(cmd_heart_beat, s.get(), c);
 			}
 		}
 	} break;

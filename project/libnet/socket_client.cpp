@@ -25,13 +25,13 @@ SocketClient::~SocketClient()
 	this->_session = nullptr;
 }
 
-bool SocketClient::create(SocketProcessor* processor, ISocketSessionHanlder* isession)
-{	
+bool SocketClient::create(SocketProcessor* processor, ISocketSessionHanlder* handler)
+{													  
 	this->_processor = processor;
-	bool r = _processor->open(false);
+	bool r = this->_processor->create(false);
 	if (r)
 	{
-		this->_session = new SocketSession(isession);
+		this->_session = new SocketSession(handler);
 		return true;
 	}
 
@@ -45,12 +45,17 @@ void SocketClient::destroy()
 		this->_session->destroy();
 	}
 
-	this->_processor->close();
+	if (this->_processor != nullptr)
+	{
+		this->_processor->destroy();
+	}
 }
 
 std::string SocketClient::debug()
 {
-	return std::string("SocketClient");
+	char buf[512];
+	sprintf(buf, "%s", _session->debug());
+	return std::string(buf);
 }
 
 int SocketClient::run(const std::string& addr, int port)

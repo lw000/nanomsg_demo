@@ -116,7 +116,7 @@ void GameServer::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* b
 	{
 	case cmd_connected:
 	{
-		printf("cmd_connected: %d\n", client->getSession()->getSocket());
+		printf("connected  [port:%d]\n", client->getSession()->getSocket());
 	} break;
 	case cmd_game_frame_cs_game_start:
 	case cmd_game_frame_sc_game_end:
@@ -196,8 +196,8 @@ int GameServer::onGameMessage(int cmd, void* data, int datasize)
 		platform::msg_userinfo_reponse userinfo;
 		userinfo.ParseFromArray(data, datasize);
 
-		//printf("userid: %d age:%d sex:%d name:%s address:%s\n", userinfo.uid(),
-		//	userinfo.age(), userinfo.sex(), userinfo.name().c_str(), userinfo.address().c_str());
+		printf("userid: %d age:%d sex:%d name:%s address:%s\n", userinfo.uid(),
+			userinfo.age(), userinfo.sex(), userinfo.name().c_str(), userinfo.address().c_str());
 	}break;
 	default:
 		break;

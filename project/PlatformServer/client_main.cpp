@@ -63,6 +63,13 @@ public:
 	{
 		switch (cmd)
 		{
+		case cmd_connected:
+		{
+			platform::msg_connected msg;
+			msg.ParseFromArray(buf, bufsize);
+			printf("connected. [time : %d]\n", msg.time());
+
+		} break;
 		case cmd_heart_beat:
 		{
 			platform::msg_heartbeat msg;
@@ -99,18 +106,20 @@ int __connect_center_server(const lw_char8* addr, const lw_char8* sport)
 			platform::msg_heartbeat msg;
 			msg.set_time(time(NULL));
 			lw_int32 c = (lw_int32)msg.ByteSizeLong();
-			std::unique_ptr<char[]> s(new char[c + 1]());
+			std::unique_ptr<char[]> s(new char[c + 1]()); 
 			lw_bool ret = msg.SerializeToArray(s.get(), c);
 			if (ret)
 			{
-				__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c, cmd_heart_beat, [](lw_char8* buf, lw_int32 bufsize) -> bool
-				{
-					platform::msg_heartbeat msg;
-					msg.ParseFromArray(buf, bufsize);
-					printf("heartBeat[%d]\n", msg.time());
+// 				__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c, cmd_heart_beat, [](lw_char8* buf, lw_int32 bufsize) -> bool
+// 				{
+// 					platform::msg_heartbeat msg;
+// 					msg.ParseFromArray(buf, bufsize);
+// 					printf("heartBeat[%d]\n", msg.time());
+// 
+// 					return false;
+// 				});
 
-					return false;
-				});
+				__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c);
 			}
 			return true;
 		});

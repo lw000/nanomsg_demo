@@ -27,6 +27,7 @@
 #include "client_http.h"
 
 #include "GameServer.h"
+#include "socket_core.h"
 
 using namespace LW;
 

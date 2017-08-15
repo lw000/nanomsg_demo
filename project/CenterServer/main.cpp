@@ -113,13 +113,91 @@ int md5_test()
 	return 0;
 }
 
-static Timer			__g_timer;
-static SocketProcessor	__g_processor;
-
 static Timer			__g_timer1;
 static SocketProcessor	__g_processor1;
 
+static Timer			__g_timer2;
+static SocketProcessor	__g_processor2;
+
 static SocketServer		__g_serv;
+static SocketProcessor	__g_processor;
+
+static void start_cb(lw_int32 what)
+{
+	char s[512];
+	sprintf(s, "中心服务器服务启动完成 [port: %d]", __g_serv.getPort());
+	LOGD(s);
+}
+
+static void test1()
+{
+	int exec_times = 1000;
+	
+	__g_processor1.create(true);
+
+	__g_timer1.create(&__g_processor1);
+	for (int i = 1; i < exec_times; i++)
+	{
+		__g_timer1.start(i, 1000, [](int tid, unsigned int tms) -> bool
+		{
+			char s[512];
+			sprintf(s, "timer tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
+			LOGD(s);
+
+			return true;
+		});
+	}
+
+	__g_timer2.create(&__g_processor1);
+	for (int i = 1; i < exec_times; i++)
+	{
+		__g_timer2.start(i, 1000, [](int tid, unsigned int tms) -> bool
+		{
+			char s[512];
+			sprintf(s, "timer tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
+			LOGD(s);
+
+			return true;
+		});
+	}
+
+	__g_processor1.dispatch();
+
+	__g_processor1.destroy();
+
+	//for (int i = 1; i < exec_times; i++)
+	//{
+	//	__g_timer1.kill(i);
+	//}
+}
+
+static void test2()
+{
+	int exec_times = 1000;
+	__g_processor2.create(true);
+
+	__g_timer2.create(&__g_processor2);
+	for (int i = 1; i < exec_times; i++)
+	{
+		__g_timer2.start(i, 1000, [](int tid, unsigned int tms) -> bool
+		{
+			char s[512];
+			sprintf(s, "timer1 tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
+			LOGD(s);
+
+			return true;
+		});
+	}
+
+	__g_processor2.dispatch();
+
+	//for (int i = 1; i < exec_times; i++)
+	//{
+	//	__g_timer2.kill(i);
+	//}
+
+	__g_processor2.destroy();
+}
 
 int main(int argc, char** argv)
 {
@@ -132,6 +210,12 @@ int main(int argc, char** argv)
 // 	base64_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
 // 	xxtea_test("aaaaaaaaaaaaaaaaaaaaaaaaaa");
 
+
+	SocketProcessor::processorUseThreads();
+
+	std::cout << __g_processor << std::endl;
+	std::cout << __g_processor1 << std::endl;
+	std::cout << __g_processor2 << std::endl;
 
 	hn_start_fastlog();
 
@@ -154,82 +238,20 @@ int main(int argc, char** argv)
 
 			if (__g_serv.create(&__g_processor, new ServerHandler()))
 			{
-				__g_serv.run(port, [](int what) {
-					char s[512];
-					sprintf(s, "中心服务器服务启动完成 [%d]", __g_serv.getPort());
-					LOGD(s);
-				});
+				__g_serv.run(port, start_cb);
 			}
 
-			{
-				__g_timer.create(&__g_processor);
-				int exec_times = 1000;
-				for (int i = 1; i < exec_times; i++)
-				{
-					__g_timer.start(i, 1000, [](int tid, unsigned int tms) -> bool
-					{
-						char s[512];
-						sprintf(s, "timer tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
-
-						if (tid > 15)
-						{
-							LOGD(s);
-						}
-
-						return true;
-					});
-				}
-
-				{
-					char c = getchar();
-				}
-
-				for (int i = 1; i < exec_times; i++)
-				{
-					__g_timer.kill(i);
-				}
-
-			}
-
-			{
-				__g_timer1.create(&__g_processor1);
-				int exec_times = 1000;
-				for (int i = 1; i < exec_times; i++)
-				{
-					__g_timer1.start(i, 1000, [](int tid, unsigned int tms) -> bool
-					{
-						char s[512];
-						sprintf(s, "timer1 tid = [%d], time = [%f]", tid, double(tms) / 1000.0);
-
-						if (tid > 15)
-						{
-							LOGD(s);
-						}
-
-						return true;
-					});
-				}
-
-				{
-					char c = getchar();
-				}
-
-				for (int i = 1; i < exec_times; i++)
-				{
-					__g_timer1.kill(i);
-				}
-			}
-			
-			{
-				char c = getchar();
-			}
-
-			while (1) { lw_sleep(1); }
+			//std::thread a(test1);
+			//std::thread b(test2);
+			//a.detach();
+			//b.detach();
 		}
 		else
 		{
 			std::cout << "falue" << std::endl;
 		}
+
+		while (1) { lw_sleep(1); }
 
 	} while (0);
 

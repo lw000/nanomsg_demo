@@ -9,38 +9,39 @@
 #include <event2/buffer.h>
 #include <event2/util.h>
 
+#include "socket_core.h"
 #include "socket_processor.h"
 
 class CoreSocket
 {
 public:
-	static void __read_cb(struct bufferevent* bev, void* arg)
+	static void __read_cb(struct bufferevent* bev, void* userdata)
 	{
-		SocketSession *session = (SocketSession*)arg;
+		SocketSession *session = (SocketSession*)userdata;
 		session->onRead();
 	}
 
-	static void __write_cb(struct bufferevent *bev, void *arg)
+	static void __write_cb(struct bufferevent *bev, void *userdata)
 	{
-		SocketSession * session = (SocketSession*)arg;
+		SocketSession * session = (SocketSession*)userdata;
 		session->onWrite();
 	}
 
-	static void __event_cb(struct bufferevent *bev, short event, void *arg)
+	static void __event_cb(struct bufferevent *bev, short event, void *userdata)
 	{
-		SocketSession *session = (SocketSession*)arg;
+		SocketSession *session = (SocketSession*)userdata;
 		session->onEvent(event);
 	}
 
 	static void __on_parse_cb(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
 	{
 		SocketSession *session = (SocketSession *)userdata;
-		session->onSocketParse(session, cmd, buf, bufsize);
+		session->onParse(cmd, buf, bufsize);
 	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SocketSession::SocketSession(ISocketSessionHanlder* isession) : _isession(isession)
+SocketSession::SocketSession(ISocketSessionHanlder* handler) : _handler(handler)
 {
 	this->_connected = false;
 	this->_bev = nullptr;
@@ -54,7 +55,7 @@ SocketSession::~SocketSession()
 	this->reset();
 }
 
-int SocketSession::create(SESSION_TYPE c, SocketProcessor* base, evutil_socket_t fd, short event)
+int SocketSession::create(SESSION_TYPE c, SocketProcessor* processor, evutil_socket_t fd, short ev)
 {
 	this->_c = c;
 
@@ -62,10 +63,10 @@ int SocketSession::create(SESSION_TYPE c, SocketProcessor* base, evutil_socket_t
 	{
 	case SESSION_TYPE::Server:
 	{
-		this->_bev = bufferevent_socket_new(base->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
+		this->_bev = bufferevent_socket_new(processor->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
 		bufferevent_setcb(this->_bev, CoreSocket::__read_cb, CoreSocket::__write_cb, CoreSocket::__event_cb, this);
-		bufferevent_enable(this->_bev, EV_READ | EV_WRITE);
-		_connected = true;
+		bufferevent_enable(this->_bev, ev);
+		this->_connected = true;
 	} break;
 	case SESSION_TYPE::Client:
 	{
@@ -75,13 +76,19 @@ int SocketSession::create(SESSION_TYPE c, SocketProcessor* base, evutil_socket_t
 		saddr.sin_addr.s_addr = inet_addr(this->_host.c_str());
 		saddr.sin_port = htons(this->_port);
 
-		this->_bev = bufferevent_socket_new(base->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
+		this->_bev = bufferevent_socket_new(processor->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
 		int con = bufferevent_socket_connect(this->_bev, (struct sockaddr *)&saddr, sizeof(saddr));
 		if (con >= 0)
 		{
 			bufferevent_setcb(this->_bev, CoreSocket::__read_cb, NULL, CoreSocket::__event_cb, this);
-			bufferevent_enable(this->_bev, event);
-			this->_connected = true;
+			
+// 			struct timeval timeout_read;
+// 			evutil_timerclear(&timeout_read);
+// 			timeout_read.tv_sec = 1;
+// 			timeout_read.tv_usec = 0;
+// 			bufferevent_set_timeouts(this->_bev, &timeout_read, NULL);
+
+			bufferevent_enable(this->_bev, ev);
 		}
 		else
 		{
@@ -104,10 +111,25 @@ void SocketSession::reset()
 {
 	this->_connected = false;
 	this->_bev = nullptr;
-	this->_isession = nullptr;
+	this->_handler = nullptr;
 	this->_host.clear();
 	this->_port = -1;
 	this->_c = SESSION_TYPE::NONE;
+}
+
+void SocketSession::setConnTimeout(int s)
+{
+
+}
+
+void SocketSession::setRecvTimeout(int s)
+{
+
+}
+
+void SocketSession::setSendTimeout(int s)
+{
+
 }
 
 void SocketSession::setHost(const std::string& host)
@@ -139,6 +161,13 @@ evutil_socket_t SocketSession::getSocket()
 { 
 	evutil_socket_t fd = bufferevent_getfd(this->_bev);
 	return fd;
+}
+
+std::string SocketSession::debug()
+{
+	char buf[512];
+	sprintf(buf, "(fd: [%d] ip: %s, port: %d)", this->getSocket(), this->_host.c_str(), this->_port);
+	return std::string(buf);
 }
 
 lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)
@@ -202,36 +231,14 @@ void SocketSession::onRead()
 	}
 }
 
-int SocketSession::onSocketConnected(SocketSession* session)
-{
-	this->_connected = true;
-	this->_isession->onSocketConnected(this);
-	return 0;
-}
-
-int SocketSession::onSocketDisConnect(SocketSession* session)
-{
-	this->_isession->onSocketDisConnect(this);
-	return 0;
-}
-
-int SocketSession::onSocketTimeout(SocketSession* session)
-{
-	this->_isession->onSocketTimeout(this);
-	return 0;
-}
-
-int SocketSession::onSocketError(SocketSession* session)
-{
-	this->_isession->onSocketError(this);
-	return 0;
-}
-
-void SocketSession::onSocketParse(SocketSession* session, lw_int32 cmd, char* buf, lw_int32 bufsize)
+void SocketSession::onParse(lw_int32 cmd, char* buf, lw_int32 bufsize)
 {
 	SocketCallback cb = nullptr;
 	{
-		cb = this->_cmd_event_map[cmd];
+		if (!_cmd_event_map.empty())
+		{
+			cb = this->_cmd_event_map.at(cmd);
+		}
 	}
 	
 	bool goon = true;
@@ -242,7 +249,7 @@ void SocketSession::onSocketParse(SocketSession* session, lw_int32 cmd, char* bu
 
 	if (goon)
 	{
-		this->_isession->onSocketParse(this, cmd, buf, bufsize);
+		this->_handler->onSocketParse(this, cmd, buf, bufsize);
 	}
 }
 
@@ -250,30 +257,30 @@ void SocketSession::onEvent(short ev)
 {
 	if (ev & BEV_EVENT_CONNECTED)
 	{
-		_connected = true;
-		this->_isession->onSocketConnected(this);
+		this->_connected = true;
+		this->_handler->onSocketConnected(this);
 		return;
 	}
 
 	if (ev & BEV_EVENT_READING)
 	{
-		this->onSocketError(this);
+		this->_handler->onSocketError(this);
 	}
 	else if (ev & BEV_EVENT_WRITING)
 	{
-		this->onSocketError(this);
+		this->_handler->onSocketError(this);
 	}
 	else if (ev & BEV_EVENT_EOF)
 	{
-		this->onSocketDisConnect(this);
+		this->_handler->onSocketDisConnect(this);
 	}
 	else if (ev & BEV_EVENT_TIMEOUT)
 	{
-		this->onSocketTimeout(this);
+		this->_handler->onSocketTimeout(this);
 	}
 	else if (ev & BEV_EVENT_ERROR)
 	{
-		this->onSocketError(this);
+		this->_handler->onSocketError(this);
 	}
 
 	this->_connected = false;

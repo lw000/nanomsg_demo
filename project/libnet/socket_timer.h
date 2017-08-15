@@ -52,6 +52,9 @@ public:
 	int start_once(int tid, int tms, TIMER_CALLBACK func);
 	void kill(int tid);
 
+public:
+	std::string debug() override;
+
 private:
 	ITimer* _timer;
 };

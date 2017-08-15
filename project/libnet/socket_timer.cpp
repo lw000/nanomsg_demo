@@ -113,6 +113,9 @@ public:
 	virtual int start_once(int tid, int tms, TIMER_CALLBACK func) override;
 	virtual void kill(int tid) override;
 
+public:
+	std::string debug() override;
+
 protected:
 	virtual void _timer_cb(TIMER_ITEM* timer) override;
 
@@ -156,6 +159,11 @@ int TimerWin32::create(SocketProcessor* base)
 
 void TimerWin32::destroy()
 {
+}
+
+std::string TimerWin32::debug()
+{
+	return std::string("TimerWin32");
 }
 
 int TimerWin32::start(int tid, int tms, TIMER_CALLBACK func)
@@ -268,6 +276,9 @@ public:
 	virtual int start_once(int tid, int tms, TIMER_CALLBACK func) override;
 	virtual void kill(int tid) override;
 
+public:
+	std::string debug() override;
+
 protected:
 	virtual void _timer_cb(TIMER_ITEM* timer) override;
 
@@ -309,6 +320,11 @@ void TimerLinux::destroy()
 
 		iter = _timers.erase(iter);
 	}
+}
+
+std::string TimerLinux::debug()
+{
+	return std::string("TimerLinux");
 }
 
 int TimerLinux::start(int tid, int tms, TIMER_CALLBACK func)
@@ -432,4 +448,9 @@ int Timer::start_once(int tid, int tms, TIMER_CALLBACK func)
 void Timer::kill(int tid)
 {
 	_timer->kill(tid);
+}
+
+std::string Timer::debug()
+{
+	return std::string("Timer");
 }

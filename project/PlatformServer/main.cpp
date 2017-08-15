@@ -102,6 +102,8 @@ int main(int argc, char** argv)
 // 		printf("NetMessage create[%d] : %f, %f\n", create_times, ((double)t1 - t) / CLOCKS_PER_SEC, (((double)t1 - t) / CLOCKS_PER_SEC) / create_times);
 // 	}	
 
+	SocketProcessor::processorUseThreads();
+
 	hn_start_fastlog();
 
 // 	std::thread a(_add_user_thread);

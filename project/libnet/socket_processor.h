@@ -11,12 +11,15 @@ struct event_base;
 class SocketProcessor : public Object
 {
 public:
+	static void processorUseThreads();
+
+public:
 	SocketProcessor();
 	virtual ~SocketProcessor();
 
 public:
-	bool open(bool enableServer);
-	void close();
+	bool create(bool enableServer);
+	void destroy();
 
 public:
 	struct event_base* getBase();
@@ -29,9 +32,9 @@ public:
 	int loopexit();
 
 public:
-	virtual std::string debug();
+	virtual std::string debug() override;
 
-protected:
+private:
 	struct event_base* _base;
 };
 

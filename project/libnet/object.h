@@ -3,9 +3,12 @@
 
 #include "base_type.h"
 #include <string>
+#include <iosfwd>
 
 class Object
 {
+	friend std::ostream& operator<<(std::ostream & os, Object & o);
+
 public:
 	Object();
 	virtual ~Object();
@@ -18,7 +21,7 @@ public:
 	int getTag();
 
 public:
-	virtual std::string debug();
+	virtual std::string debug() = 0;
 
 private:
 	void *_data;

@@ -22,6 +22,7 @@
 #include "FastLog.h"
 #include "SQLConnPool.h"
 #include "socket_session.h"
+#include "socket_core.h"
 
 using namespace LW;
 

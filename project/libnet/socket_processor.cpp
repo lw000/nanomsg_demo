@@ -6,6 +6,16 @@
 #include <event2/util.h>
 #include <event2/thread.h>
 
+void SocketProcessor::processorUseThreads()
+{
+#ifdef WIN32
+	//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
+	evthread_use_windows_threads();
+#else
+	evthread_use_pthreads();
+#endif	
+}
+
 SocketProcessor::SocketProcessor()
 {
 
@@ -15,16 +25,13 @@ SocketProcessor::~SocketProcessor()
 {
 }
 
-bool SocketProcessor::open(bool enableServer)
+bool SocketProcessor::create(bool enableServer)
 {
 	if (this->_base == nullptr)
 	{
 		if (enableServer)
 		{
 #ifdef WIN32
-			//如果要启用IOCP，创建event_base之前，必须调用evthread_use_windows_threads()函数
-			evthread_use_windows_threads();
-
 			struct event_config *cfg = event_config_new();
 			event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
 			if (cfg)
@@ -45,7 +52,7 @@ bool SocketProcessor::open(bool enableServer)
 	return true;
 }
 
-void SocketProcessor::close()
+void SocketProcessor::destroy()
 {
 	if (this->_base != nullptr)
 	{
@@ -73,12 +80,21 @@ int SocketProcessor::loopbreak()
 
 int SocketProcessor::loopexit()
 {
-	struct timeval delay = { 1, 0 };
+	struct timeval delay = {1, 0};
 	int r = event_base_loopexit(this->_base, &delay);
 	return r;
 }
 
 std::string SocketProcessor::debug()
 {
-	return std::string("EventObject");
+	char buf[256];
+	if (this->_base == nullptr)
+	{
+		sprintf(buf, "[SocketProcessor: %x]", this);
+	}
+	else
+	{
+		sprintf(buf, "[SocketProcessor: %x, %x]", this, this->_base);
+	}
+	return std::string(buf);
 }

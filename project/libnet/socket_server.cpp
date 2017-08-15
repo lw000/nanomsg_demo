@@ -54,12 +54,12 @@ SocketServer::~SocketServer()
 	}
 }
 
-bool SocketServer::create(SocketProcessor* processor, ISocketServerHandler* isession)
+bool SocketServer::create(SocketProcessor* processor, ISocketServerHandler* handler)
 {
 	this->_processor = processor;
-	this->iserver = isession;
+	this->_handler = handler;
 
-	bool r = _processor->open(true);
+	bool r = _processor->create(true);
 	if (r)
 	{
 		this->_timer->create(_processor);
@@ -71,10 +71,13 @@ void SocketServer::destroy()
 {
 	if (_timer != nullptr)
 	{
-		_timer->destroy();
+		this->_timer->destroy();
 	}
 
-	_processor->close();
+	if (this->_processor != nullptr)
+	{
+		this->_processor->destroy();
+	}
 }
 
 std::string SocketServer::debug()
@@ -86,18 +89,19 @@ void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t 
 {
 	//struct event_base *base = evconnlistener_get_base(listener);
 
-	SocketSession* pSession = new SocketSession(this->iserver);
+	SocketSession* pSession = new SocketSession(this->_handler);
 	int r = pSession->create(SESSION_TYPE::Server, _processor, fd, EV_READ | EV_WRITE);
 	if (r == 0)
 	{
-		char hostBuf[NI_MAXHOST];
-		char portBuf[64];
-		getnameinfo(sa, socklen, hostBuf, sizeof(hostBuf), portBuf, sizeof(portBuf), NI_NUMERICHOST | NI_NUMERICSERV);
+		{
+			char hostBuf[NI_MAXHOST];
+			char portBuf[64];
+			getnameinfo(sa, socklen, hostBuf, sizeof(hostBuf), portBuf, sizeof(portBuf), NI_NUMERICHOST | NI_NUMERICSERV);
 
-		pSession->setHost(hostBuf);
-		pSession->setPort(std::stoi(portBuf));
-
-		this->iserver->onListener(pSession);
+			pSession->setHost(hostBuf);
+			pSession->setPort(std::stoi(portBuf));
+		}
+		this->_handler->onListener(pSession);
 	}
 	else
 	{

@@ -1,5 +1,11 @@
 #include "object.h"
 
+std::ostream& operator<<(std::ostream & os, Object & o)
+{
+	os << o.debug();
+	return os;
+}
+
 Object::Object()
 {
 	_data = nullptr;

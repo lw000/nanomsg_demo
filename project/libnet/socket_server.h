@@ -23,7 +23,7 @@ public:
 	virtual ~SocketServer();
 
 public:
-	bool create(SocketProcessor* processor, ISocketServerHandler* isession);
+	bool create(SocketProcessor* processor, ISocketServerHandler* handler);
 	void destroy();
 
 public:
@@ -52,7 +52,7 @@ private:
 
 private:
 	std::function<void(lw_int32 what)> _onFunc;
-	ISocketServerHandler* iserver;
+	ISocketServerHandler* _handler;
 };
 
 #endif // !__SocketServer_H__ 

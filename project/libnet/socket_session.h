@@ -2,14 +2,14 @@
 #define __session_H__
 
 #include <string>
+#include <unordered_map>
+
 #include <event2/util.h>
 
 #include "base_type.h"
 #include "object.h"
-#include "socket_core.h"
-#include "socket_hanlder.h"
 
-#include <unordered_map>
+#include "socket_hanlder.h"
 
 class SocketSession;
 class SocketProcessor;
@@ -23,21 +23,25 @@ enum SESSION_TYPE
 	Server = 2,
 };
 
-class SocketSession : public Object, public ISocketSessionHanlder
+class SocketSession : public Object
 {
 	friend class CoreSocket;
 
 public:
-	SocketSession(ISocketSessionHanlder* isession);
+	SocketSession(ISocketSessionHanlder* handler);
 	virtual ~SocketSession();
 
 public:
 	evutil_socket_t getSocket();
 
 public:
-	int create(SESSION_TYPE c, SocketProcessor* base, evutil_socket_t fd, short event);
-	int create(SESSION_TYPE c, SocketProcessor* base, evutil_socket_t fd, short event, ISocketSessionHanlder* isession);
+	int create(SESSION_TYPE c, SocketProcessor* processor, evutil_socket_t fd, short ev);
 	void destroy();
+
+public:
+	void setConnTimeout(int s);
+	void setRecvTimeout(int s);
+	void setSendTimeout(int s);
 
 public:
 	void setHost(const std::string& host);
@@ -50,6 +54,9 @@ public:
 	bool connected();
 
 public:
+	virtual std::string debug() override;
+
+public:
 	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize);
 	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize, lw_int32 recvcmd, SocketCallback cb);
 
@@ -57,16 +64,10 @@ private:
 	void onRead();
 	void onWrite();
 	void onEvent(short ev);
+	void onParse(lw_int32 cmd, char* buf, lw_int32 bufsize);
+
+private:
 	void reset();
-
-protected:
-	virtual int onSocketConnected(SocketSession* session) override;
-	virtual int onSocketDisConnect(SocketSession* session) override;
-	virtual int onSocketTimeout(SocketSession* session) override;
-	virtual int onSocketError(SocketSession* session) override;
-
-protected:
-	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, char* buf, lw_int32 bufsize) override;
 
 private:
 	std::unordered_map<lw_int32, SocketCallback> _cmd_event_map;
@@ -81,7 +82,7 @@ private:
 
 private:
 	struct bufferevent* _bev;
-	ISocketSessionHanlder * _isession;
+	ISocketSessionHanlder * _handler;
 };
 
 

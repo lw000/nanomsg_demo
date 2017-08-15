@@ -15,7 +15,7 @@ public:
 	virtual ~SocketClient();
 
 public:
-	bool create(SocketProcessor* processor, ISocketSessionHanlder* isession);
+	bool create(SocketProcessor* processor, ISocketSessionHanlder* handler);
 	void destroy();
 
 public:
