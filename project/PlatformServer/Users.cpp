@@ -1,7 +1,7 @@
 #include "Users.h"
 #include <algorithm>
 
-#include "..\libcrossLog\log4z.h"
+#include "log4z.h"
 
 #include "socket_session.h"
 

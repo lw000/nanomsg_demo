@@ -27,7 +27,7 @@
 #include "client_http.h"
 
 #include "GameServer.h"
-#include "socket_core.h"
+#include "net.h"
 
 using namespace LW;
 
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 	signal(SIGBREAK, signal_handler);
 	signal(SIGTERM, signal_handler);
 
-	lw_socket_init();
+	SocketInit s;
 
 	lw_int32 port = 0;
 	lw_int32 rpc_times = 1;
@@ -108,26 +108,31 @@ int main(int argc, char** argv)
 			rpc_times = std::atoi(srpc_times.c_str());
 			http_times = std::atoi(shttp_times.c_str());
 
-			for (size_t i = 0; i < rpc_times; i++)
+			while (1)
 			{
-				DESK_INFO desk_info;
-				desk_info.did = i;
-				desk_info.max_usercount = 6;
-				char buf[64];
-				sprintf(buf, "²âÊÔ[%d]", i);
-				desk_info.name = std::string(buf);
-				desk_info.rid = 0;
-				desk_info.state = DESK_STATE_Empty;
-
-				GameServer * serv = new GameServer(nullptr);
-				if (serv->create(desk_info))
+				for (size_t i = 0; i < rpc_times; i++)
 				{
-					serv->start("127.0.0.1", port);
+					DESK_INFO desk_info;
+					desk_info.did = i;
+					desk_info.max_usercount = 6;
+					char buf[64];
+					sprintf(buf, "²âÊÔ[%d]", i);
+					desk_info.name = std::string(buf);
+					desk_info.rid = 0;
+					desk_info.state = DESK_STATE_Empty;
+
+					GameServer * serv = new GameServer(nullptr);
+					if (serv->create(desk_info))
+					{
+						serv->start("127.0.0.1", port);
+					}
+
+					gServer[i] = serv;
+
+					lw_sleep(0.1);
 				}
 
-				gServer[i] = serv;
-
-				lw_sleep(0.1);
+				int c = getchar();
 			}
 
 //			run_client_http(http_times);

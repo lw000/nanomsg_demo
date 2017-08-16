@@ -7,6 +7,7 @@
 
 class SocketClient;
 class SocketProcessor;
+class SocketCore;
 
 class SocketClient : public Object
 {
@@ -15,11 +16,15 @@ public:
 	virtual ~SocketClient();
 
 public:
-	bool create(SocketProcessor* processor, ISocketSessionHanlder* handler);
+	bool create(SocketProcessor* processor, ISocketClientHandler* handler);
 	void destroy();
 
 public:
 	int run(const std::string& addr, int port);
+
+public:
+	int loopbreak();
+	int loopexit();
 
 public:
 	SocketSession* getSession();
@@ -33,6 +38,8 @@ private:
 private:
 	SocketProcessor* _processor;
 	SocketSession* _session;
+	SocketCore* _core;
+	ISocketClientHandler* _handler;
 };
 
 #endif // !__SocketClient_H__

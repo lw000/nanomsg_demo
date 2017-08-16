@@ -1,6 +1,7 @@
 #ifndef __SocketTimer_H__
 #define __SocketTimer_H__
 
+#include "common_type.h"
 #include "object.h"
 
 #include <unordered_map>

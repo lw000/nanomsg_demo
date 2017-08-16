@@ -1,10 +1,13 @@
 #ifndef __session_handler_h__
 #define __session_handler_h__
 
-#include "base_type.h"
+#include "common_type.h"
 #include <functional>
 
 class SocketSession;
+class SocketServer;
+class SocketClient;
+
 class ISocketSessionHanlder;
 
 typedef std::function<bool(char* buf, lw_int32 bufsize)> SocketCallback;
@@ -26,30 +29,34 @@ protected:
 	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) = 0;
 };
 
-
-class ISocketClient
+class ISocketThread
 {
 	friend class SocketClient;
+	friend class SocketServer;
 
 public:
-	virtual ~ISocketClient() {}
+	virtual ~ISocketThread() {}
 
 protected:
-	virtual int onSocketConnected() = 0;
-	virtual int onSocketDisConnect() = 0;
-	virtual int onSocketTimeout() = 0;
-	virtual int onSocketError() = 0;
-
-protected:
-	virtual void onSocketParse(lw_int32 cmd, char* buf, lw_int32 bufsize) = 0;
+	virtual int onStart() = 0;
+	virtual int onEnd() = 0;
 };
 
-class ISocketServerHandler : public ISocketSessionHanlder
+class ISocketClientHandler : public ISocketSessionHanlder, public ISocketThread
 {
+	friend class SocketClient;
+public:
+	virtual ~ISocketClientHandler() {}
+};
+
+class ISocketServerHandler : public ISocketSessionHanlder, public ISocketThread
+{
+	friend class SocketServer;
+
 public:
 	virtual ~ISocketServerHandler() {}
 
-public:
+protected:
 	virtual void onListener(SocketSession* session) = 0;
 };
 

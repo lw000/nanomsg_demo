@@ -1,7 +1,6 @@
 #ifndef __object_h__
 #define __object_h__
 
-#include "base_type.h"
 #include <string>
 #include <iosfwd>
 

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CacheQueue.cpp" />
+    <ClCompile Include="net.cpp" />
     <ClCompile Include="socket_processor.cpp" />
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="NetHead.cpp" />

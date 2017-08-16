@@ -57,7 +57,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobufd.lib;libprotocd.lib;libproperties.lib;libutils.lib;libnet.lib;business.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobufd.lib;libprotocd.lib;libproperties.lib;libutils.lib;libnet.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Debug;..\libevent\build\vs2013\lib\Debug;..\protobuf\lib;..\nanomsg\build\vs2013\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

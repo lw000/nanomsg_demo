@@ -42,16 +42,14 @@ static void __listener_error_cb(struct evconnlistener * listener, void * userdat
 
 SocketServer::SocketServer() : _onFunc(nullptr)
 {
+	this->_core = new SocketCore;
 	this->_timer = new Timer();
 }
 
 SocketServer::~SocketServer()
 {
-	if (_timer != nullptr)
-	{
-		delete this->_timer;
-		this->_timer = nullptr;
-	}
+	SAFE_DELETE(this->_timer);
+	SAFE_DELETE(this->_core);
 }
 
 bool SocketServer::create(SocketProcessor* processor, ISocketServerHandler* handler)
@@ -59,10 +57,10 @@ bool SocketServer::create(SocketProcessor* processor, ISocketServerHandler* hand
 	this->_processor = processor;
 	this->_handler = handler;
 
-	bool r = _processor->create(true);
+	bool r = this->_processor->create(true, this->_core);
 	if (r)
 	{
-		this->_timer->create(_processor);
+		this->_timer->create(this->_processor);
 	}
 	return r;
 }
@@ -105,7 +103,7 @@ void SocketServer::listener_cb(struct evconnlistener *listener, evutil_socket_t 
 	}
 	else
 	{
-		delete pSession;
+		SAFE_DELETE(pSession);
 		_processor->loopbreak();
 		fprintf(stderr, "error constructing SocketSession!");
 	}
@@ -168,7 +166,11 @@ void SocketServer::__run()
 			});
 		}
 
+		(ISocketThread*)(_handler)->onStart();
+
 		int r = _processor->dispatch();
+
+		(ISocketThread*)(_handler)->onEnd();
 
 		if (listener != nullptr)
 		{
@@ -179,4 +181,14 @@ void SocketServer::__run()
 	this->destroy();
 
 	return;
+}
+
+int SocketServer::loopbreak()
+{
+	return this->_processor->loopbreak();
+}
+
+int SocketServer::loopexit()
+{
+	return this->_processor->loopexit();
 }

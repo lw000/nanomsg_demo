@@ -21,10 +21,7 @@
 #include "SQLTable.h"
 #include "FastLog.h"
 #include "SQLConnPool.h"
-#include "socket_session.h"
-#include "socket_core.h"
-
-using namespace LW;
+#include "net.h"
 
 static void* thread_one_action(void *arg);
 

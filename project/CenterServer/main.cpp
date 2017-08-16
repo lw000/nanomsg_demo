@@ -26,7 +26,6 @@
 
 #include "FileUtils.h"
 
-#include "socket_core.h"
 #include "socket_timer.h"
 #include "socket_processor.h"
 
@@ -35,10 +34,9 @@ extern "C"
 	#include "ext/md5.h"
 }
 
-#include "..\libcrossLog\log4z.h"
-#include "libcrossLog/FastLog.h"
-
-using namespace LW;
+#include "log4z.h"
+#include "FastLog.h"
+#include "net.h"
 
 void xxtea_test(char* s)
 {
@@ -133,7 +131,7 @@ static void test1()
 {
 	int exec_times = 1000;
 	
-	__g_processor1.create(true);
+	__g_processor1.create(true, nullptr);
 
 	__g_timer1.create(&__g_processor1);
 	for (int i = 1; i < exec_times; i++)
@@ -174,7 +172,7 @@ static void test1()
 static void test2()
 {
 	int exec_times = 1000;
-	__g_processor2.create(true);
+	__g_processor2.create(true, nullptr);
 
 	__g_timer2.create(&__g_processor2);
 	for (int i = 1; i < exec_times; i++)

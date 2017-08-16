@@ -58,12 +58,13 @@ SocketSession::~SocketSession()
 int SocketSession::create(SESSION_TYPE c, SocketProcessor* processor, evutil_socket_t fd, short ev)
 {
 	this->_c = c;
+	this->_processor = processor;
 
 	switch (this->_c)
 	{
 	case SESSION_TYPE::Server:
 	{
-		this->_bev = bufferevent_socket_new(processor->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
+		this->_bev = bufferevent_socket_new(this->_processor->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
 		bufferevent_setcb(this->_bev, CoreSocket::__read_cb, CoreSocket::__write_cb, CoreSocket::__event_cb, this);
 		bufferevent_enable(this->_bev, ev);
 		this->_connected = true;
@@ -76,7 +77,7 @@ int SocketSession::create(SESSION_TYPE c, SocketProcessor* processor, evutil_soc
 		saddr.sin_addr.s_addr = inet_addr(this->_host.c_str());
 		saddr.sin_port = htons(this->_port);
 
-		this->_bev = bufferevent_socket_new(processor->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
+		this->_bev = bufferevent_socket_new(this->_processor->getBase(), fd, BEV_OPT_CLOSE_ON_FREE);
 		int con = bufferevent_socket_connect(this->_bev, (struct sockaddr *)&saddr, sizeof(saddr));
 		if (con >= 0)
 		{
@@ -166,7 +167,7 @@ evutil_socket_t SocketSession::getSocket()
 std::string SocketSession::debug()
 {
 	char buf[512];
-	sprintf(buf, "(fd: [%d] ip: %s, port: %d)", this->getSocket(), this->_host.c_str(), this->_port);
+	sprintf(buf, "(fd: [%d] ip: %s, port: %d, c: %d, connected:%d)", this->getSocket(), this->_host.c_str(), this->_port, this->_c, this->_connected);
 	return std::string(buf);
 }
 
@@ -174,7 +175,7 @@ lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize
 {
 	if (this->_connected)
 	{
-		int c = lw_send_socket_data(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
+		int c = this->_processor->getSocketCore()->send(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
 		{
 			int c = bufferevent_write(this->_bev, p->buf, p->size);
 
@@ -191,7 +192,7 @@ lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize
 {
 	if (this->_connected)
 	{
-		int c = lw_send_socket_data(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
+		int c = this->_processor->getSocketCore()->send(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
 		{
 			int c1 = bufferevent_write(this->_bev, p->buf, p->size);
 			return c1;
@@ -218,16 +219,31 @@ void SocketSession::onRead()
 	size_t input_len = evbuffer_get_length(input);
 
 	{
-		char *read_buf = (char*)malloc(input_len);
+		char read_buf[1024+1];
+
+		while (input_len > 0)
+		{
+			size_t read_len = bufferevent_read(this->_bev, read_buf, 1024);
+			if (read_len > 0)
+			{
+				read_buf[read_len] = '0';
+				if (this->_processor->getSocketCore()->parse(read_buf, read_len, CoreSocket::__on_parse_cb, this) == 0)
+				{
+
+				}
+			}
+			input_len -= read_len;
+		}
+		/*char *read_buf = (char*)malloc(input_len);
 		size_t read_len = bufferevent_read(this->_bev, read_buf, input_len);
 		if (input_len == read_len)
 		{
-			if (lw_parse_socket_data(read_buf, read_len, CoreSocket::__on_parse_cb, this) == 0)
-			{
+		if (this->_processor->getSocketCore()->parse(read_buf, read_len, CoreSocket::__on_parse_cb, this) == 0)
+		{
 
-			}
 		}
-		free(read_buf);
+		}
+		free(read_buf);*/
 	}
 }
 

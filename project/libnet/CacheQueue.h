@@ -1,7 +1,7 @@
 #ifndef __CacheQueueT_H__
 #define __CacheQueueT_H__
 
-#include "base_type.h"
+#include "common_type.h"
 #include <vector>
 
 class CacheQueue

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "base_type.h"
+#include "common_type.h"
 #include "common_struct.h"
 #include "socket_session.h"
 #include "socket_client.h"
@@ -31,7 +31,7 @@ public:
 	virtual int onGameMessage(int cmd, void* data, int datasize) = 0;
 };
 
-class GameServer : public IGameServer, public ISocketSessionHanlder
+class GameServer : public IGameServer, public ISocketClientHandler
 {
 private:
 	IGameServer* iDesk;
@@ -53,6 +53,10 @@ public:
 
 private:
 	void sendData(lw_int32 cmd, void* object, lw_int32 objectSize);
+
+protected:
+	virtual int onStart() override;
+	virtual int onEnd() override;
 
 protected:
 	virtual int onSocketConnected(SocketSession* session) override;

@@ -16,22 +16,24 @@ using namespace LW;
 
 SocketClient::SocketClient() : _processor(nullptr), _session(nullptr)
 {
-
+	_core = new SocketCore;
 }
 
 SocketClient::~SocketClient()
 {
-	delete this->_session;
-	this->_session = nullptr;
+	SAFE_DELETE(this->_session);
+	SAFE_DELETE(this->_core);
 }
 
-bool SocketClient::create(SocketProcessor* processor, ISocketSessionHanlder* handler)
+bool SocketClient::create(SocketProcessor* processor, ISocketClientHandler* handler)
 {													  
 	this->_processor = processor;
-	bool r = this->_processor->create(false);
+	this->_handler = handler;
+
+	bool r = this->_processor->create(false, _core);
 	if (r)
 	{
-		this->_session = new SocketSession(handler);
+		this->_session = new SocketSession(this->_handler);
 		return true;
 	}
 
@@ -69,6 +71,16 @@ int SocketClient::run(const std::string& addr, int port)
 	return 0;
 }
 
+int SocketClient::loopbreak()
+{
+	return this->_processor->loopbreak();
+}
+
+int SocketClient::loopexit()
+{
+	return this->_processor->loopexit();
+}
+
 SocketSession* SocketClient::getSession()
 {
 	return this->_session;
@@ -80,7 +92,11 @@ void SocketClient::__run()
 
 	if (r == 0)
 	{
+		(ISocketThread*)(this->_handler)->onStart();
+
 		this->_processor->dispatch();
+
+		(ISocketThread*)(this->_handler)->onEnd();
 	}
 
 	this->destroy();

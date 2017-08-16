@@ -6,7 +6,7 @@
 
 #include <event2/util.h>
 
-#include "base_type.h"
+#include "common_type.h"
 #include "object.h"
 
 #include "socket_hanlder.h"
@@ -81,6 +81,7 @@ private:
 	bool _connected;
 
 private:
+	SocketProcessor* _processor;
 	struct bufferevent* _bev;
 	ISocketSessionHanlder * _handler;
 };

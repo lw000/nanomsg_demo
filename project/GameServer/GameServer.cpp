@@ -8,6 +8,7 @@
 #include "command.h"
 #include "platform.pb.h"
 #include "game.pb.h"
+#include <iostream>
 
 using namespace LW;
 
@@ -58,7 +59,6 @@ bool GameServer::create(const DESK_INFO& info)
 void GameServer::destroy()
 {
 	timer->destroy();
-	client->destroy();
 }
 
 void GameServer::start(const std::string& host, int port)
@@ -76,18 +76,28 @@ void GameServer::start(const std::string& host, int port)
 			{
 				client->getSession()->sendData(cmd_platform_cs_userinfo, s.get(), c);
 			}
-
 			return true;
 		});
 		
 		int ret = client->run(host, port);
-
 	} while (0);
 }
 
 void GameServer::sendData(lw_int32 cmd, void* object, lw_int32 objectSize)
 {
 	client->getSession()->sendData(cmd, object, objectSize);
+}
+
+int GameServer::onStart()
+{
+	printf("onStart.\n");
+	return 0;
+}
+
+int GameServer::onEnd()
+{
+	printf("onEnd.\n");
+	return 0;
 }
 
 int GameServer::onSocketConnected(SocketSession* session)
@@ -97,16 +107,19 @@ int GameServer::onSocketConnected(SocketSession* session)
 
 int GameServer::onSocketDisConnect(SocketSession* session)
 {
+	client->loopbreak();
 	return 0;
 }
 
 int GameServer::onSocketTimeout(SocketSession* session)
 {
+	client->loopbreak();
 	return 0;
 }
 
 int GameServer::onSocketError(SocketSession* session)
 {
+	client->loopbreak();
 	return 0;
 }
 

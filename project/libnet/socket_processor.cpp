@@ -23,10 +23,13 @@ SocketProcessor::SocketProcessor()
 
 SocketProcessor::~SocketProcessor()
 {
+	
 }
 
-bool SocketProcessor::create(bool enableServer)
+bool SocketProcessor::create(bool enableServer, SocketCore* core)
 {
+	this->_core = core;
+
 	if (this->_base == nullptr)
 	{
 		if (enableServer)
@@ -54,6 +57,8 @@ bool SocketProcessor::create(bool enableServer)
 
 void SocketProcessor::destroy()
 {
+	loopbreak();
+
 	if (this->_base != nullptr)
 	{
 		event_base_free(this->_base);
@@ -64,6 +69,11 @@ void SocketProcessor::destroy()
 struct event_base* SocketProcessor::getBase()
 { 
 	return this->_base;
+}
+
+SocketCore* SocketProcessor::getSocketCore()
+{
+	return this->_core;
 }
 
 int SocketProcessor::dispatch()
@@ -80,7 +90,7 @@ int SocketProcessor::loopbreak()
 
 int SocketProcessor::loopexit()
 {
-	struct timeval delay = {1, 0};
+	struct timeval delay = {0, 5000000};
 	int r = event_base_loopexit(this->_base, &delay);
 	return r;
 }

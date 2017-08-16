@@ -57,7 +57,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Debug;..\libevent\build\vs2013\lib\Debug;..\protobuf\lib;..\nanomsg\build\vs2013\Debug;..\mysql-connector-c++-noinstall-1.1.9-win32\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobufd.lib;libprotocd.lib;libproperties.lib;libutils.lib;libnet.lib;business.lib;mysqlcppconn.lib;pthreadVC2.lib;libcrosslog.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobufd.lib;libprotocd.lib;libproperties.lib;libutils.lib;libnet.lib;mysqlcppconn.lib;pthreadVC2.lib;libcrosslog.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

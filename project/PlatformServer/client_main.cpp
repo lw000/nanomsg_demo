@@ -26,7 +26,7 @@
 
 using namespace LW;
 
-class ClientHandler : public ISocketSessionHanlder
+class ClientHandler : public ISocketClientHandler
 {
 public:
 	ClientHandler()
@@ -37,7 +37,18 @@ public:
 	{
 	}
 
-public:
+protected:
+	virtual int onStart() override
+	{
+		return 0;
+	}
+
+	virtual int onEnd() override
+	{
+		return 0;
+	}
+
+protected:
 	virtual int onSocketConnected(SocketSession* session) override
 	{
 		return 0;
@@ -58,7 +69,7 @@ public:
 		return 0;
 	}
 
-public:
+protected:
 	virtual void onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8* buf, lw_int32 bufsize) override
 	{
 		switch (cmd)

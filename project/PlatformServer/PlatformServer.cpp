@@ -49,6 +49,16 @@ void ServerHandler::onListener(SocketSession* session)
 	std::cout << *session << std::endl;
 }
 
+int ServerHandler::onStart()
+{
+	return 0;
+}
+
+int ServerHandler::onEnd()
+{
+	return 0;
+}
+
 int ServerHandler::onSocketConnected(SocketSession* session)
 {
 	return 0;

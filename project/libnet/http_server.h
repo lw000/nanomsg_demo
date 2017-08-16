@@ -31,7 +31,7 @@
 #include <event2/http_struct.h>
 #include <event2/util.h>
 
-#include "base_type.h"
+#include "common_type.h"
 
 typedef void(*LW_HTTP_CB)(struct evhttp_request *);
 

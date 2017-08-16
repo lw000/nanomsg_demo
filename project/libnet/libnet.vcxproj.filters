@@ -30,6 +30,7 @@
     </ClCompile>
     <ClCompile Include="SessionManager.cpp" />
     <ClCompile Include="socket_processor.cpp" />
+    <ClCompile Include="net.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />

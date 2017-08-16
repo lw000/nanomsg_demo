@@ -32,6 +32,16 @@ void ServerHandler::sendHeartbeat(SocketSession* session)
 	}
 }
 
+int ServerHandler::onStart()
+{
+	return 0;
+}
+
+int ServerHandler::onEnd()
+{
+	return 0;
+}
+
 void ServerHandler::onListener(SocketSession* session)
 {
 	Sessions.add(session);

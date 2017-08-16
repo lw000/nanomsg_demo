@@ -1,7 +1,7 @@
 ﻿#ifndef __NetHead_H_
 #define __NetHead_H_
 
-#include "base_type.h"
+#include "common_type.h"
 
 namespace LW 
 {

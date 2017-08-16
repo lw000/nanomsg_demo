@@ -14,6 +14,8 @@
 class Timer;
 class SocketSession;
 class SocketProcessor;
+class SocketCore;
+
 struct evconnlistener;
 
 class SocketServer : public Object
@@ -28,6 +30,10 @@ public:
 
 public:
 	lw_int32 run(u_short port, std::function<void(lw_int32 what)> func);
+
+public:
+	int loopbreak();
+	int loopexit();
 
 public:
 	int getPort() const { return this->_port; }
@@ -47,6 +53,8 @@ private:
 
 private:
 	SocketProcessor* _processor;
+	SocketCore* _core;
+
 	lw_int32 _port;
 	Timer* _timer;
 

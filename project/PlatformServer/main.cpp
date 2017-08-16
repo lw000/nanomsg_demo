@@ -38,8 +38,8 @@
 #include "..\libcrossLog\FastLog.h"
 
 #include "NetMessage.h"
-#include "socket_core.h"
 #include "socket_processor.h"
+#include "net.h"
 
 using namespace LW;
 
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 {
 	if (argc < 2) return 0;
 
-	lw_socket_init();
+	SocketInit s;
 
 // 	int create_times = 10000000;
 // 	{

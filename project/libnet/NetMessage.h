@@ -4,7 +4,7 @@
 #include <functional>
 
 #include "NetHead.h"
-#include "base_type.h"
+#include "common_type.h"
 #include <iosfwd>
 #include <iostream>
 #include <string>

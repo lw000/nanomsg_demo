@@ -3,10 +3,11 @@
 
 #include <string>
 
-#include "base_type.h"
+#include "common_type.h"
 #include "object.h"
 
 struct event_base;
+class SocketCore;
 
 class SocketProcessor : public Object
 {
@@ -18,11 +19,12 @@ public:
 	virtual ~SocketProcessor();
 
 public:
-	bool create(bool enableServer);
+	bool create(bool enableServer, SocketCore* core);
 	void destroy();
 
 public:
 	struct event_base* getBase();
+	SocketCore* getSocketCore();
 
 public:
 	int dispatch();
@@ -36,6 +38,7 @@ public:
 
 private:
 	struct event_base* _base;
+	SocketCore* _core;
 };
 
 
