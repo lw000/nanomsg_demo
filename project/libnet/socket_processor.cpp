@@ -57,8 +57,6 @@ bool SocketProcessor::create(bool enableServer, SocketCore* core)
 
 void SocketProcessor::destroy()
 {
-	loopbreak();
-
 	if (this->_base != nullptr)
 	{
 		event_base_free(this->_base);

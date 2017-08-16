@@ -65,9 +65,10 @@ message msg_userinfo_request
 message msg_userinfo_reponse
 {
 	int32     uid = 1;			// uid
-	int32     age = 2;			// u_id
-	int32     sex = 3;			// u_id
-	string    name = 4;			// u_id
-	string    address = 5;		// str
+	int32     age = 2;			// age
+	int32     sex = 3;			// sex
+	string    name = 4;			// name
+	string    address = 5;		// address
+	string    ext = 6;			// ext
 }
 

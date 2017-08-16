@@ -116,6 +116,8 @@ void ServerHandler::onSocketParse(SocketSession* session, lw_int32 cmd, lw_char8
 		userinfo.set_sex(1);
 		userinfo.set_name("liwei");
 		userinfo.set_address("guangdong");
+		userinfo.set_ext("{\"name\":\"liwei\",\"age\":30,\"sex\":1,\"address\":\"guangdongsheng\"}");
+
 		int c = userinfo.ByteSize();
 		std::unique_ptr<char[]> s(new char[c + 1]);
 		bool ret = userinfo.SerializeToArray(s.get(), c);

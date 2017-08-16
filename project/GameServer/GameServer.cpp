@@ -209,8 +209,8 @@ int GameServer::onGameMessage(int cmd, void* data, int datasize)
 		platform::msg_userinfo_reponse userinfo;
 		userinfo.ParseFromArray(data, datasize);
 
-		printf("userid: %d age:%d sex:%d name:%s address:%s\n", userinfo.uid(),
-			userinfo.age(), userinfo.sex(), userinfo.name().c_str(), userinfo.address().c_str());
+		printf("userid: %d age:%d sex:%d name:%s address:%s ext:%s\n", userinfo.uid(),
+			userinfo.age(), userinfo.sex(), userinfo.name().c_str(), userinfo.address().c_str(), userinfo.ext().c_str());
 	}break;
 	default:
 		break;

@@ -154,8 +154,6 @@ int main(int argc, char** argv)
 
 	} while (0);
 
-	lw_socket_clean();
-
 	return 0;
 }
 

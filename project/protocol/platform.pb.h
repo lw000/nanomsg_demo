@@ -1015,12 +1015,24 @@ class msg_userinfo_reponse : public ::google::protobuf::Message /* @@protoc_inse
   ::std::string* release_address();
   void set_allocated_address(::std::string* address);
 
+  // optional string ext = 6;
+  void clear_ext();
+  static const int kExtFieldNumber = 6;
+  const ::std::string& ext() const;
+  void set_ext(const ::std::string& value);
+  void set_ext(const char* value);
+  void set_ext(const char* value, size_t size);
+  ::std::string* mutable_ext();
+  ::std::string* release_ext();
+  void set_allocated_ext(::std::string* ext);
+
   // @@protoc_insertion_point(class_scope:platform.msg_userinfo_reponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr name_;
   ::google::protobuf::internal::ArenaStringPtr address_;
+  ::google::protobuf::internal::ArenaStringPtr ext_;
   ::google::protobuf::int32 uid_;
   ::google::protobuf::int32 age_;
   ::google::protobuf::int32 sex_;
@@ -1635,6 +1647,50 @@ inline void msg_userinfo_reponse::set_allocated_address(::std::string* address) 
   }
   address_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), address);
   // @@protoc_insertion_point(field_set_allocated:platform.msg_userinfo_reponse.address)
+}
+
+// optional string ext = 6;
+inline void msg_userinfo_reponse::clear_ext() {
+  ext_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& msg_userinfo_reponse::ext() const {
+  // @@protoc_insertion_point(field_get:platform.msg_userinfo_reponse.ext)
+  return ext_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void msg_userinfo_reponse::set_ext(const ::std::string& value) {
+  
+  ext_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:platform.msg_userinfo_reponse.ext)
+}
+inline void msg_userinfo_reponse::set_ext(const char* value) {
+  
+  ext_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:platform.msg_userinfo_reponse.ext)
+}
+inline void msg_userinfo_reponse::set_ext(const char* value, size_t size) {
+  
+  ext_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_userinfo_reponse.ext)
+}
+inline ::std::string* msg_userinfo_reponse::mutable_ext() {
+  
+  // @@protoc_insertion_point(field_mutable:platform.msg_userinfo_reponse.ext)
+  return ext_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* msg_userinfo_reponse::release_ext() {
+  // @@protoc_insertion_point(field_release:platform.msg_userinfo_reponse.ext)
+  
+  return ext_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void msg_userinfo_reponse::set_allocated_ext(::std::string* ext) {
+  if (ext != NULL) {
+    
+  } else {
+    
+  }
+  ext_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ext);
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_userinfo_reponse.ext)
 }
 
 inline const msg_userinfo_reponse* msg_userinfo_reponse::internal_default_instance() {
