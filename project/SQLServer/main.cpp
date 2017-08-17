@@ -17,11 +17,12 @@
 #include <pthread.h>
 
 #include "libproperties.h"
-#include "lwutil.h"
-#include "SQLTable.h"
 #include "FastLog.h"
-#include "SQLConnPool.h"
+#include "lwutil.h"
 #include "net.h"
+
+#include "SQLTable.h"
+#include "SQLConnPool.h"
 
 static void* thread_one_action(void *arg);
 
@@ -30,10 +31,10 @@ static void* thread_one_action(void *arg)
 	SQLConnPool::CONNECT conn;
 	{
 		clock_t t = clock();
-		int times = 1;
+		int times = 10;
 		for (size_t i = 0; i < times; i++)
 		{
-			SQLTableQuotation sqlQuotation(&conn);
+			SQLQuotationTable sqlQuotation(&conn);
 			{
 				sqlQuotation.reset();
 				sqlQuotation.createStatement();
@@ -42,7 +43,7 @@ static void* thread_one_action(void *arg)
 					int row = res->rowsCount();
 					while (res->next())
 					{
-						TableQuotation  quotation;
+						QuotationTable  quotation;
 						quotation.name = U2G(res->getString("name").c_str());
 						quotation.sale_name = U2G(res->getString("sale_name").c_str());
 						quotation.quotation_number = U2G(res->getString("quotation_number").c_str());
@@ -58,14 +59,13 @@ static void* thread_one_action(void *arg)
 		}
 		clock_t t1 = clock();
 		printf("select [%d] times: %f \n", times, ((double)t1 - t) / CLOCKS_PER_SEC);
-
 	}
 	
 	{
 		int times = 1000;
 		clock_t t = clock();
 
-		SQLTableQuotation sqlQuotation(&conn);
+		SQLQuotationTable sqlQuotation(&conn);
 		sql::PreparedStatement* pstmt = sqlQuotation.prepareStatement("INSERT INTO quotation VALUES(?,?,?,?);");
 		pstmt->setString(1, G2U("祈宜鸟直播 - 新增功能"));
 		pstmt->setString(2, G2U("刘玉婷"));
@@ -134,20 +134,20 @@ int main(int argc, char** argv)
 	do
 	{
 #if 0
-		int r = connPool->createSqlConnPool("172.16.1.61", "lw", "qazxsw123", "app_project", 10);
+		int r = connPool->createSqlConnPool("localhost", "lw", "qazxsw123", "app_project");
 #else
-		int r = connPool->createSqlConnPool("tcp://172.16.1.61:3306", "lw", "qazxsw123", "app_project", 10);
+		int r = connPool->createConnPool("tcp://localhost:3306", "lw", "qazxsw123", "app_project");
 #endif
 
 		if (r != 0) break;
 
 		{
-			sql::Connection* conn = connPool->getGetConnection();
+			sql::Connection* conn = connPool->getConnection();
 			sql::PreparedStatement* stmt = conn->prepareStatement("SELECT * FROM config WHERE work_day=?;");
 			stmt->setInt(1, 22);
 			sql::ResultSet* res = stmt->executeQuery();
 			int row = res->rowsCount();
-			TableConfig config;
+			ConfigTable config;
 			while (res->next())
 			{
 				config.proportion = res->getDouble(1);
@@ -188,8 +188,8 @@ int main(int argc, char** argv)
 		}
 
 		{
-			sql::Connection* conn = connPool->getGetConnection();
-			SQLTableUser user(conn);
+			sql::Connection* conn = connPool->getConnection();
+			SQLUserTable user(conn);
 			{
 				user.reset();
 				user.createStatement();
