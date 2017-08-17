@@ -142,7 +142,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libutils;..\json;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\business;..\business\common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libutils;..\json;..\libevent;..\libevent\include;..\libevent\WIN32-Code;..\libevent\build\vs2013\include;..\common</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

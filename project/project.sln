@@ -45,6 +45,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cryptlib", "cryptopp\cryptl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib-1.2.8", "zlib-1.2.8\zlib-1.2.8.vcxproj", "{B67944CC-CECE-4E75-8012-A134334955DC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmysqlwarpper", "libmysqlwarpper\libmysqlwarpper.vcxproj", "{190FC442-ADD6-461A-AFAB-4817C73C6A41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -883,6 +885,48 @@ Global
 		{B67944CC-CECE-4E75-8012-A134334955DC}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
 		{B67944CC-CECE-4E75-8012-A134334955DC}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
 		{B67944CC-CECE-4E75-8012-A134334955DC}.RelWithDebInfo|x86.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Debug|Win32.ActiveCfg = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Debug|Win32.Build.0 = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Debug|x64.ActiveCfg = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Debug|x86.ActiveCfg = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Debug|x86.Build.0 = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Debug|Win32.ActiveCfg = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Debug|Win32.Build.0 = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Debug|x64.ActiveCfg = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Debug|x86.ActiveCfg = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Debug|x86.Build.0 = Debug|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Release|Mixed Platforms.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Release|Win32.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Release|Win32.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Release|x64.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Release|x86.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.DLL-Import Release|x86.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.MinSizeRel|Mixed Platforms.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.MinSizeRel|Mixed Platforms.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.MinSizeRel|Win32.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.MinSizeRel|Win32.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.MinSizeRel|x64.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.MinSizeRel|x86.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.MinSizeRel|x86.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Release|Win32.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Release|Win32.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Release|x64.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Release|x86.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.Release|x86.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.RelWithDebInfo|Mixed Platforms.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.RelWithDebInfo|Mixed Platforms.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.RelWithDebInfo|Win32.Build.0 = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41}.RelWithDebInfo|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -902,5 +946,6 @@ Global
 		{619589EB-073B-4BDB-954C-7064CCE8F672} = {0408F2C3-B6C4-48D8-B41B-CED746147A38}
 		{3423EC9A-52E4-4A4D-9753-EDEBC38785EF} = {0408F2C3-B6C4-48D8-B41B-CED746147A38}
 		{B67944CC-CECE-4E75-8012-A134334955DC} = {0408F2C3-B6C4-48D8-B41B-CED746147A38}
+		{190FC442-ADD6-461A-AFAB-4817C73C6A41} = {0408F2C3-B6C4-48D8-B41B-CED746147A38}
 	EndGlobalSection
 EndGlobal

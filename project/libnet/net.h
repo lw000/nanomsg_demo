@@ -3,14 +3,6 @@
 
 #include "common_type.h"
 
-#include "http_server.h"
-
-#include "socket_session.h"
-#include "socket_timer.h"
-#include "socket_client.h"
-#include "socket_server.h"
-
-
 extern "C"
 {
 	int lw_socket_init();
