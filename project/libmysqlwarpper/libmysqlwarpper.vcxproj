@@ -84,7 +84,6 @@
   <ItemGroup>
     <ClInclude Include="SQLConnPool.h" />
     <ClInclude Include="SQLMgr.h" />
-    <ClInclude Include="SQLTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

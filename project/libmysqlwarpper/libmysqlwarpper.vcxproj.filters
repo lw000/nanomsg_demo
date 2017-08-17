@@ -32,8 +32,5 @@
     <ClInclude Include="SQLMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SQLTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
