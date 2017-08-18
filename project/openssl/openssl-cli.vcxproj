@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Default|Win32">
+      <Configuration>Default</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{F783FA01-855C-D20C-1916-3660AB86DFAC}</ProjectGuid>
+    <RootNamespace>openssl-cli</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Default|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Default|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Default|Win32'">
+    <IntDir>$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Default|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.;openssl;openssl\crypto;openssl\crypto\asn1;openssl\crypto\evp;openssl\crypto\md2;openssl\crypto\modes;openssl\crypto\store;openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>L_ENDIAN;PURIFY;_REENTRANT;OPENSSL_NO_HEARTBEATS;MK1MF_BUILD;WIN32_LEAN_AND_MEAN;OPENSSL_SYSNAME_WIN32;MONOLITH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ProgramDataBaseFileName>$(IntDir)$(ProjectName)\vc80.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>.;openssl;openssl\crypto;openssl\crypto\asn1;openssl\crypto\evp;openssl\crypto\md2;openssl\crypto\modes;openssl\crypto\store;openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>L_ENDIAN;PURIFY;_REENTRANT;OPENSSL_NO_HEARTBEATS;MK1MF_BUILD;WIN32_LEAN_AND_MEAN;OPENSSL_SYSNAME_WIN32;MONOLITH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>ws2_32.lib;advapi32.lib;crypt32.lib;gdi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="openssl.gyp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="openssl\apps\apps.c" />
+    <ClCompile Include="openssl\apps\app_rand.c" />
+    <ClCompile Include="openssl\apps\asn1pars.c" />
+    <ClCompile Include="openssl\apps\ca.c" />
+    <ClCompile Include="openssl\apps\ciphers.c" />
+    <ClCompile Include="openssl\apps\cms.c" />
+    <ClCompile Include="openssl\apps\crl.c" />
+    <ClCompile Include="openssl\apps\crl2p7.c" />
+    <ClCompile Include="openssl\apps\dgst.c" />
+    <ClCompile Include="openssl\apps\dh.c" />
+    <ClCompile Include="openssl\apps\dhparam.c" />
+    <ClCompile Include="openssl\apps\dsa.c" />
+    <ClCompile Include="openssl\apps\dsaparam.c" />
+    <ClCompile Include="openssl\apps\ec.c" />
+    <ClCompile Include="openssl\apps\ecparam.c" />
+    <ClCompile Include="openssl\apps\enc.c" />
+    <ClCompile Include="openssl\apps\engine.c" />
+    <ClCompile Include="openssl\apps\errstr.c" />
+    <ClCompile Include="openssl\apps\gendh.c" />
+    <ClCompile Include="openssl\apps\gendsa.c" />
+    <ClCompile Include="openssl\apps\genpkey.c" />
+    <ClCompile Include="openssl\apps\genrsa.c" />
+    <ClCompile Include="openssl\apps\nseq.c" />
+    <ClCompile Include="openssl\apps\ocsp.c" />
+    <ClCompile Include="openssl\apps\openssl.c" />
+    <ClCompile Include="openssl\apps\passwd.c" />
+    <ClCompile Include="openssl\apps\pkcs12.c" />
+    <ClCompile Include="openssl\apps\pkcs7.c" />
+    <ClCompile Include="openssl\apps\pkcs8.c" />
+    <ClCompile Include="openssl\apps\pkey.c" />
+    <ClCompile Include="openssl\apps\pkeyparam.c" />
+    <ClCompile Include="openssl\apps\pkeyutl.c" />
+    <ClCompile Include="openssl\apps\prime.c" />
+    <ClCompile Include="openssl\apps\rand.c" />
+    <ClCompile Include="openssl\apps\req.c" />
+    <ClCompile Include="openssl\apps\rsa.c" />
+    <ClCompile Include="openssl\apps\rsautl.c" />
+    <ClCompile Include="openssl\apps\sess_id.c" />
+    <ClCompile Include="openssl\apps\smime.c" />
+    <ClCompile Include="openssl\apps\speed.c" />
+    <ClCompile Include="openssl\apps\spkac.c" />
+    <ClCompile Include="openssl\apps\srp.c" />
+    <ClCompile Include="openssl\apps\s_cb.c" />
+    <ClCompile Include="openssl\apps\s_client.c" />
+    <ClCompile Include="openssl\apps\s_server.c" />
+    <ClCompile Include="openssl\apps\s_socket.c" />
+    <ClCompile Include="openssl\apps\s_time.c" />
+    <ClCompile Include="openssl\apps\ts.c" />
+    <ClCompile Include="openssl\apps\verify.c" />
+    <ClCompile Include="openssl\apps\version.c" />
+    <ClCompile Include="openssl\apps\x509.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="openssl.vcxproj">
+      <Project>{7de00581-5a67-3ca9-b2fd-5b6976b394ec}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
