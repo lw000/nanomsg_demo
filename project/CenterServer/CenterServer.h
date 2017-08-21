@@ -2,9 +2,9 @@
 #define __CenterServer_ServerHandler_h__
 
 #include "socket_server.h"
-#include "SessionManager.h"
+#include "session_manager.h"
 
-class ServerHandler : public ISocketServerHandler
+class ServerHandler : public AbstractSocketServerHandler
 {
 public:
 	ManagerT<SocketSession> Sessions;

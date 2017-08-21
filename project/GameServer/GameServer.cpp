@@ -14,7 +14,7 @@ using namespace LW;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-GameServer::GameServer(IGameServer* idesk) : iDesk(idesk)
+GameServer::GameServer(AbstractGameServer* idesk) : iDesk(idesk)
 {
 	_processor = new SocketProcessor;
 	timer = new Timer();

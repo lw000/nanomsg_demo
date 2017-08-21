@@ -60,7 +60,6 @@ void ServerHandler::onListener(SocketSession* session)
 		}
 		delete s;
 	}
-
 	std::cout << *session << std::endl;
 }
 

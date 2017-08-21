@@ -5,5 +5,5 @@
 <properties>
     <entry key="port">19801</entry>
     <entry key="http_times">1</entry>
-    <entry key="rpc_times">1</entry>
+    <entry key="rpc_times">100</entry>
 </properties>

@@ -5,7 +5,6 @@
 #include "command.h"
 #include "platform.pb.h"
 
-#include "Users.h"
 #include <memory>
 
 #include <iostream>
@@ -14,7 +13,6 @@ using namespace LW;
 
 ServerHandler::ServerHandler()
 {
-	iuser = new Users();
 }
 
 ServerHandler::~ServerHandler()
@@ -22,14 +20,19 @@ ServerHandler::~ServerHandler()
 
 }
 
+IUser* ServerHandler::getUsers()
+{
+	return &this->users;
+}
+
 void ServerHandler::onListener(SocketSession* session)
 {
 	static int i = 0;
 	USER_INFO user;
 	user.uid = i++;
-	iuser->add(user, session);
+	users.add(user, session);
 
-	UserSession* us = iuser->find(user.uid);
+	UserSession* us = users.find(user.uid);
 
 	platform::msg_connected msg;
 	lw_llong64 t = time(NULL);
@@ -66,19 +69,19 @@ int ServerHandler::onSocketConnected(SocketSession* session)
 
 int ServerHandler::onSocketDisConnect(SocketSession* session)
 {
-	iuser->remove(session);
+	users.remove(session);
 	return 0;
 }
 
 int ServerHandler::onSocketTimeout(SocketSession* session)
 {
-	iuser->remove(session);
+	users.remove(session);
 	return 0;
 }
 
 int ServerHandler::onSocketError(SocketSession* session)
 {
-	iuser->remove(session);
+	users.remove(session);
 	return 0;
 }
 

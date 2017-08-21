@@ -2,18 +2,19 @@
 #define __PlatformServer_ServerHandler_h__
 
 #include "socket_server.h"
-#include "SessionManager.h"
+#include "Users.h"
 
-class IUser;
-
-class ServerHandler : public ISocketServerHandler
+class ServerHandler : public AbstractSocketServerHandler
 {
 public:
-	IUser* iuser;
+	Users users;
 
 public:
 	ServerHandler();
 	virtual ~ServerHandler();
+
+public:
+	IUser* getUsers();
 
 protected:
 	virtual int onStart() override;

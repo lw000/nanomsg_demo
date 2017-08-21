@@ -48,7 +48,6 @@ std::string __s_center_server_addr;
 std::string __s_center_server_port("19800");
 
 static Users			__g_umgr;
-static SocketProcessor	__g_processor;
 static SocketServer		__g_serv;
 
 static void _add_user_thread()
@@ -135,7 +134,7 @@ int main(int argc, char** argv)
 			std::string sport = Pro.getProperty("port", "19901");
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create(&__g_processor, new ServerHandler()))
+			if (__g_serv.create(new ServerHandler()))
 			{
 				__g_serv.run(port, [](int what)
 				{

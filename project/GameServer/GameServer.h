@@ -12,10 +12,10 @@
 class SocketProcessor;
 class Timer;
 
-class IGameServer
+class AbstractGameServer
 {
 public:
-	virtual ~IGameServer() {}
+	virtual ~AbstractGameServer() {}
 
 public:
 	virtual bool create(const DESK_INFO& info) = 0;
@@ -31,17 +31,17 @@ public:
 	virtual int onGameMessage(int cmd, void* data, int datasize) = 0;
 };
 
-class GameServer : public IGameServer, public ISocketClientHandler
+class GameServer : public AbstractGameServer, public AbstractSocketClientHandler
 {
 private:
-	IGameServer* iDesk;
+	AbstractGameServer* iDesk;
 
 private:
 	DESK_INFO _desk_info;
 	std::vector<USER_INFO> users;
 
 public:
-	GameServer(IGameServer* idesk);
+	GameServer(AbstractGameServer* idesk);
 	virtual ~GameServer();
 
 public:

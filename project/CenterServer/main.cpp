@@ -118,7 +118,6 @@ static Timer			__g_timer2;
 static SocketProcessor	__g_processor2;
 
 static SocketServer		__g_serv;
-static SocketProcessor	__g_processor;
 
 static void start_cb(lw_int32 what)
 {
@@ -211,7 +210,6 @@ int main(int argc, char** argv)
 
 	SocketProcessor::processorUseThreads();
 
-	std::cout << __g_processor << std::endl;
 	std::cout << __g_processor1 << std::endl;
 	std::cout << __g_processor2 << std::endl;
 
@@ -234,7 +232,7 @@ int main(int argc, char** argv)
 
 			lw_int32 port = std::atoi(sport.c_str());
 
-			if (__g_serv.create(&__g_processor, new ServerHandler()))
+			if (__g_serv.create(new ServerHandler()))
 			{
 				__g_serv.run(port, start_cb);
 			}

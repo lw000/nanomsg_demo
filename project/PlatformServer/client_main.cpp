@@ -26,7 +26,7 @@
 
 using namespace LW;
 
-class ClientHandler : public ISocketClientHandler
+class ClientHandler : public AbstractSocketClientHandler
 {
 public:
 	ClientHandler()
@@ -121,16 +121,15 @@ int __connect_center_server(const lw_char8* addr, const lw_char8* sport)
 			lw_bool ret = msg.SerializeToArray(s.get(), c);
 			if (ret)
 			{
-// 				__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c, cmd_heart_beat, [](lw_char8* buf, lw_int32 bufsize) -> bool
-// 				{
-// 					platform::msg_heartbeat msg;
-// 					msg.ParseFromArray(buf, bufsize);
-// 					printf("heartBeat[%d]\n", msg.time());
-// 
-// 					return false;
-// 				});
+				__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c, cmd_heart_beat, [](lw_char8* buf, lw_int32 bufsize) -> bool
+				{
+					platform::msg_heartbeat msg;
+					msg.ParseFromArray(buf, bufsize);
+					printf("heartBeat[%d]\n", msg.time());
 
-				__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c);
+					return false;
+				});
+				//__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c);
 			}
 			return true;
 		});
