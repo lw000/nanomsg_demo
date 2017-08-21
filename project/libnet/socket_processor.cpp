@@ -16,7 +16,7 @@ void SocketProcessor::processorUseThreads()
 #endif	
 }
 
-SocketProcessor::SocketProcessor()
+SocketProcessor::SocketProcessor() : _base(nullptr), _core(nullptr)
 {
 
 }
@@ -86,7 +86,7 @@ int SocketProcessor::loopbreak()
 	return r;
 }
 
-int SocketProcessor::loopexit()
+int SocketProcessor::loopexit() 
 {
 	struct timeval delay = {0, 5000000};
 	int r = event_base_loopexit(this->_base, &delay);

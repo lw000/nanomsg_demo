@@ -16,7 +16,7 @@ public:
 	virtual ~SocketClient();
 
 public:
-	bool create(SocketProcessor* processor, ISocketClientHandler* handler);
+	bool create(SocketProcessor* processor, AbstractSocketClientHandler* handler);
 	void destroy();
 
 public:
@@ -39,7 +39,7 @@ private:
 	SocketProcessor* _processor;
 	SocketSession* _session;
 	SocketCore* _core;
-	ISocketClientHandler* _handler;
+	AbstractSocketClientHandler* _handler;
 };
 
 #endif // !__SocketClient_H__

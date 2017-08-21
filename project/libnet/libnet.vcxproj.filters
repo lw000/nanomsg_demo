@@ -28,9 +28,10 @@
     <ClCompile Include="socket_core.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="SessionManager.cpp" />
     <ClCompile Include="socket_processor.cpp" />
     <ClCompile Include="net.cpp" />
+    <ClCompile Include="session_manager.cpp" />
+    <ClCompile Include="socket_listener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
@@ -55,9 +56,10 @@
     <ClInclude Include="socket_core.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="SessionManager.h" />
     <ClInclude Include="socket_hanlder.h" />
     <ClInclude Include="socket_processor.h" />
+    <ClInclude Include="session_manager.h" />
+    <ClInclude Include="socket_listener.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MemoryPool.tcc">

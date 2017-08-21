@@ -21,12 +21,13 @@
   <ItemGroup>
     <ClCompile Include="CacheQueue.cpp" />
     <ClCompile Include="net.cpp" />
+    <ClCompile Include="socket_listener.cpp" />
     <ClCompile Include="socket_processor.cpp" />
     <ClCompile Include="http_server.cpp" />
     <ClCompile Include="NetHead.cpp" />
     <ClCompile Include="NetMessage.cpp" />
     <ClCompile Include="object.cpp" />
-    <ClCompile Include="SessionManager.cpp" />
+    <ClCompile Include="session_manager.cpp" />
     <ClCompile Include="socket_core.cpp" />
     <ClCompile Include="socket_session.cpp" />
     <ClCompile Include="socket_client.cpp" />
@@ -35,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CacheQueue.h" />
+    <ClInclude Include="socket_listener.h" />
     <ClInclude Include="socket_processor.h" />
     <ClInclude Include="http_server.h" />
     <ClInclude Include="MemoryPool.h" />
@@ -42,7 +44,7 @@
     <ClInclude Include="NetHead.h" />
     <ClInclude Include="NetMessage.h" />
     <ClInclude Include="object.h" />
-    <ClInclude Include="SessionManager.h" />
+    <ClInclude Include="session_manager.h" />
     <ClInclude Include="socket_core.h" />
     <ClInclude Include="socket_hanlder.h" />
     <ClInclude Include="socket_session.h" />

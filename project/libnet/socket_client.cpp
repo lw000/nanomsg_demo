@@ -25,7 +25,7 @@ SocketClient::~SocketClient()
 	SAFE_DELETE(this->_core);
 }
 
-bool SocketClient::create(SocketProcessor* processor, ISocketClientHandler* handler)
+bool SocketClient::create(SocketProcessor* processor, AbstractSocketClientHandler* handler)
 {													  
 	this->_processor = processor;
 	this->_handler = handler;
@@ -92,11 +92,11 @@ void SocketClient::__run()
 
 	if (r == 0)
 	{
-		(ISocketThread*)(this->_handler)->onStart();
+		(AbstractSocketThread*)(this->_handler)->onStart();
 
 		this->_processor->dispatch();
 
-		(ISocketThread*)(this->_handler)->onEnd();
+		(AbstractSocketThread*)(this->_handler)->onEnd();
 	}
 
 	this->destroy();

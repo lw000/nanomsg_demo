@@ -41,7 +41,7 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SocketSession::SocketSession(ISocketSessionHanlder* handler) : _handler(handler)
+SocketSession::SocketSession(AbstractSocketSessionHanlder* handler) : _handler(handler)
 {
 	this->_connected = false;
 	this->_bev = nullptr;
@@ -167,7 +167,7 @@ evutil_socket_t SocketSession::getSocket()
 std::string SocketSession::debug()
 {
 	char buf[512];
-	sprintf(buf, "(fd: [%d] ip: %s, port: %d, c: %d, connected:%d)", this->getSocket(), this->_host.c_str(), this->_port, this->_c, this->_connected);
+	sprintf(buf, "(address:%x, fd:%d ip:%s, port:%d, c:%d, connected:%d)", this, this->getSocket(), this->_host.c_str(), this->_port, this->_c, this->_connected);
 	return std::string(buf);
 }
 

@@ -15,6 +15,7 @@ class Timer;
 class SocketSession;
 class SocketProcessor;
 class SocketCore;
+class SocketListener;
 
 struct evconnlistener;
 
@@ -25,7 +26,7 @@ public:
 	virtual ~SocketServer();
 
 public:
-	bool create(SocketProcessor* processor, ISocketServerHandler* handler);
+	bool create(AbstractSocketServerHandler* handler);
 	void destroy();
 
 public:
@@ -54,13 +55,14 @@ private:
 private:
 	SocketProcessor* _processor;
 	SocketCore* _core;
+	SocketListener* _listener;
 
 	lw_int32 _port;
 	Timer* _timer;
 
 private:
 	std::function<void(lw_int32 what)> _onFunc;
-	ISocketServerHandler* _handler;
+	AbstractSocketServerHandler* _handler;
 };
 
 #endif // !__SocketServer_H__ 

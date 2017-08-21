@@ -28,7 +28,7 @@ class SocketSession : public Object
 	friend class CoreSocket;
 
 public:
-	SocketSession(ISocketSessionHanlder* handler);
+	SocketSession(AbstractSocketSessionHanlder* handler);
 	virtual ~SocketSession();
 
 public:
@@ -83,7 +83,7 @@ private:
 private:
 	SocketProcessor* _processor;
 	struct bufferevent* _bev;
-	ISocketSessionHanlder * _handler;
+	AbstractSocketSessionHanlder * _handler;
 };
 
 
