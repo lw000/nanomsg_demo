@@ -26,30 +26,33 @@ public:
 	}
 };
 
-class IUser
+class AbstractUser
 {
 public:
-	virtual ~IUser() {}
-
-public:
-	virtual UserSession* find(int uid) = 0;
-	virtual UserSession* find(const USER_INFO* user) = 0;
-	virtual UserSession* find(const SocketSession* session) = 0;
+	virtual ~AbstractUser() {}
 
 public:
 	virtual int add(const USER_INFO& user, SocketSession* session) = 0;
 
 public:
-	virtual void remove(const SocketSession* session) = 0;
+	virtual const UserSession* find(int uid) = 0;
+	virtual const UserSession* find(const USER_INFO* user) = 0;
+	virtual const UserSession* find(const SocketSession* session) = 0;
+
+public:
 	virtual void remove(int uid) = 0;
 	virtual void remove(const USER_INFO* user) = 0;
+	virtual void remove(const SocketSession* session) = 0;
+
+// public:
+// 	virtual void update() = 0;
 };
 
-class Users : public IUser
+class Users : public AbstractUser
 {
-	typedef std::list<UserSession*> LIST_U;
-	typedef std::list<UserSession*>::iterator iterator;
-	typedef std::list<UserSession*>::const_iterator const_iterator;
+	typedef std::list<UserSession*> USER_LIST;
+	typedef USER_LIST::iterator iterator;
+	typedef USER_LIST::const_iterator const_iterator;
 
 public:
 	Users();
@@ -59,9 +62,9 @@ public:
 	UserSession* operator[](int i);
 
 public:
-	virtual UserSession* find(int uid) override;
-	virtual UserSession* find(const USER_INFO* user) override;
-	virtual UserSession* find(const SocketSession* session) override;
+	virtual const UserSession* find(int uid) override;
+	virtual const UserSession* find(const USER_INFO* user) override;
+	virtual const UserSession* find(const SocketSession* session) override;
 
 public:
 	virtual int add(const USER_INFO& user, SocketSession* session) override;
@@ -81,8 +84,8 @@ private:
 	std::mutex _m;
 
 private:
-	LIST_U _live;	// 激活用户
-	LIST_U _cache;	// 缓存用户
+	USER_LIST _live;	// 激活用户
+	USER_LIST _cache;	// 缓存用户
 };
 
 #endif	// !__usermgr_h__

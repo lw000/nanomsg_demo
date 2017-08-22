@@ -180,7 +180,7 @@ KVPragma::~KVPragma()
 	}
 }
 
-int KVPragma::parse_url(const char* data)
+int KVPragma::parseURL(const char* data)
 {
 	_kv.clear();
 
@@ -217,7 +217,7 @@ int KVPragma::parse_url(const char* data)
 	return 0;
 }
 
-char* KVPragma::find_value(const char* key)
+char* KVPragma::findValue(const char* key)
 {
 	std::vector<KV*>::iterator iter = _kv.begin();
 	for (; iter != _kv.end(); iter++)
@@ -231,7 +231,7 @@ char* KVPragma::find_value(const char* key)
 	return NULL;
 }
 
-void KVPragma::printf(std::function<void(KV*)> func)
+void KVPragma::each(std::function<void(KV*)> func)
 {
 	std::vector<KV*>::iterator iter = _kv.begin();
 	for (; iter != _kv.end(); iter++)

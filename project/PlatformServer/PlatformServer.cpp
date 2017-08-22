@@ -20,7 +20,7 @@ ServerHandler::~ServerHandler()
 
 }
 
-IUser* ServerHandler::getUsers()
+AbstractUser* ServerHandler::getUsers()
 {
 	return &this->users;
 }
@@ -32,7 +32,7 @@ void ServerHandler::onListener(SocketSession* session)
 	user.uid = i++;
 	users.add(user, session);
 
-	UserSession* us = users.find(user.uid);
+	const UserSession* us = users.find(user.uid);
 
 	platform::msg_connected msg;
 	lw_llong64 t = time(NULL);

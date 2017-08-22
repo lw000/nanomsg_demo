@@ -3,6 +3,6 @@
 
 #include "common_type.h"
 
-void __init_http_business(lw_int32 port);
+void __create_http_service_business(lw_int32 port);
 
 #endif // !__http_server_business_H__

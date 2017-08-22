@@ -40,7 +40,7 @@ Users::~Users()
 	}
 }
 
-UserSession* Users::find(int uid)
+const UserSession* Users::find(int uid)
 {
 	UserSession* pUsession = nullptr;
 	{
@@ -59,7 +59,7 @@ UserSession* Users::find(int uid)
 	return pUsession;
 }
 
-UserSession* Users::find(const USER_INFO* user)
+const UserSession* Users::find(const USER_INFO* user)
 {
 	if (user != nullptr)
 	{
@@ -69,7 +69,7 @@ UserSession* Users::find(const USER_INFO* user)
 	return nullptr;
 }
 
-UserSession* Users::find(const SocketSession* session)
+const UserSession* Users::find(const SocketSession* session)
 {
 	UserSession* pUsession = nullptr;
 	{
@@ -287,7 +287,7 @@ void Users::restoreCache()
 		}
 
 		{			
-			LIST_U().swap(_cache);
+			USER_LIST().swap(_cache);
 		}
 	}
 }

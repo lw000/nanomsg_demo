@@ -34,9 +34,9 @@ public:
 	~KVPragma();
 
 public:
-	int parse_url(const char* data);
-	char* find_value(const char* key);
-	void printf(std::function<void(KV*)> func);
+	int parseURL(const char* data);
+	char* findValue(const char* key);
+	void each(std::function<void(KV*)> func);
 
 private:
 	std::vector<KV*> _kv;

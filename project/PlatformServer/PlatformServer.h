@@ -14,7 +14,7 @@ public:
 	virtual ~ServerHandler();
 
 public:
-	IUser* getUsers();
+	AbstractUser* getUsers();
 
 protected:
 	virtual int onStart() override;

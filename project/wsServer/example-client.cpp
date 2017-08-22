@@ -91,18 +91,19 @@ static void *pthread_routine(void *tool_in)
 {
 	struct pthread_routine_tool *tool = (struct pthread_routine_tool *)tool_in;
 
-	printf("[pthread_routine] Good day. This is pthread_routine.\n");
+	printf("[pthread_routine] this is pthread_routine.\n");
+
 	//* waiting for connection with server done.*/
 	while (!connection_flag)
 	{
-		Sleep(1000 * 2);
+		Sleep(500);
 	}
 
 	static int i = 0;
 	while (!destroy_flag)
 	{
 		char buf[128];
-		sprintf(buf, "{\"data\":\"Good day [%d]\"}", i++);
+		sprintf(buf, "{\"data\":\"good [%d]\"}", i++);
 		websocket_write(tool->wsi, buf, strlen(buf));
 		Sleep(200);
 	}
@@ -112,10 +113,11 @@ static void *pthread_routine(void *tool_in)
 	websocket_write(tool->wsi, "Good day", -1);
 
 	printf("[pthread_routine] sleep 2 seconds then call onWritable\n");
-	Sleep(1);
+	Sleep(2);
 	printf("------------------------------------------------------\n");
 		
-	Sleep(1);
+	Sleep(2);
+
 	//*involked wriable*/
 	printf("[pthread_routine] call on writable.\n");
 	lws_callback_on_writable(tool->wsi);

@@ -7,6 +7,32 @@
 #include <thread>
 #include <unordered_map>
 
+#ifdef WIN32
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include <io.h>
+#include <fcntl.h>
+#ifndef S_ISDIR
+#define S_ISDIR(x) (((x) & S_IFMT) == S_IFDIR)
+#endif
+#else
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <dirent.h>
+#endif
+
+#include <event2/event.h>
+#include <event2/event-config.h>
+#include <event2/event_struct.h>
+#include <event2/buffer.h>
+#include <event2/http.h>
+#include <event2/http_struct.h>
+#include <event2/util.h>
+
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
@@ -50,22 +76,23 @@ static void __method_handler(struct evhttp_request *req, void *arg)
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
 HttpServer::HttpServer()
 {
-
-	
+	this->_base = nullptr;
+	this->_htpServ = nullptr;
 }
 
 HttpServer::~HttpServer()
 {
+
 }
 
-lw_int32 HttpServer::init(const char* addr, lw_uint32 port)
+lw_int32 HttpServer::create(const char* addr, lw_uint32 port)
 {
 	this->_addr = addr;
 	this->port = port;
-
-// 	char uri_root[512];
 
 	struct evhttp_bound_socket *handle = NULL;
 
@@ -73,29 +100,29 @@ lw_int32 HttpServer::init(const char* addr, lw_uint32 port)
 	//event_config_set_flag(cfg, EVENT_BASE_FLAG_STARTUP_IOCP);
 	if (cfg)
 	{
-		_base = event_base_new_with_config(cfg);
+		this->_base = event_base_new_with_config(cfg);
 		event_config_free(cfg);
 	}
 
-	_httpServ = evhttp_new(_base);
-	if (!_httpServ)
+	this->_htpServ = evhttp_new(this->_base);
+	if (!this->_htpServ)
 	{
 		fprintf(stderr, "couldn't?create?evhttp.?Exiting.\n");
-		event_base_free(_base);
+		event_base_free(this->_base);
 		return -1;
 	}
 
-	handle = evhttp_bind_socket_with_handle(_httpServ, this->_addr.c_str(), port);
+	handle = evhttp_bind_socket_with_handle(this->_htpServ, this->_addr.c_str(), port);
 	if (!handle)
 	{
 		fprintf(stderr, "couldn't?bind?to?port?%d.?exiting.\n", (int)port);
-		evhttp_free(_httpServ);
-		event_base_free(_base);
+		evhttp_free(this->_htpServ);
+		event_base_free(this->_base);
 		return -1;
 	}
 
 	// 设置超时
-	evhttp_set_timeout(_httpServ, 60);
+	evhttp_set_timeout(this->_htpServ, 30);
 
 	/* Extract and display the address we're listening on. */
 	{
@@ -150,45 +177,61 @@ lw_int32 HttpServer::init(const char* addr, lw_uint32 port)
 	return 0;
 }
 
-void HttpServer::start()
+void HttpServer::run()
 {
 	std::thread t(std::bind(&HttpServer::__run, this));
 	t.detach();
 }
 
 // 设置回调 
-void HttpServer::set_http_gen_hook(LW_HTTP_CB cb)
+void HttpServer::gen(HTTP_CB cb)
 {
 	HTTP_METHOD_SIGNATURE* signature = new HTTP_METHOD_SIGNATURE;
-	signature->_signature = "evhttp_set_gencb";
+	signature->_signature = "__evhttp_set_gencb__";
 	signature->_cmd = 1;
 	signature->_cb = cb;
-	evhttp_set_gencb(this->_httpServ, __default_handler, signature);
+	evhttp_set_gencb(this->_htpServ, __default_handler, signature);
 }
 
-void HttpServer::get(const char * path, LW_HTTP_CB cb)
+void HttpServer::get(const char * path, HTTP_CB cb)
 {
 	HTTP_METHOD_SIGNATURE* signature = new HTTP_METHOD_SIGNATURE;
 	signature->_signature = path;
 	signature->_cmd = 1;
 	signature->_cb = cb;
-	int r = evhttp_set_cb(this->_httpServ, path, __method_handler, signature);
+	int r = evhttp_set_cb(this->_htpServ, path, __method_handler, signature);
 	if (r == 0)
 	{
-		_unmap_method[path] = signature;
+		iterator iter = this->_method.find(path);
+		if (iter == _method.end())
+		{
+			this->_method.insert(std::pair<std::string, HTTP_METHOD_SIGNATURE*>(path, signature));
+		}
+		else
+		{
+			iter->second = signature;
+		}
 	}
 }
 
-void HttpServer::post(const char * path, LW_HTTP_CB cb)
+void HttpServer::post(const char * path, HTTP_CB cb)
 {
 	HTTP_METHOD_SIGNATURE* signature = new HTTP_METHOD_SIGNATURE;
 	signature->_signature = path;
 	signature->_cmd = 1;
 	signature->_cb = cb;
-	int r = evhttp_set_cb(this->_httpServ, path, __method_handler, signature);
+	int r = evhttp_set_cb(this->_htpServ, path, __method_handler, signature);
 	if (r == 0)
 	{
-		_unmap_method[path] = signature;
+		iterator iter = this->_method.find(path);
+		if (iter == _method.end())
+		{
+			this->_method.insert(std::pair<std::string, HTTP_METHOD_SIGNATURE*>(path, signature));
+		}
+		else
+		{
+			iter->second = signature;
+		}
 	}
 }
 
@@ -196,11 +239,11 @@ void HttpServer::__run()
 {
 	int ret = event_base_dispatch(_base);
 
-	evhttp_free(_httpServ);
+	evhttp_free(this->_htpServ);
 
-	event_base_free(_base);
+	event_base_free(this->_base);
 
 
-	_httpServ = NULL;
-	_base = NULL;
+	this->_htpServ = NULL;
+	this->_base = NULL;
 }

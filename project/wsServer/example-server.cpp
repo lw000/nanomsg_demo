@@ -109,6 +109,34 @@ static int ws_service_callback(struct lws *wsi, enum lws_callback_reasons reason
 		printf("[Main Service] Client close.\n");
 		break;
 
+	case LWS_CALLBACK_HTTP: {
+		char buf[256];
+		int n;
+		printf("lws_http_serve: %s\n", (const char *)in);
+		n = 0;
+		while (lws_hdr_copy_fragment(wsi, buf, sizeof(buf),
+			WSI_TOKEN_HTTP_URI_ARGS, n) > 0) {
+			lwsl_notice("URI Arg %d: %s\n", ++n, buf);
+		}
+
+		{
+			lws_get_peer_simple(wsi, buf, sizeof(buf));
+			lwsl_info("HTTP connect from %s\n", buf);
+		}
+
+		if (len < 1) {
+			lws_return_http_status(wsi, HTTP_STATUS_BAD_REQUEST, NULL);
+		}
+		else
+		{
+			lws_return_http_status(wsi, HTTP_STATUS_OK, "{\"resply\":\"0\"}");
+		}
+		
+	} break;
+	case LWS_CALLBACK_CLOSED_HTTP:
+	{
+
+	} break;
 	default:
 		break;
 	}

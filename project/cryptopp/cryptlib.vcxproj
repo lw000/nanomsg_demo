@@ -173,7 +173,6 @@
     </ResourceCompile>
     <Lib>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>..\libs\lib\Release\cryptlib.lib</OutputFile>
     </Lib>
     <PostBuildEvent />
   </ItemDefinitionGroup>
@@ -276,7 +275,6 @@
     </ResourceCompile>
     <Lib>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>..\lib\Debug\cryptlib.lib</OutputFile>
     </Lib>
     <PostBuildEvent />
   </ItemDefinitionGroup>

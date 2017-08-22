@@ -192,15 +192,23 @@ lw_int32 SocketSession::sendData(lw_int32 cmd, void* object, lw_int32 objectSize
 {
 	if (this->_connected)
 	{
+		{
+			std::unordered_map<lw_int32, SocketCallback>::iterator iter = this->_cmd_event_map.find(recvcmd);
+			if (iter == _cmd_event_map.end())
+			{
+				this->_cmd_event_map.insert(std::pair<lw_int32, SocketCallback>(recvcmd, cb));
+			}
+			else
+			{
+				iter->second = cb;
+			}
+		}
+
 		int c = this->_processor->getSocketCore()->send(cmd, object, objectSize, [this](LW_NET_MESSAGE * p) -> lw_int32
 		{
 			int c1 = bufferevent_write(this->_bev, p->buf, p->size);
 			return c1;
 		});
-
-		{
-			this->_cmd_event_map[recvcmd] = cb;
-		}
 
 		return c;
 	}
