@@ -147,6 +147,8 @@
     <ClInclude Include="lw_base64.h" />
     <ClInclude Include="lw_xxtea.h" />
     <ClInclude Include="Threadable.h" />
+    <ClInclude Include="win32helpers\getopt.h" />
+    <ClInclude Include="win32helpers\gettimeofday.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data.cpp" />
@@ -159,6 +161,9 @@
     <ClCompile Include="lw_base64.cpp" />
     <ClCompile Include="lw_xxtea.cpp" />
     <ClCompile Include="Threadable.cpp" />
+    <ClCompile Include="win32helpers\getopt.c" />
+    <ClCompile Include="win32helpers\getopt_long.c" />
+    <ClCompile Include="win32helpers\gettimeofday.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

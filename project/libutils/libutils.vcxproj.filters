@@ -8,6 +8,9 @@
     <Filter Include="ext">
       <UniqueIdentifier>{591040b6-a47d-481a-8fb6-0a0d4893dfcf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="win32helpers">
+      <UniqueIdentifier>{dab101ee-d9aa-482c-99c5-3c214501910b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -29,6 +32,12 @@
     <ClInclude Include="Data.h" />
     <ClInclude Include="FileUtils.h" />
     <ClInclude Include="Threadable.h" />
+    <ClInclude Include="win32helpers\getopt.h">
+      <Filter>win32helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="win32helpers\gettimeofday.h">
+      <Filter>win32helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lwutil.cpp" />
@@ -49,5 +58,14 @@
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="FileUtils.cpp" />
     <ClCompile Include="Threadable.cpp" />
+    <ClCompile Include="win32helpers\getopt.c">
+      <Filter>win32helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="win32helpers\getopt_long.c">
+      <Filter>win32helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="win32helpers\gettimeofday.c">
+      <Filter>win32helpers</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
