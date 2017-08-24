@@ -25,6 +25,8 @@
 #include <dirent.h>
 #endif
 
+#include <memory>
+
 #include <event2/event.h>
 #include <event2/event-config.h>
 #include <event2/event_struct.h>
@@ -38,43 +40,86 @@
 #include "rapidjson/stringbuffer.h"
 
 #include "lwutil.h"
-#include <memory>
+
+struct HTTP_METHOD_SIGNATURE
+{
+	std::string sign;
+	lw_uint32 cmd;
+	std::function<void(struct evhttp_request *)> _request_cb;
+};
+
+struct EqualKey
+{
+	bool operator () (const HTTP_METHOD_SIGNATURE &lhs, const HTTP_METHOD_SIGNATURE &rhs) const
+	{
+		return lhs.sign == rhs.sign && lhs.cmd == rhs.cmd;
+	}
+};
+
+struct HashFunc
+{
+	std::size_t operator()(const HTTP_METHOD_SIGNATURE &key) const
+	{
+		using std::size_t;
+		using std::hash;
+
+		return ((hash<std::string>()(key.sign) ^ (hash<lw_uint32>()(key.cmd) << 1)) >> 1);
+	}
+};
 
 void lw_http_send_reply(struct evhttp_request * req, const char* what)
 {
 	struct evbuffer *buf = evbuffer_new();
-	// 	evhttp_add_header(req->output_headers, "Server", MYHTTPD_SIGNATURE);
-	// 	evhttp_add_header(req->output_headers, "Content-Type", "text/plain; charset=UTF-8");
-	// 	evhttp_add_header(req->output_headers, "Connection", "close");
+	evhttp_add_header(req->output_headers, "Content-Type", "text/plain; charset=UTF-8");
 	evbuffer_add_printf(buf, what);
-	evhttp_send_reply(req, HTTP_OK, "Client", buf);
+	evhttp_send_reply(req, HTTP_OK, NULL, buf);
 	evbuffer_free(buf);
 }
 
-static void __default_handler(struct evhttp_request *req, void *arg)
-{
-	HTTP_METHOD_SIGNATURE* signature = (HTTP_METHOD_SIGNATURE*)arg;
-	{
-		signature->_cb(req);
-	}
-}
+class CoreHttp {
 
-static void __method_handler(struct evhttp_request *req, void *arg)
-{
-	HTTP_METHOD_SIGNATURE* signature = (HTTP_METHOD_SIGNATURE*)arg;
-	
-	switch (evhttp_request_get_command(req))
+public:
+	static void __genHandler(struct evhttp_request *req, void *arg)
 	{
-	case EVHTTP_REQ_GET:
-	case EVHTTP_REQ_POST:
+		HttpServer* serv = (HttpServer*)arg;
+		if (serv->_gen_cb != nullptr)
+		{
+			serv->_gen_cb(req);
+		}
+	}
+
+public:
+	static void __requestHandler(struct evhttp_request *req, void *arg)
 	{
-		signature->_cb(req);
+		HTTP_METHOD_SIGNATURE* signature = (HTTP_METHOD_SIGNATURE*)arg;
+		evhttp_cmd_type cmd = evhttp_request_get_command(req);
+		switch (cmd)
+		{
+		case EVHTTP_REQ_GET:
+		{
+			if (signature->cmd == cmd) {
+				signature->_request_cb(req);
+			}
+			else {
+				lw_http_send_reply(req, "{\"code\":0,\"what\":\"The requested resource does not support http method 'GET'.""}");
+			}
+		} break;
+		case EVHTTP_REQ_POST:
+		{
+			if (signature->cmd == cmd) {
+				signature->_request_cb(req);
+			}
+			else {
+				lw_http_send_reply(req, "{\"code\":0,\"what\":\"The requested resource does not support http method 'POST'.""}");
+			}
+		} break;
+		default: {
+			lw_http_send_reply(req, "{\"code\":0,\"what\":\"The requested resource only support http method 'GET' OR 'POST'.""}");
+		} break;
+		}
 	}
-	default:
-		lw_http_send_reply(req, "{\"code\":0,\"what\":\"The requested resource does not support http method 'POST' OR 'GET'.""}");
-		break;
-	}
-}
+};
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -160,17 +205,15 @@ lw_int32 HttpServer::create(const char* addr, lw_uint32 port)
 			}
 
 			addr = evutil_inet_ntop(ss.ss_family, inaddr, addrbuf, sizeof(addrbuf));
-			if (addr)
+			if (addr != NULL)
 			{
-				printf("HTTP服务启动完成 [http://%s:%d]\n", addr, got_port);
-// 				evutil_snprintf(uri_root, sizeof(uri_root), "http://%s:%d", addr, got_port);
+				fprintf(stdout, "HTTP服务启动完成 [http://%s:%d]\n", addr, got_port);
 			}
 			else
 			{
 				fprintf(stderr, "evutil_inet_ntop failed\n");
 				break;
 			}
-
 		} while (0);
 	}
 
@@ -184,43 +227,29 @@ void HttpServer::run()
 }
 
 // 设置回调 
-void HttpServer::gen(HTTP_CB cb)
+void HttpServer::gen(std::function<void(struct evhttp_request *)> cb)
 {
-	HTTP_METHOD_SIGNATURE* signature = new HTTP_METHOD_SIGNATURE;
-	signature->_signature = "__evhttp_set_gencb__";
-	signature->_cmd = 1;
-	signature->_cb = cb;
-	evhttp_set_gencb(this->_htpServ, __default_handler, signature);
+	this->_gen_cb = cb;
+	evhttp_set_gencb(this->_htpServ, CoreHttp::__genHandler, this);
 }
 
-void HttpServer::get(const char * path, HTTP_CB cb)
+void HttpServer::get(const char * path, std::function<void(struct evhttp_request *)> cb)
 {
-	HTTP_METHOD_SIGNATURE* signature = new HTTP_METHOD_SIGNATURE;
-	signature->_signature = path;
-	signature->_cmd = 1;
-	signature->_cb = cb;
-	int r = evhttp_set_cb(this->_htpServ, path, __method_handler, signature);
-	if (r == 0)
-	{
-		iterator iter = this->_method.find(path);
-		if (iter == _method.end())
-		{
-			this->_method.insert(std::pair<std::string, HTTP_METHOD_SIGNATURE*>(path, signature));
-		}
-		else
-		{
-			iter->second = signature;
-		}
-	}
+	__doStore(path, EVHTTP_REQ_GET, cb);
 }
 
-void HttpServer::post(const char * path, HTTP_CB cb)
+void HttpServer::post(const char * path, std::function<void(struct evhttp_request *)> cb)
+{
+	__doStore(path, EVHTTP_REQ_POST, cb);
+}
+
+void HttpServer::__doStore(const char * path, lw_int32 cmd, std::function<void(struct evhttp_request *)> cb)
 {
 	HTTP_METHOD_SIGNATURE* signature = new HTTP_METHOD_SIGNATURE;
-	signature->_signature = path;
-	signature->_cmd = 1;
-	signature->_cb = cb;
-	int r = evhttp_set_cb(this->_htpServ, path, __method_handler, signature);
+	signature->sign = path;
+	signature->cmd = cmd;
+	signature->_request_cb = cb;
+	int r = evhttp_set_cb(this->_htpServ, path, CoreHttp::__requestHandler, signature);
 	if (r == 0)
 	{
 		iterator iter = this->_method.find(path);
@@ -242,7 +271,6 @@ void HttpServer::__run()
 	evhttp_free(this->_htpServ);
 
 	event_base_free(this->_base);
-
 
 	this->_htpServ = NULL;
 	this->_base = NULL;

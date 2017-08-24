@@ -65,7 +65,7 @@ BOOL CALLBACK __cosonle_handler(DWORD ev)
 /* *
 * websocket_write_back: write the string data to the destination wsi.
 */
-int websocket_write(struct lws *wsi_in, char *str, int str_size_in)
+int sendMessage(struct lws *wsi_in, char *str, int str_size_in)
 {
 	if (str == NULL || wsi_in == NULL)
 		return -1;
@@ -82,7 +82,8 @@ int websocket_write(struct lws *wsi_in, char *str, int str_size_in)
 	//* write out*/
 	n = lws_write(wsi_in, (unsigned char*)out + LWS_SEND_BUFFER_PRE_PADDING, len, LWS_WRITE_TEXT);
 
-	printf("[websocket_write_back] %s\n", str);
+	//printf("[websocket_write_back] %s\n", str);
+
 	//* free the buffer*/
 	free(out);
 
@@ -94,21 +95,25 @@ static int ws_service_callback(struct lws *wsi, enum lws_callback_reasons reason
 	switch (reason) 
 	{
 	case LWS_CALLBACK_ESTABLISHED:
+	{
 		printf("[Main Service] Connection established\n");
-		break;
-
+	} break;
 		//* If receive a data from client*/
 	case LWS_CALLBACK_RECEIVE:
+	{
 		printf("[Main Service] Server recvived:%s\n", (char *)in);
 
 		//* echo back to client*/
-		websocket_write(wsi, (char *)in, -1);
+		char *buf = (char*)malloc(sizeof(char)*len + 1);
+		memcpy(buf, in, len);
 
-		break;
-	case LWS_CALLBACK_CLOSED:
+		sendMessage(wsi, (char *)buf, -1);
+
+		free(buf);
+	} break;
+	case LWS_CALLBACK_CLOSED: {
 		printf("[Main Service] Client close.\n");
-		break;
-
+	} break;
 	case LWS_CALLBACK_HTTP: {
 		char buf[256];
 		int n;
@@ -191,6 +196,7 @@ int test_server(int argc, char **argv)
 	info.gid = -1;
 	info.uid = -1;
 	info.options = LWS_SERVER_OPTION_LIBEVENT;
+
 	//info.options = 0;
 
 	//* create libwebsocket context. */

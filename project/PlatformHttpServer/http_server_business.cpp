@@ -2,12 +2,10 @@
 
 #include "http_server.h"
 
-#include <event2/event.h>
-#include <event2/event-config.h>
-#include <event2/event_struct.h>
 #include <event2/buffer.h>
 #include <event2/http.h>
 #include <event2/http_struct.h>
+#include <event2/keyvalq_struct.h>
 #include <event2/util.h>
 
 #include "rapidjson/document.h"
@@ -123,100 +121,83 @@ static void add_get_cb(struct evhttp_request *req)
 // 	}
 
 	struct evkeyvalq http_query;
-	do
+	const char *uri = evhttp_request_get_uri(req);
+	int ret = evhttp_parse_query_str(uri, &http_query);
+	if (ret != 0)
 	{
-		const char *uri = evhttp_request_get_uri(req);
-		int ret = evhttp_parse_query_str(uri, &http_query);
-		if (ret != 0)
-		{
-			lw_http_send_reply(req, "paragma is error!");
-			break;
-		}
+		lw_http_send_reply(req, "paragma is error!");
+		return;
+	}
 
-		//解析URI的参数(即GET方法的参数)
-		struct evkeyvalq params;
-		ret = evhttp_parse_query(uri, &params);
-		if (ret != 0)
-		{
-			lw_http_send_reply(req, "paragma is error!");
-			break;
-		}
+	//解析URI的参数(即GET方法的参数)
+	struct evkeyvalq params;
+	ret = evhttp_parse_query(uri, &params);
+	if (ret != 0)
+	{
+		lw_http_send_reply(req, "paragma is error!");
+		return;
+	}
 
-		const char* _a = evhttp_find_header(&params, "a");
-		const char* _b = evhttp_find_header(&params, "b");
+	const char* _a = evhttp_find_header(&params, "a");
+	const char* _b = evhttp_find_header(&params, "b");
 
-		if (_a == NULL || _b == NULL)
-		{
-			lw_http_send_reply(req, "paragma is error!");
-			break;
-		}
+	if (_a == NULL || _b == NULL)
+	{
+		lw_http_send_reply(req, "paragma is error!");
+		return;
+	}
 
-		int a = std::atoi(_a);
-		int b = std::atoi(_b);
-		
-		struct evbuffer *buf = evbuffer_new();
-		evbuffer_add_printf(buf, "%d + %d = %d", a, b, a + b);
-		evhttp_send_reply(req, HTTP_OK, NULL, buf);
-		evbuffer_free(buf);
+	int a = std::atoi(_a);
+	int b = std::atoi(_b);
 
-	} while (0);
+	struct evbuffer *buf = evbuffer_new();
+	evbuffer_add_printf(buf, "%d + %d = %d", a, b, a + b);
+	evhttp_send_reply(req, HTTP_OK, NULL, buf);
+	evbuffer_free(buf);
 
 	evhttp_clear_headers(&http_query);
-
-	return;
 }
 
 static void sub_get_cb(struct evhttp_request *req)
 {
 	struct evkeyvalq http_query;
-	do
+
+	const char *uri = evhttp_request_get_uri(req);
+	int ret = evhttp_parse_query_str(uri, &http_query);
+	if (ret != 0)
 	{
-		const char *uri = evhttp_request_get_uri(req);
-		int ret = evhttp_parse_query_str(uri, &http_query);
-		if (ret != 0)
-		{
-			lw_http_send_reply(req, "paragma is error!");
-			break;
-		}
+		lw_http_send_reply(req, "paragma is error!");
+		return;
+	}
 
-		//解析URI的参数(即GET方法的参数)
-		struct evkeyvalq params;
-		ret = evhttp_parse_query(uri, &params);
-		if (ret != 0)
-		{
-			lw_http_send_reply(req, "paragma is error!");
-			break;
-		}
+	//解析URI的参数(即GET方法的参数)
+	struct evkeyvalq params;
+	ret = evhttp_parse_query(uri, &params);
+	if (ret != 0)
+	{
+		lw_http_send_reply(req, "paragma is error!");
+		return;
+	}
 
-		const char* _a = evhttp_find_header(&params, "a");
-		const char* _b = evhttp_find_header(&params, "b");
+	const char* _a = evhttp_find_header(&params, "a");
+	const char* _b = evhttp_find_header(&params, "b");
 
-		if (_a == NULL || _b == NULL)
-		{
-			lw_http_send_reply(req, "paragma is error!");
-			break;
-		}
+	if (_a == NULL || _b == NULL)
+	{
+		lw_http_send_reply(req, "paragma is error!");
+		return;
+	}
 
-		int a = std::atoi(_a);
-		int b = std::atoi(_b);
-		struct evbuffer *buf = evbuffer_new();
-		evbuffer_add_printf(buf, "%d - %d = %d", a, b, a - b);
+	int a = std::atoi(_a);
+	int b = std::atoi(_b);
+	struct evbuffer *buf = evbuffer_new();
+	evbuffer_add_printf(buf, "%d - %d = %d", a, b, a - b);
 
-		evhttp_send_reply(req, HTTP_OK, NULL, buf);
+	evhttp_send_reply(req, HTTP_OK, NULL, buf);
 
-		evbuffer_free(buf);
-
-	} while (0);
+	evbuffer_free(buf);
 
 	evhttp_clear_headers(&http_query);
-
-	return;
-}
-
-
-static void mul_get_cb(struct evhttp_request *req)
-{
-
 }
 
 void __create_http_service_business(lw_int32 port)
@@ -231,7 +212,46 @@ void __create_http_service_business(lw_int32 port)
 		__g_htpServ.post("/login", login_post_cb);
 		__g_htpServ.get("/add", add_get_cb);
 		__g_htpServ.get("/sub", sub_get_cb);
-		__g_htpServ.get("/mul", mul_get_cb);
+		__g_htpServ.get("/mul", [](struct evhttp_request *req)
+		{
+			struct evkeyvalq http_query;
+			
+			const char *uri = evhttp_request_get_uri(req);
+			int ret = evhttp_parse_query_str(uri, &http_query);
+			if (ret != 0)
+			{
+				lw_http_send_reply(req, "paragma is error!");
+				return;
+			}
+
+			//解析URI的参数(即GET方法的参数)
+			struct evkeyvalq params;
+			ret = evhttp_parse_query(uri, &params);
+			if (ret != 0)
+			{
+				lw_http_send_reply(req, "paragma is error!");
+				return;
+			}
+
+			const char* _a = evhttp_find_header(&params, "a");
+			const char* _b = evhttp_find_header(&params, "b");
+
+			if (_a == NULL || _b == NULL)
+			{
+				lw_http_send_reply(req, "paragma is error!");
+				return;
+			}
+
+			int a = std::atoi(_a);
+			int b = std::atoi(_b);
+
+			struct evbuffer *buf = evbuffer_new();
+			evbuffer_add_printf(buf, "%d / %d = %f", a, b, double(a) / b);
+			evhttp_send_reply(req, HTTP_OK, NULL, buf);
+			evbuffer_free(buf);
+
+			evhttp_clear_headers(&http_query);
+		});
 
 		__g_htpServ.run();
 	}
