@@ -10,11 +10,11 @@ int main(int argc, char **argv)
 
 	if (strcmp(argv[1], "s") == 0)
 	{
-		test_server(argc, argv);
+		test_ws_server(argc, argv);
 	}
 	else if(strcmp(argv[1], "c") == 0)
 	{
-		test_client(argc, argv);
+		test_ws_client(argc, argv);
 	}
 	else {
 

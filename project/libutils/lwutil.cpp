@@ -163,15 +163,15 @@ char * lw_strtok_r(char *s, const char *delim, char **state) {
 	}
 }
 
-KVPragma::KVPragma()
+KVQueryUrlValue::KVQueryUrlValue()
 {
 	_kv.clear();
 }
 
-KVPragma::~KVPragma()
+KVQueryUrlValue::~KVQueryUrlValue()
 {
-	std::vector<KV*>::iterator iter = _kv.begin();
-	for (; iter != _kv.end(); iter++)
+	std::list<KV*>::iterator iter = _kv.begin();
+	for (; iter != _kv.end(); ++iter)
 	{
 		KV *_pkv = *iter;
 		free(_pkv->k);
@@ -180,7 +180,7 @@ KVPragma::~KVPragma()
 	}
 }
 
-int KVPragma::parseURL(const char* data)
+int KVQueryUrlValue::parse(const char* data)
 {
 	_kv.clear();
 
@@ -217,10 +217,10 @@ int KVPragma::parseURL(const char* data)
 	return 0;
 }
 
-char* KVPragma::findValue(const char* key)
+char* KVQueryUrlValue::find(const char* key)
 {
-	std::vector<KV*>::iterator iter = _kv.begin();
-	for (; iter != _kv.end(); iter++)
+	std::list<KV*>::iterator iter = _kv.begin();
+	for (; iter != _kv.end(); ++iter)
 	{
 		KV *_pkv = *iter;
 		if (strcmp(_pkv->k, key) == 0)
@@ -231,10 +231,10 @@ char* KVPragma::findValue(const char* key)
 	return NULL;
 }
 
-void KVPragma::each(std::function<void(KV*)> func)
+void KVQueryUrlValue::each(std::function<void(KV*)> func)
 {
-	std::vector<KV*>::iterator iter = _kv.begin();
-	for (; iter != _kv.end(); iter++)
+	std::list<KV*>::iterator iter = _kv.begin();
+	for (; iter != _kv.end(); ++iter)
 	{
 		KV *_pkv = *iter;
 		func(_pkv);

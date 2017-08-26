@@ -65,7 +65,7 @@ BOOL CALLBACK __cosonle_handler(DWORD ev)
 /* *
 * websocket_write_back: write the string data to the destination wsi.
 */
-int sendMessage(struct lws *wsi_in, char *str, int str_size_in)
+int sendMessageText(struct lws *wsi_in, char *str, int str_size_in)
 {
 	if (str == NULL || wsi_in == NULL)
 		return -1;
@@ -76,13 +76,11 @@ int sendMessage(struct lws *wsi_in, char *str, int str_size_in)
 
 	len = (str_size_in < 1) ? strlen(str) : str_size_in;
 
-	out = (char *)malloc(sizeof(char)*(LWS_SEND_BUFFER_PRE_PADDING + len + LWS_SEND_BUFFER_POST_PADDING));
+	out = (char *)malloc(sizeof(char)*(LWS_PRE + len));
 	//* setup the buffer*/
-	memcpy(out + LWS_SEND_BUFFER_PRE_PADDING, str, len);
+	memcpy(out + LWS_PRE, str, len);
 	//* write out*/
-	n = lws_write(wsi_in, (unsigned char*)out + LWS_SEND_BUFFER_PRE_PADDING, len, LWS_WRITE_TEXT);
-
-	//printf("[websocket_write_back] %s\n", str);
+	n = lws_write(wsi_in, (unsigned char*)out + LWS_PRE, len, LWS_WRITE_TEXT);
 
 	//* free the buffer*/
 	free(out);
@@ -90,26 +88,35 @@ int sendMessage(struct lws *wsi_in, char *str, int str_size_in)
 	return n;
 }
 
+static int sendMessagePing(struct lws *wsi_in) {
+
+	unsigned char pingbuf[LWS_PRE + 10];
+	int n = lws_write(wsi_in, pingbuf + LWS_PRE, 10, LWS_WRITE_PING);
+
+	return n;
+}
+
 static int ws_service_callback(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len)
 {
-	switch (reason) 
-	{
-	case LWS_CALLBACK_ESTABLISHED:
-	{
+	printf("lws_callback_reasons: %d \n", reason);
+	switch (reason) {
+	case LWS_CALLBACK_ESTABLISHED: {
 		printf("[Main Service] Connection established\n");
 	} break;
 		//* If receive a data from client*/
-	case LWS_CALLBACK_RECEIVE:
-	{
-		printf("[Main Service] Server recvived:%s\n", (char *)in);
-
+	case LWS_CALLBACK_RECEIVE: {
 		//* echo back to client*/
-		char *buf = (char*)malloc(sizeof(char)*len + 1);
-		memcpy(buf, in, len);
+		{
+			char *buf = (char*)malloc(sizeof(char)*len + 1);
+			memcpy(buf, in, len);
+			buf[len] = '\0';
+			
+			printf("[Main Service] Server recvived:%s\n", buf);
 
-		sendMessage(wsi, (char *)buf, -1);
+			sendMessageText(wsi, buf, strlen(buf));
 
-		free(buf);
+			free(buf);
+		}
 	} break;
 	case LWS_CALLBACK_CLOSED: {
 		printf("[Main Service] Client close.\n");
@@ -136,11 +143,9 @@ static int ws_service_callback(struct lws *wsi, enum lws_callback_reasons reason
 		{
 			lws_return_http_status(wsi, HTTP_STATUS_OK, "{\"resply\":\"0\"}");
 		}
-		
 	} break;
-	case LWS_CALLBACK_CLOSED_HTTP:
-	{
-
+	case LWS_CALLBACK_SERVER_WRITEABLE: {
+		sendMessagePing(wsi);
 	} break;
 	default:
 		break;
@@ -167,7 +172,7 @@ static const struct lws_extension exts[] = {
 	{ NULL, NULL, NULL /* terminator */ }
 };
 
-int test_server(int argc, char **argv)
+int test_ws_server(int argc, char **argv)
 {
 #ifdef _WIN32
 	SetConsoleCtrlHandler(__cosonle_handler, TRUE);

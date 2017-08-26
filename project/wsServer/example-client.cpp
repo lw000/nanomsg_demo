@@ -10,127 +10,39 @@
 #include <libwebsockets.h>
 
 #include "example.h"
+#include <unordered_map>
+#include <mutex>
+#include <string>
 
-static int destroy_flag = 0;
-static int connection_flag = 0;
-static int writeable_flag = 0;
+// static int destroy_flag = 0;
+// static int connection_flag = 0;
 
-static void __signal_cb(int signo) {
-	destroy_flag = 1;
-}
+std::mutex _g_mutex;
 
 struct session_data {
 	int fd;
 };
 
-struct pthread_routine_tool {
+struct pthread_args {
 	struct lws_context *context;
 	struct lws *ws;
+	std::string name;
+	int destroy_flag;
+	int connection_flag;
 };
 
-static int sendMessage(struct lws *wsi_in, char *str, int str_size_in) {
-	if (str == NULL || wsi_in == NULL) {
-		return -1;
-	}
-		
-	int n;
-	int len;
-	char *out = NULL;
+static std::unordered_map <lws*, pthread_args*> __g_pthread_args;
 
-	len = (str_size_in < 1) ? strlen(str) : str_size_in;
-
-	out = (char *)malloc(sizeof(char)*(LWS_SEND_BUFFER_PRE_PADDING + len + LWS_SEND_BUFFER_POST_PADDING));
-	//* setup the buffer*/
-	memcpy(out + LWS_SEND_BUFFER_PRE_PADDING, str, len);
-	//* write out*/
-	n = lws_write(wsi_in, (unsigned char*)out + LWS_SEND_BUFFER_PRE_PADDING, len, LWS_WRITE_TEXT);
-
-	//printf("[websocket_write] str: %s\n", str);
-
-	//* free the buffer*/
-	free(out);
-
-	return n;
-}
-
+static void __signal_cb(int signo);
+static int sendMessageText(struct lws *wsi_in, char *str, int str_size_in);
+static int sendMessagePing(struct lws *wsi_in);
 static int ws_service_callback(struct lws *wsi, enum lws_callback_reasons reason, void *user,
-	void *in, size_t len) {
-	switch (reason)
-	{
-	case LWS_CALLBACK_CLIENT_ESTABLISHED: {
-		printf("Connect with server success.\n");
-		connection_flag = 1;
-	} break;
-	case LWS_CALLBACK_CLIENT_CONNECTION_ERROR: {
-		printf("Connect with server error.\n");
-		destroy_flag = 1;
-		connection_flag = 0;
-	} break;
-	case LWS_CALLBACK_CLOSED: {
-		printf("LWS_CALLBACK_CLOSED\n");
-		destroy_flag = 1;
-		connection_flag = 0;
-	} break;
-	case LWS_CALLBACK_CLIENT_RECEIVE: {
-		printf("Client recvived:%s\n", (char *)in);
-		if (writeable_flag)
-			destroy_flag = 1;
-	} break;
-	case LWS_CALLBACK_CLIENT_WRITEABLE: {
-		printf("On writeable is called. send byebye message\n");
-		sendMessage(wsi, "Byebye! See you later", -1);
-		writeable_flag = 1;
-	} break;
-
-	default:
-		break;
-	}
-
-	return 0;
-}
-
-static void *pthread_routine(void *tool_in)
-{
-	struct pthread_routine_tool *tool = (struct pthread_routine_tool *)tool_in;
-
-	printf("[pthread_routine] this is pthread_routine.\n");
-
-	//* waiting for connection with server done.*/
-	while (!connection_flag)
-	{
-		Sleep(500);
-	}
-
-	static int i = 0;
-	while (!destroy_flag)
-	{
-		char buf[128];
-		sprintf(buf, "{\"data\":\"good [%d]\"}", i++);
-		sendMessage(tool->ws, buf, strlen(buf));
-		Sleep(1000);
-	}
-
-	//*Send greeting to server*/
-	printf("[pthread_routine] Server is ready. send a greeting message to server.\n");
-	sendMessage(tool->ws, "Good day", -1);
-
-	printf("[pthread_routine] sleep 2 seconds then call onWritable\n");
-	Sleep(2);
-	printf("------------------------------------------------------\n");
-		
-	Sleep(2);
-
-	//*involked wriable*/
-	printf("[pthread_routine] call on writable.\n");
-	lws_callback_on_writable(tool->ws);
-	
-	return nullptr;
-}
+	void *in, size_t len);
 
 static struct lws_protocols protocols[] =
 {
 	{
-		"my-protocol",
+		"my-websocket-protocol",
 		ws_service_callback,
 		sizeof(struct session_data),
 		0,
@@ -143,7 +55,106 @@ static struct lws_protocols protocols[] =
 	}
 };
 
-int test_client(int argc, char **argv)
+
+static void __signal_cb(int signo) {
+
+	for (auto v : __g_pthread_args)
+	{
+		v.second->destroy_flag = 1;
+	}
+}
+
+static int sendMessageText(struct lws *wsi_in, char *str, int str_size_in) {
+	if (str == NULL || wsi_in == NULL) {
+		return -1;
+	}
+		
+	int n;
+	int len;
+	char *out = NULL;
+
+	len = (str_size_in < 1) ? strlen(str) : str_size_in;
+
+	out = (char *)malloc(sizeof(char)*(LWS_PRE + len));
+	//* setup the buffer*/
+	memcpy(out + LWS_PRE, str, len);
+	//* write out*/
+	n = lws_write(wsi_in, (unsigned char*)out + LWS_PRE, len, LWS_WRITE_TEXT);
+
+	//* free the buffer*/
+	free(out);
+
+	return n;
+}
+
+static int sendMessagePing(struct lws *wsi) {
+
+	unsigned char pingbuf[LWS_PRE + 1];
+	int n = lws_write(wsi, pingbuf + LWS_PRE, 1, LWS_WRITE_PING);
+	return n;
+}
+
+static int ws_service_callback(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len) {
+	switch (reason)
+	{
+	case LWS_CALLBACK_CLIENT_ESTABLISHED: {
+		struct pthread_args *tool = (struct pthread_args *)__g_pthread_args[wsi];
+		printf("Connect[%s] with server success.\n", tool->name.c_str());
+		tool->connection_flag = 1;
+	} break;
+	case LWS_CALLBACK_CLIENT_CONNECTION_ERROR: {
+		struct pthread_args *tool = (struct pthread_args *)__g_pthread_args[wsi];
+		printf("Connect[%s] with server error.\n", tool->name.c_str());
+		tool->destroy_flag = 1;
+		tool->connection_flag = 0;
+	} break;
+	case LWS_CALLBACK_CLOSED: {	
+		struct pthread_args *tool = (struct pthread_args *)__g_pthread_args[wsi];
+		printf("Connect[%s] LWS_CALLBACK_CLOSED\n", tool->name.c_str());
+		tool->destroy_flag = 1;
+		tool->connection_flag = 0;
+	} break;
+	case LWS_CALLBACK_CLIENT_RECEIVE: {
+		struct pthread_args *tool = (struct pthread_args *)__g_pthread_args[wsi];
+		char* buf = (char*)malloc(len + 1);
+		memcpy(buf, (char*)in, len);
+		buf[len] = '\0';
+		printf("Client[%s] recvived:%s\n", tool->name.c_str(), buf);
+		free(buf);
+	} break;
+	case LWS_CALLBACK_CLIENT_WRITEABLE: {
+		sendMessagePing(wsi);
+	} break;
+	default:
+		break;
+	}
+
+	return 0;
+}
+
+static void *pthread_routine(void *tool_in)
+{
+	struct pthread_args *tool = (struct pthread_args *)tool_in;
+
+	//* waiting for connection with server done.*/
+	while (!tool->connection_flag)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+
+	while (!tool->destroy_flag)
+	{
+		static int i = 0;
+		char buf[128];
+		sprintf(buf, "{\"data\":\"good [%d]\"}", i++);
+		sendMessageText(tool->ws, buf, strlen(buf));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+	
+	return nullptr;
+}
+
+static void create_ws_client(int v)
 {
 	struct lws_context *context = NULL;
 	struct lws_context_creation_info creation_info;
@@ -165,42 +176,68 @@ int test_client(int argc, char **argv)
 	if (context == NULL)
 	{
 		lwsl_notice("[Main] context is NULL.\n");
-		return -1;
+		return;
 	}
 	lwsl_notice("[Main] context created.\n");
-
+	
 	memset(&connect_info, 0, sizeof(connect_info));
 	connect_info.context = context;
 	connect_info.address = "localhost";
 	connect_info.port = 5000;
 	connect_info.ssl_connection = 0;
-	connect_info.path = "/ws?rid=1&uid=222";
+	char buf[512];
+	sprintf(buf, "/ws?rid=%d&uid=%d&extra=abcdedfhigklmnopqrstuvwxyz%d", 1, v + 10000, v + 10000);
+	connect_info.path = buf;
 	connect_info.host = "localhost:5000";
 	connect_info.origin = "localhost:5000";
-	connect_info.protocol = protocols[0].name;
+	connect_info.protocol = "my-websocket-protocol";
 	connect_info.ietf_version_or_minus_one = -1;
-
+	
 	wsi = lws_client_connect_via_info(&connect_info);
 	if (wsi == NULL) {
 		lwsl_err("[Main] wsi create error.\n");
-		return 1;
+		return;
 	}
 
 	lwsl_notice("[Main] wsi create success.\n");
 
-	struct pthread_routine_tool tool;
-	tool.ws = wsi;
-	tool.context = context;
+	struct pthread_args* tool = new struct pthread_args;
+	tool->ws = wsi;
+	tool->context = context;
+	tool->connection_flag = 0;
+	tool->destroy_flag = 0;
+	tool->name = std::to_string(v);
 
-	std::thread a(pthread_routine, &tool);
-	a.detach();
+	{
+		std::lock_guard<std::mutex> l(_g_mutex);
+		__g_pthread_args.insert(std::pair<lws*, pthread_args*>(wsi, tool));
+	}
+	
+	{
+		std::thread a(pthread_routine, tool);
+		a.detach();
+	}
 
-	while (!destroy_flag)
+	while (!tool->destroy_flag)
 	{
 		lws_service(context, 50);
 	}
 
 	lws_context_destroy(context);
+}
+
+int test_ws_client(int argc, char **argv)
+{
+	for (int i = 0; i < 10; i++)
+	{
+		std::thread a(create_ws_client, i);
+		a.detach();
+	}
+
+	while (true)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
 
 	return 0;
 }

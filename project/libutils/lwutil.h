@@ -27,19 +27,19 @@ struct KV
 	char *v;
 };
 
-class KVPragma
+class KVQueryUrlValue
 {
 public:
-	KVPragma();
-	~KVPragma();
+	KVQueryUrlValue();
+	~KVQueryUrlValue();
 
 public:
-	int parseURL(const char* data);
-	char* findValue(const char* key);
+	int parse(const char* data);
+	char* find(const char* key);
 	void each(std::function<void(KV*)> func);
 
 private:
-	std::vector<KV*> _kv;
+	std::list<KV*> _kv;
 };
 
 char * lw_strtok_r(char *s, const char *delim, char **state);

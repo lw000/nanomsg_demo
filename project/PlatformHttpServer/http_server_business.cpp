@@ -74,13 +74,12 @@ static void login_post_cb(struct evhttp_request *req)
 		doc.SetObject();
 		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 		doc.AddMember("host", host, allocator);
-		KVPragma kv;
-		kv.parseURL(buff);
+		KVQueryUrlValue kv;
+		kv.parse(buff);
 		kv.each([&doc, &allocator](KV* pkv)
 		{
 			const char* k = pkv->k;
 			const char* v = pkv->v;
-
 			doc.AddMember(k, v, allocator);
 		});
 
@@ -115,12 +114,12 @@ static void add_get_cb(struct evhttp_request *req)
 // 
 // 		evbuffer_drain(evbuf, data_len);
 // 
-// 		KVPragma kv;
+// 		KVQueryUrlValue kv;
 // 		kv.parse_url(buff);
-// 		const char* _a = kv.find_value("a");
-// 		const char* _b = kv.find_value("b");
-// 		const char* _c = kv.find_value("c");
-// 		const char* _d = kv.find_value("d");
+// 		const char* _a = kv.find("a");
+// 		const char* _b = kv.find("b");
+// 		const char* _c = kv.find("c");
+// 		const char* _d = kv.find("d");
 // 	}
 
 	evhttp_uri* url = evhttp_uri_parse(evhttp_request_get_uri(req));

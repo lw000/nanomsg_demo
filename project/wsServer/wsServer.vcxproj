@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="example-client.cpp" />
+    <ClCompile Include="example-http-server.cpp" />
     <ClCompile Include="example-server.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
