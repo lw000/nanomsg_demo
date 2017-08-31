@@ -32,6 +32,7 @@
     <ClCompile Include="net.cpp" />
     <ClCompile Include="session_manager.cpp" />
     <ClCompile Include="socket_listener.cpp" />
+    <ClCompile Include="nanomsg_socket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="http_server.h" />
@@ -60,6 +61,7 @@
     <ClInclude Include="socket_processor.h" />
     <ClInclude Include="session_manager.h" />
     <ClInclude Include="socket_listener.h" />
+    <ClInclude Include="nanomsg_socket.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MemoryPool.tcc">

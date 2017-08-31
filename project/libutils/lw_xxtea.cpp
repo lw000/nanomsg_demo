@@ -31,7 +31,9 @@ void XXTea::encrypt(unsigned char *data, unsigned int data_len, std::function<vo
 	unsigned int len;
 	unsigned char* out;
 	out = xxtea_encrypt(data, data_len, (unsigned char*)k.c_str(), k.size(), &len);
-	func(out, len);
+	{
+		func(out, len);
+	}
 	free(out);
 }
 
@@ -49,7 +51,10 @@ void XXTea::decrypt(unsigned char *data, unsigned int data_len, std::function<vo
 	unsigned int len;
 	unsigned char* out;
 	out = xxtea_decrypt(data, data_len, (unsigned char*)k.c_str(), k.size(), &len);
-	func(out, len);
+	{
+		func(out, len);
+	}
+
 	free(out);
 }
 

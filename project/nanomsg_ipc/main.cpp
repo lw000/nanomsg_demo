@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,11 +11,12 @@
 #include <nn.h>
 #include <pair.h>
 
-
-#include "business.h"
-
-#include "Message.h"
 #include "platform.pb.h"
+#include "common_type.h"
+#include "lwutil.h"
+#include "command.h"
+
+#include "nanomsg_socket.h"
 
 using namespace LW;
 
@@ -25,106 +25,98 @@ using namespace LW;
 
 #define SOCKET_ADDR "ipc:///tmp/pair.ipc"
 
-static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize);
-static lw_int32 recv_socket_data(lw_int32 sock);
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
-
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
+class Server : public NanomsgSocket
 {
-	switch (cmd)
-	{
-	case 10000:	//用户信息
-	{
-		platform::sc_msg_userinfo msg;
-		msg.ParsePartialFromArray(buf, bufsize);
-		printf("age: %d\n sex: %d\n name: %s\n address: %s\n", msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
-
-	}break;
-	case 10001:
-	{
-
-	}break;
-	case 10002:
-	{
-
-	}break;
-	default:
-		break;
-	}
-}
-
-static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
-{
-	LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
-
-	lw_int32 result = nn_send(sock, p->buf, p->size, 0);
-
-	lw_free_net_message(p);
-
-	return result;
-}
-
-static lw_int32 recv_socket_data(lw_int32 sock)
-{
-	char *buf = NULL;
-	lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
-	if (result > 0)
-	{
-		lw_parse_socket_data(buf, result, on_socket_recv, NULL);
-
-		nn_freemsg(buf);
-	}
-	else
-	{
-
+public:
+	Server() {
 	}
 
-	return result;
-}
+	virtual ~Server() {
+	}
 
-static int on_pair_data(int sock)
+public:
+	virtual void onRecv(lw_int32 cmd, char* buf, lw_int32 bufsize) override {
+		switch (cmd)
+		{
+		case cmd_heart_beat: {
+			platform::msg_heartbeat msg;
+			msg.ParseFromArray(buf, bufsize);
+			printf("heartBeat[%d]\n", msg.time());
+		}break;
+		default:
+			break;
+		}
+	}
+};
+
+class Client : public NanomsgSocket
+{
+public:
+	Client() {
+	}
+
+	~Client() {
+	}
+
+private:
+	virtual void onRecv(lw_int32 cmd, char* buf, lw_int32 bufsize) override {
+		switch (cmd)
+		{
+		case cmd_heart_beat: {
+			platform::msg_heartbeat msg;
+			msg.ParseFromArray(buf, bufsize);
+			printf("heartBeat[%d]\n", msg.time());
+		}break;
+		default:
+			break;
+		}
+	}
+};
+
+Client __g_client;
+Server __g_server;
+
+static int on_pair_data(int sock, NanomsgSocket *c)
 {
 	int to = 100;
-	assert(nn_setsockopt(sock, NN_SOL_SOCKET, NN_RCVTIMEO, &to, sizeof(to)) >= 0);
+	assert(c->setsockopt(NN_SOL_SOCKET, NN_RCVTIMEO, &to, sizeof(int)) >= 0);
 	while (1)
 	{
+		c->recv();
+
+		lw_sleep(1);
+
+		platform::msg_heartbeat msg;
+		msg.set_time(time(NULL));
+		lw_int32 l = (lw_int32)msg.ByteSize();
+		std::unique_ptr<char[]> s(new char[l + 1]);
+		lw_bool ret = msg.SerializeToArray(s.get(), l);
+		if (ret)
 		{
-			recv_socket_data(sock);
+			c->send(cmd_heart_beat, s.get(), l);
 		}
-
-		//lw_sleep(1);
-
-		platform::sc_msg_userinfo msg;
-		msg.set_age(30);
-		msg.set_sex(1);
-		msg.set_name("liwei");
-		msg.set_address("guangdong shenzhen");
-
-		char s[256] = { 0 };
-		bool ret = msg.SerializePartialToArray(s, sizeof(s));
-
-		send_socket_data(sock, 10000, s, strlen(s));
 	}
 }
 
 static int server_node(const char *url)
 {
-	int sock = nn_socket(AF_SP, NN_PAIR);
+	int sock = __g_server.create(NN_PAIR);
 	assert(sock >= 0);
-	assert(nn_bind(sock, url) >= 0);
+	assert(__g_server.bind(url) >= 0);
 
-	on_pair_data(sock);
+	on_pair_data(sock, &__g_server);
 
 	return nn_shutdown(sock, 0);
 }
 
 static int client_node(const char *url)
 {
-	int sock = nn_socket(AF_SP, NN_PAIR);
+	int sock = __g_client.create(NN_PAIR);
+	//int sock = nn_socket(AF_SP, NN_PAIR);
 	assert(sock >= 0);
-	assert(nn_connect(sock, url) >= 0);
+	assert(__g_client.connect(url) >= 0);
 
-	on_pair_data(sock);
+	on_pair_data(sock, &__g_client);
 
 	return nn_shutdown(sock, 0);
 }

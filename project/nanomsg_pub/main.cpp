@@ -100,90 +100,56 @@ For example:
 #include <unistd.h>
 #endif
 
-#include "business.h"
+#include "socket_core.h"
 
-#include "Message.h"
 #include "platform.pb.h"
-#include "..\libutils\lwutil.h"
+#include "common_type.h"
+#include "lwutil.h"
+#include "command.h"
+
+#include "nanomsg_socket.h"
 
 using namespace LW;
 
-static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize);
-static lw_int32 recv_socket_data(lw_int32 sock);
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
-
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
+class Server : public NanomsgSocket
 {
-	switch (cmd)
-    {
-        case 10000:
-        {
-            sc_userinfo *user = (sc_userinfo*)(buf);
-            printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
-                   user->age, user->sex, user->name, user->address);
-        } break;
-        case 10001:
-        {
-            platform::sc_msg_userinfo msg;
-            msg.ParseFromArray(buf, bufsize);
-            printf(" age: %d\n sex: %d\n name: %s\n address: %s\n",
-                   msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
-        }break;
-        case 10002:
-        {
-            
-        }break;
-        default:
-            break;
-    }
-}
-
-static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
-{
-	lw_int32 c = 0;
-	{
-		LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
-		c = nn_send(sock, p->buf, p->size, 0);
-		lw_free_net_message(p);
+public:
+	Server() {
 	}
-	return c;
-}
 
-static lw_int32 recv_socket_data(lw_int32 sock)
-{
-    char *buf = NULL;
-    lw_int32 c = nn_recv(sock, &buf, NN_MSG, 0);
-    if (c > 0)
-    {
-		lw_parse_socket_data(buf, c, on_socket_recv, NULL);
-        
-        nn_freemsg(buf);
-    }
-    else
-    {
-        
-    }
-    
-    return c;
-}
+	virtual ~Server() {
+	}
 
+public:
+	virtual void onRecv(lw_int32 cmd, char* buf, lw_int32 bufsize) override {
+		switch (cmd)
+		{
+		case cmd_heart_beat: {
+			platform::msg_heartbeat msg;
+			msg.ParseFromArray(buf, bufsize);
+			printf("heartBeat[%d]\n", msg.time());
+		}break;
+		default:
+			break;
+		}
+	}
+};
+
+Server __g_server;
 
 /*  The server runs forever. */
 
 int pub_server(const char *url)
 {
 	int fd;
-	fd = nn_socket(AF_SP, NN_PUB);
+	fd = __g_server.create(NN_PUB);
 	if (fd < 0) 
 	{
-		fprintf(stderr, "nn_socket: %s\n", nn_strerror(nn_errno()));
 		return (-1);
 	}
 
-	if (nn_bind(fd, url) < 0)
+	if (__g_server.bind(url) < 0)
 	{
-		fprintf(stderr, "nn_bind: %s\n", nn_strerror(nn_errno()));
-		nn_close(fd);
 		return (-1);
 	}
 
@@ -191,49 +157,19 @@ int pub_server(const char *url)
 
 	for (;;)
     {
-		int i = rand() % 3;
-		switch (i)
+		platform::msg_heartbeat msg;
+		msg.set_time(time(NULL));
+		lw_int32 c = (lw_int32)msg.ByteSize();
+		std::unique_ptr<char[]> s(new char[c + 1]);
+		lw_bool ret = msg.SerializeToArray(s.get(), c);
+		if (ret)
 		{
-		case 0:
-		{
-			sc_userinfo userinfo;
-			userinfo.id = 4000001;
-			userinfo.age = 30;
-			userinfo.sex = 1;
-			strcpy(userinfo.name, "liwei");
-			strcpy(userinfo.address, "shanxi");
-			send_socket_data(fd, 10000, &userinfo, sizeof(userinfo));
-		} break;
-		case 1:
-		{
-			platform::sc_msg_userinfo msg;
-			msg.set_userid(4000001);
-			msg.set_age(30);
-			msg.set_sex(1);
-			msg.set_name("heshanshan");
-			msg.set_address("shenzhen");
-
-			int len = (int)msg.ByteSizeLong();
-			char s[256] = { 0 };
-			bool ret = msg.SerializeToArray(s, len);
-			//bool ret = msg.SerializePartialToArray(s, len);
-			if (ret)
-			{
-				send_socket_data(fd, 10001, s, len);
-			}
-		} break;
-		case 2:
-		{
-		} break;
-		default:
-			break;
+			__g_server.send(cmd_heart_beat, s.get(), c);
 		}
-/*		lw_sleep(1);*/
 
+		lw_sleep(1);
 	}
-	/* NOTREACHED */
-
-	nn_close(fd);
+	__g_server.close();
 
 	return (-1);
 }

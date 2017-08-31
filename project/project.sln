@@ -55,6 +55,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libuv-1.4.2", "libuv-1.4.2\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net", "net", "{82264EA5-7494-456D-B8D3-7F1A88569092}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "commonTest", "commonTest\commonTest.vcxproj", "{705365BB-080F-4485-A459-04BF94D724C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -1061,6 +1063,48 @@ Global
 		{E748E723-D9AA-4518-99CA-D1ECB690E337}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
 		{E748E723-D9AA-4518-99CA-D1ECB690E337}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
 		{E748E723-D9AA-4518-99CA-D1ECB690E337}.RelWithDebInfo|x86.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Debug|Win32.Build.0 = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Debug|x64.ActiveCfg = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Debug|x86.ActiveCfg = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Debug|x86.Build.0 = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Debug|Win32.ActiveCfg = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Debug|Win32.Build.0 = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Debug|x64.ActiveCfg = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Debug|x86.ActiveCfg = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Debug|x86.Build.0 = Debug|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Release|Mixed Platforms.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Release|Win32.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Release|Win32.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Release|x64.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Release|x86.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.DLL-Import Release|x86.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.MinSizeRel|Mixed Platforms.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.MinSizeRel|Mixed Platforms.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.MinSizeRel|Win32.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.MinSizeRel|Win32.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.MinSizeRel|x64.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.MinSizeRel|x86.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.MinSizeRel|x86.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Release|Win32.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Release|Win32.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Release|x64.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Release|x86.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.Release|x86.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.RelWithDebInfo|Mixed Platforms.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.RelWithDebInfo|Mixed Platforms.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.RelWithDebInfo|Win32.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.RelWithDebInfo|Win32.Build.0 = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.RelWithDebInfo|x64.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
+		{705365BB-080F-4485-A459-04BF94D724C1}.RelWithDebInfo|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

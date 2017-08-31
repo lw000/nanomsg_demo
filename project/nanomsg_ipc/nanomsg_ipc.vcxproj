@@ -89,13 +89,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libutils;..\protocol;..\business;..\business\common;..\nanomsg\src;..\cppnanomsg;..\protobuf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\protocol;..\libnet;..\common;..\protobuf\include;..\nanomsg\src;..\libutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Debug;..\protobuf\lib;..\nanomsg\build\vs2013\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;mswsock.lib;nanomsg.lib;business.lib;libprotobufd.lib;libprotocd.lib;libutils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;mswsock.lib;nanomsg.lib;libprotobufd.lib;libprotocd.lib;libutils.lib;libnet.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -156,7 +156,6 @@
     <ClCompile Include="..\protocol\game.pb.cc" />
     <ClCompile Include="..\protocol\platform.pb.cc" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="main0.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\protocol\game.pb.h" />

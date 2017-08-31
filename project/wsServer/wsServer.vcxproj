@@ -85,13 +85,21 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="example-client.cpp" />
+    <ClCompile Include="Data.cpp" />
+    <ClCompile Include="example-ws-client.cpp" />
     <ClCompile Include="example-http-server.cpp" />
-    <ClCompile Include="example-server.cpp" />
+    <ClCompile Include="example-ws-server.cpp" />
+    <ClCompile Include="FileMerge.cpp" />
+    <ClCompile Include="FileUtils.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="test.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Data.h" />
     <ClInclude Include="example.h" />
+    <ClInclude Include="FileMerge.h" />
+    <ClInclude Include="FileUtils.h" />
+    <ClInclude Include="test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

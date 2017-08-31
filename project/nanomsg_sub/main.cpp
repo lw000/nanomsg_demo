@@ -99,108 +99,69 @@ For example:
 #include <unistd.h>
 #endif
 
-#include "business.h"
+#include "socket_core.h"
 
-#include "Message.h"
 #include "platform.pb.h"
+#include "common_type.h"
+#include "command.h"
+#include "nanomsg_socket.h"
 
 using namespace LW;
 
-#ifdef _WIN32
-#define SLEEP(seconds) SleepEx(seconds * 1000, 1);
-#else
-#define SLEEP(seconds) sleep(seconds);
-#endif
-
-static lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize);
-static lw_int32 recv_socket_data(lw_int32 sock);
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata);
-
-static void on_socket_recv(lw_int32 cmd, char* buf, lw_int32 bufsize, void* userdata)
+class Client : public NanomsgSocket
 {
-	switch (cmd)
-    {
-        case 10000:
-        {
-            sc_userinfo *user = (sc_userinfo*)(buf);
-            printf("id: %d age:%d sex:%d name:%s address:%s\n", user->id,
-                   user->age, user->sex, user->name, user->address);
-        } break;
-        case 10001:	//
-        {
-            platform::sc_msg_userinfo msg;
-            msg.ParseFromArray(buf, bufsize);
-			/*msg.ParsePartialFromArray(buf, bufsize);*/
-			printf("id: %d age:%d sex:%d name:%s address:%s\n", msg.userid(),
-				msg.age(), msg.sex(), msg.name().c_str(), msg.address().c_str());
-        }break;
-        default:
-            break;
-    }
-}
-
-lw_int32 send_socket_data(lw_int32 sock, lw_int32 cmd, void* object, lw_int32 objectSize)
-{
-	lw_int32 result = 0;
-	{
-		LW_NET_MESSAGE* p = lw_create_net_message(cmd, object, objectSize);
-		result = nn_send(sock, p->buf, p->size, 0);
-		lw_free_net_message(p);
+public:
+	Client() {
 	}
-	return result;
-}
 
-lw_int32 recv_socket_data(lw_int32 sock)
-{
-    char *buf = NULL;
-    lw_int32 result = nn_recv(sock, &buf, NN_MSG, 0);
-    if (result > 0)
-    {
-		lw_parse_socket_data(buf, result, on_socket_recv, NULL);
-        
-        nn_freemsg(buf);
-    }
-    else
-    {
-        
-    }
-    
-    return result;
-}
+	virtual ~Client() {
+	}
 
+private:
+	virtual void onRecv(lw_int32 cmd, char* buf, lw_int32 bufsize) override {
+		switch (cmd)
+		{
+		case cmd_heart_beat: {
+			platform::msg_heartbeat msg;
+			msg.ParseFromArray(buf, bufsize);
+			printf("heartBeat[%d]\n", msg.time());
+		}break;
+		default:
+			break;
+		}
+	}
+};
+
+Client __g_client;
 
 /*  The client runs in a loop, displaying the content. */
 
 int client(const char *url)
 {
 	int fd;
-	fd = nn_socket(AF_SP, NN_SUB);
+	fd = __g_client.create(NN_SUB);
 
 	if (fd < 0) {
-		fprintf(stderr, "nn_socket: %s\n", nn_strerror(nn_errno()));
 		return (-1);
 	}
 
-	if (nn_connect(fd, url) < 0) {
-		fprintf(stderr, "nn_socket: %s\n", nn_strerror(nn_errno()));
-		nn_close(fd);
+	if (__g_client.connect(url) < 0) {
 		return (-1);
 	}
 
 	/*  We want all messages, so just subscribe to the empty value. */
 
-	if (nn_setsockopt(fd, NN_SUB, NN_SUB_SUBSCRIBE, "", 0) < 0) {
-		fprintf(stderr, "nn_setsockopt: %s\n", nn_strerror(nn_errno()));
-		nn_close(fd);
+	if (__g_client.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0) < 0) {
 		return (-1);
 	}
-
+	
 	do
 	{
-		recv_socket_data(fd);
+		__g_client.recv();
+
 	} while (1);
 
-	nn_close(fd);
+	__g_client.close();
 
 	return (-1);
 }
