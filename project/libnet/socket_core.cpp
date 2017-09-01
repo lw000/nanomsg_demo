@@ -12,42 +12,14 @@ using namespace LW;
 
 static const lw_int32 C_NET_HEAD_SIZE = sizeof(NetHead);
 
-static lw_int32 parse_socket_data(CacheQueue& cache, std::mutex& m, const lw_char8 * buf, lw_int32 size, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata);
-static LW_NET_MESSAGE* createMessage(lw_int32 cmd, lw_void* object, lw_int32 objectSize);
-static lw_void freeMessage(LW_NET_MESSAGE* p);
+static lw_int32 __parse_socket_data(CacheQueue& cache, std::mutex& m, const lw_char8 * buf, lw_int32 size, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata);
+
+static LW_NET_MESSAGE* __createMessage(lw_int32 cmd, lw_void* object, lw_int32 objectSize);
+static lw_void __freeMessage(LW_NET_MESSAGE* p);
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-SocketCore::SocketCore()
-{
-
-}
-
-SocketCore::~SocketCore()
-{
-
-}
-
-lw_int32 SocketCore::send(lw_int32 cmd, void* object, lw_int32 objectSize, std::function<lw_int32(LW_NET_MESSAGE* p)> func)
-{
-	lw_int32 c = -1;
-	{
-		LW_NET_MESSAGE* p = createMessage(cmd, object, objectSize);
-		c = func(p);
-		freeMessage(p);
-	}
-	return c;
-}
-
-lw_int32 SocketCore::parse(const lw_char8 * buf, lw_int32 size, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata)
-{
-	int c = parse_socket_data(_cacheQueue, _cacheMutex, buf, size, func, userdata);
-	return c;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-LW_NET_MESSAGE* createMessage(lw_int32 cmd, lw_void* object, lw_int32 objectSize)
+LW_NET_MESSAGE* __createMessage(lw_int32 cmd, lw_void* object, lw_int32 objectSize)
 {
 	LW_NET_MESSAGE * p = NULL;
 
@@ -62,14 +34,14 @@ LW_NET_MESSAGE* createMessage(lw_int32 cmd, lw_void* object, lw_int32 objectSize
 	return p;
 }
 
-lw_void freeMessage(LW_NET_MESSAGE* p)
+lw_void __freeMessage(LW_NET_MESSAGE* p)
 {
 	free(p->buf);
 	free(p);
 	p = NULL;
 }
 
-static lw_int32 parse_socket_data(CacheQueue& cache, std::mutex& m, const lw_char8 * buf, lw_int32 size, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata)
+static lw_int32 __parse_socket_data(CacheQueue& cache, std::mutex& m, const lw_char8 * buf, lw_int32 size, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata)
 {
 	if (size <= 0) return -1;
 	if (NULL == buf) return -2;
@@ -87,7 +59,7 @@ static lw_int32 parse_socket_data(CacheQueue& cache, std::mutex& m, const lw_cha
 			// 解析网络数据包
 			{
 				std::lock_guard < std::mutex > lock(m);
-				
+
 				NetHead *phead = (NetHead*)cache.front();
 				if (nullptr == phead) break;
 
@@ -110,10 +82,35 @@ static lw_int32 parse_socket_data(CacheQueue& cache, std::mutex& m, const lw_cha
 				}
 				cache.pop(phead->size);
 			}
-
 			data_queue_size = (lw_uint32)cache.size();
-        } while (data_queue_size >= C_NET_HEAD_SIZE);
+		} while (data_queue_size >= C_NET_HEAD_SIZE);
 	}
 
 	return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+SocketCore::SocketCore() {
+
+}
+
+SocketCore::~SocketCore() {
+
+}
+
+lw_int32 SocketCore::send(lw_int32 cmd, void* object, lw_int32 objectSize, std::function<lw_int32(LW_NET_MESSAGE* p)> func) {
+	lw_int32 c = -1;
+	{
+		LW_NET_MESSAGE* p = __createMessage(cmd, object, objectSize);
+		c = func(p);
+		__freeMessage(p);
+	}
+	return c;
+}
+
+lw_int32 SocketCore::parse(const lw_char8 * buf, lw_int32 size, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata)
+{
+	int c = __parse_socket_data(_cacheQueue, _cacheMutex, buf, size, func, userdata);
+	return c;
 }

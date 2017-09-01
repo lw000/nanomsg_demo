@@ -17,13 +17,14 @@
 #include "command.h"
 
 #include "nanomsg_socket.h"
+#include <thread>
 
 using namespace LW;
 
 #define NODE0 "node0"
 #define NODE1 "node1"
 
-#define SOCKET_ADDR "ipc:///tmp/pair.ipc"
+#define SOCKET_ADDR "ipc:///tmp/lwstar_pair.ipc"
 
 class Server : public NanomsgSocket
 {
@@ -84,7 +85,9 @@ static int on_pair_data(int sock, NanomsgSocket *c)
 	{
 		c->recv();
 
-		lw_sleep(1);
+		std::this_thread::sleep_for(std::chrono::microseconds(10));
+
+// 		lw_sleep(1);
 
 		platform::msg_heartbeat msg;
 		msg.set_time(time(NULL));
@@ -112,7 +115,6 @@ static int server_node(const char *url)
 static int client_node(const char *url)
 {
 	int sock = __g_client.create(NN_PAIR);
-	//int sock = nn_socket(AF_SP, NN_PAIR);
 	assert(sock >= 0);
 	assert(__g_client.connect(url) >= 0);
 

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CacheQueue.cpp" />
+    <ClCompile Include="MessageQueue.cpp" />
     <ClCompile Include="nanomsg_socket.cpp" />
     <ClCompile Include="net.cpp" />
     <ClCompile Include="socket_listener.cpp" />
@@ -37,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CacheQueue.h" />
+    <ClInclude Include="MessageQueue.h" />
     <ClInclude Include="nanomsg_socket.h" />
     <ClInclude Include="socket_listener.h" />
     <ClInclude Include="socket_processor.h" />

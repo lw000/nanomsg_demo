@@ -1,6 +1,5 @@
 #include "CacheQueue.h"
 
-
 CacheQueue::CacheQueue(void) {}
 CacheQueue::~CacheQueue(void) {}
 

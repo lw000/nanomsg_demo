@@ -1,48 +1,25 @@
 /*
-
 Copyright 2016 Garrett D'Amore <garrett@damore.org>
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
-
 of this software and associated documentation files (the "Software"),
-
 to deal in the Software without restriction, including without limitation
-
 the rights to use, copy, modify, merge, publish, distribute, sublicense,
-
 and/or sell copies of the Software, and to permit persons to whom
-
 the Software is furnished to do so, subject to the following conditions:
 
-
-
 The above copyright notice and this permission notice shall be included
-
 in all copies or substantial portions of the Software.
 
-
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-
 THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-
 IN THE SOFTWARE.
 
-
-
 "nanomsg" is a trademark of Martin Sustrik
-
 */
-
-
 
 /*  This program serves as an example for how to write a simple PUB SUB
 
@@ -108,8 +85,19 @@ For example:
 #include "command.h"
 
 #include "nanomsg_socket.h"
+#include <thread>
+#include "MessageQueue.h"
+
+#include "FastLog.h"
 
 using namespace LW;
+
+struct pthread_args {
+	int destroy_flag;
+	int connection_flag;
+};
+
+MessageQueue __g_msg_queue;
 
 class Server : public NanomsgSocket
 {
@@ -135,52 +123,102 @@ public:
 	}
 };
 
-Server __g_server;
-
 /*  The server runs forever. */
 
-int pub_server(const char *url)
+int pub_server(struct pthread_args *pargs, const char *url)
 {
-	int fd;
-	fd = __g_server.create(NN_PUB);
+	Server serv;
+	int fd = serv.create(NN_PUB);
 	if (fd < 0) 
 	{
 		return (-1);
 	}
 
-	if (__g_server.bind(url) < 0)
+	if (serv.bind(url) < 0)
 	{
 		return (-1);
 	}
 
 	printf("pub server start ...\n");
+	
+	pargs->connection_flag = 1;
 
 	for (;;)
     {
+		if (!__g_msg_queue.empty())
+		{
+			Msgdata msg = __g_msg_queue.pop();
+			{
+				char s[512];
+				sprintf(s, "pop size [%lld]", __g_msg_queue.size());
+				LOGD(s);
+			}
+			serv.send(cmd_heart_beat, msg.getmtext(), msg.getmtextl());
+		}
+		else
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+	}
+
+	serv.close();
+
+	serv.shutdown();
+
+	return (-1);
+}
+
+static void *pthread_push_msgdata(void *args)
+{
+	struct pthread_args *pargs = (struct pthread_args *)args;
+
+	//* waiting for connection with server done.*/
+	while (!pargs->connection_flag)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+
+	while (!pargs->destroy_flag)
+	{
 		platform::msg_heartbeat msg;
 		msg.set_time(time(NULL));
 		lw_int32 c = (lw_int32)msg.ByteSize();
-		std::unique_ptr<char[]> s(new char[c + 1]);
+		std::unique_ptr<unsigned char[]> s(new unsigned char[c]);
 		lw_bool ret = msg.SerializeToArray(s.get(), c);
 		if (ret)
 		{
-			__g_server.send(cmd_heart_beat, s.get(), c);
+			Msgdata dmsg(0, s.get(), c, msg.time());
+			{
+				__g_msg_queue.push(dmsg);
+			}
 		}
 
-		lw_sleep(1);
+//  		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
-	__g_server.close();
 
-	return (-1);
+	return nullptr;
 }
 
 int main(int argc, char **argv)
 {
 	if (argc < 3) return 0;
 
+	hn_start_fastlog();
+
+	__g_msg_queue.createMQ();
+
+	struct pthread_args* pargs = new struct pthread_args;
+	pargs->connection_flag = 0;
+	pargs->destroy_flag = 0;
+
+	{
+		std::thread a(pthread_push_msgdata, pargs);
+		a.detach();
+	}
+
 	int rc;
 	if (strcmp(argv[2], "-s") == 0) {
-		rc = pub_server(argv[1]);
+		rc = pub_server(pargs, argv[1]);
 	}
 	else {
 		fprintf(stderr, "Usage: %s <url> [-s]\n", argv[0]);

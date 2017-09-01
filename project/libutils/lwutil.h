@@ -42,6 +42,8 @@ private:
 	std::list<KV*> _kv;
 };
 
+unsigned long hash_code(const char* c);
+
 char * lw_strtok_r(char *s, const char *delim, char **state);
 
 std::vector<std::string> split(const char* str, const char* pattern);
