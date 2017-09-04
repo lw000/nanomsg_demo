@@ -106,15 +106,17 @@ For example:
 #include "command.h"
 #include "nanomsg_socket.h"
 
+#include "FastLog.h"
+
 using namespace LW;
 
-class Client : public NanomsgSocket
+class SubClient : public NanomsgSocket
 {
 public:
-	Client() {
+	SubClient() {
 	}
 
-	virtual ~Client() {
+	virtual ~SubClient() {
 	}
 
 private:
@@ -132,42 +134,47 @@ private:
 	}
 };
 
-Client __g_client;
 
 /*  The client runs in a loop, displaying the content. */
 
 int client(const char *url)
 {
+	SubClient client;
+
 	int fd;
-	fd = __g_client.create(NN_SUB);
+	fd = client.create(NN_SUB);
 
 	if (fd < 0) {
 		return (-1);
 	}
 
-	if (__g_client.connect(url) < 0) {
+	if (client.connect(url) < 0) {
 		return (-1);
 	}
 
 	/*  We want all messages, so just subscribe to the empty value. */
 
-	if (__g_client.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0) < 0) {
+	if (client.setsockopt(NN_SUB, NN_SUB_SUBSCRIBE, "", 0) < 0) {
 		return (-1);
 	}
 	
 	do
 	{
-		__g_client.recv();
-
+		int bytes = client.recv();
+		if (bytes < 0 && nn_errno() == ETIMEDOUT) break;
+		if (bytes < 0) {
+			fprintf(stderr, "recv fail: %sn", nn_strerror(errno));
+			break;
+		}
 	} while (1);
-
-	__g_client.close();
 
 	return (-1);
 }
 
 int main(int argc, char **argv)
 {
+	hn_start_fastlog();
+
 	int rc;
 	if (argc == 2) {
 		rc = client(argv[1]);

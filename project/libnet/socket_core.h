@@ -1,12 +1,13 @@
-#ifndef __buniness_h__
-#define __buniness_h__
+#ifndef __socket_core_h__
+#define __socket_core_h__
 
 #include "common_type.h"
 #include "common_marco.h"
-#include "NetMessage.h"
 #include "CacheQueue.h"
 
 #include <mutex>
+
+using namespace lwstar;
 
 #define SOCKET_CALLBACK(__selector__,__target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, ##__VA_ARGS__)
 
@@ -14,6 +15,7 @@ typedef void(*LW_PARSE_DATA_CALLFUNC)(lw_int32 cmd, lw_char8* buf, lw_int32 bufs
 
 struct LW_NET_MESSAGE
 {
+	lw_int32 cmd;
 	lw_char8* buf;
 	lw_int32 size;
 };
@@ -27,11 +29,16 @@ public:
 public:
 	lw_int32 send(lw_int32 cmd, void* object, lw_int32 objectSize, std::function<lw_int32(LW_NET_MESSAGE* p)> func);
 	lw_int32 parse(const lw_char8 * buf, lw_int32 size, LW_PARSE_DATA_CALLFUNC func, lw_void* userdata);
+	
+public:
+	SocketCore(const SocketCore&) = delete;
+	SocketCore& operator=(const SocketCore&) = delete;
 
 private:
-	CacheQueue	_cacheQueue;
-	std::mutex	_cacheMutex;
+	CacheQueue	_cq;
+	std::mutex	_m;
 };
 
-#endif // !__buniness_h__
+#endif // !__socket_core_h__
+
 

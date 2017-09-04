@@ -95,7 +95,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Debug;..\protobuf\lib;..\nanomsg\build\vs2013\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;mswsock.lib;nanomsg.lib;libprotobufd.lib;libprotocd.lib;libutils.lib;libnet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;mswsock.lib;nanomsg.lib;libprotobufd.lib;libprotocd.lib;libutils.lib;libnet.lib;libcrosslog.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

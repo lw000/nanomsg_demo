@@ -26,13 +26,13 @@ using namespace LW;
 
 #define SOCKET_ADDR "ipc:///tmp/lwstar_pair.ipc"
 
-class Server : public NanomsgSocket
+class IPCServer : public NanomsgSocket
 {
 public:
-	Server() {
+	IPCServer() {
 	}
 
-	virtual ~Server() {
+	virtual ~IPCServer() {
 	}
 
 public:
@@ -75,7 +75,7 @@ private:
 };
 
 Client __g_client;
-Server __g_server;
+IPCServer __g_server;
 
 static int on_pair_data(int sock, NanomsgSocket *c)
 {

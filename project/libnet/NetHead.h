@@ -3,7 +3,7 @@
 
 #include "common_type.h"
 
-namespace LW 
+namespace lwstar 
 {
 #pragma  pack(1)
 	typedef struct tagNetHead
@@ -11,7 +11,7 @@ namespace LW
 	public:
 		lw_int32	size;			// 数据包大小
 		lw_int32	cmd;			// 指令
-		lw_uint32	createtime;		// 发送时间
+		lw_uint32	ctime;			// 发送时间
 
 	public:
 		tagNetHead();

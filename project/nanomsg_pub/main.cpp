@@ -97,15 +97,20 @@ struct pthread_args {
 	int connection_flag;
 };
 
+struct push_pthread_args {
+	struct pthread_args *pargs;
+	std::string url;
+};
+
 MessageQueue __g_msg_queue;
 
-class Server : public NanomsgSocket
+class PushServer : public NanomsgSocket
 {
 public:
-	Server() {
+	PushServer() {
 	}
 
-	virtual ~Server() {
+	virtual ~PushServer() {
 	}
 
 public:
@@ -125,23 +130,24 @@ public:
 
 /*  The server runs forever. */
 
-int pub_server(struct pthread_args *pargs, const char *url)
+void pub_thread_server(void* args)
 {
-	Server serv;
+	struct push_pthread_args *pargs = (struct push_pthread_args *)args;
+	PushServer serv;
 	int fd = serv.create(NN_PUB);
 	if (fd < 0) 
 	{
-		return (-1);
+		return;
 	}
 
-	if (serv.bind(url) < 0)
+	if (serv.bind(pargs->url.c_str()) < 0)
 	{
-		return (-1);
+		return;
 	}
 
 	printf("pub server start ...\n");
 	
-	pargs->connection_flag = 1;
+	pargs->pargs->connection_flag = 1;
 
 	for (;;)
     {
@@ -153,7 +159,7 @@ int pub_server(struct pthread_args *pargs, const char *url)
 				sprintf(s, "pop size [%lld]", __g_msg_queue.size());
 				LOGD(s);
 			}
-			serv.send(cmd_heart_beat, msg.getmtext(), msg.getmtextl());
+			serv.send(msg.getmtype(), msg.getmtext(), msg.getmtextl());
 		}
 		else
 		{
@@ -161,11 +167,10 @@ int pub_server(struct pthread_args *pargs, const char *url)
 		}
 	}
 
-	serv.close();
 
 	serv.shutdown();
 
-	return (-1);
+	return;
 }
 
 static void *pthread_push_msgdata(void *args)
@@ -187,13 +192,13 @@ static void *pthread_push_msgdata(void *args)
 		lw_bool ret = msg.SerializeToArray(s.get(), c);
 		if (ret)
 		{
-			Msgdata dmsg(0, s.get(), c, msg.time());
+			Msgdata dmsg(cmd_heart_beat, s.get(), c, msg.time());
 			{
 				__g_msg_queue.push(dmsg);
 			}
 		}
 
-//  		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+//   		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 	}
 
 	return nullptr;
@@ -216,13 +221,24 @@ int main(int argc, char **argv)
 		a.detach();
 	}
 
+	struct push_pthread_args* push_args = new struct push_pthread_args;
+	push_args->pargs = pargs;
+	push_args->url = argv[1];
+
 	int rc;
 	if (strcmp(argv[2], "-s") == 0) {
-		rc = pub_server(pargs, argv[1]);
+		std::thread a(pub_thread_server, push_args);
+		a.detach();
+
+		while (1)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
 	}
 	else {
 		fprintf(stderr, "Usage: %s <url> [-s]\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
+
 	exit(rc == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }

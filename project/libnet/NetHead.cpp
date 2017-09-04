@@ -11,13 +11,13 @@
 
 #define  TRANSPORT_PROTOCOL_VERSION		10000
 
-namespace LW 
+namespace lwstar
 {
 	tagNetHead::tagNetHead()
 	{
 		this->size = 0;			// 数据包大小
 		this->cmd = 0;			// 指令
-		this->createtime = 0;	// 发送时间
+		this->ctime = 0;	// 发送时间
 		this->v =  TRANSPORT_PROTOCOL_VERSION;
 	}
 
@@ -26,7 +26,7 @@ namespace LW
 # if defined(_DEBUG) || defined(DEBUG)
 		char hhmmss[9];  /* HH:MM:SS\0 */
 		time_t t;
-		t = (time_t)ntohl(createtime);
+		t = (time_t)/*ntohl*/(ctime);
 		strftime(hhmmss, sizeof(hhmmss), "%T", localtime(&t));
 		printf("size = %d, cmd = %d, create_time = %s \n", size, cmd, hhmmss); 
 # endif

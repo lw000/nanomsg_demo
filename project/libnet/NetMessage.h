@@ -1,5 +1,5 @@
-﻿#ifndef __NetMessage_H__
-#define __NetMessage_H__
+﻿#ifndef __NetMessage_h__
+#define __NetMessage_h__
 
 #include <functional>
 
@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-namespace LW
+namespace lwstar
 {
 	class NetMessage;
 
@@ -25,10 +25,11 @@ namespace LW
 		lw_int32 setMessage(lw_int32 cmd, lw_void* msg, lw_int32 size);
 
 	public:
-		lw_char8* getBuff() const;
-		lw_int32 getBuffSize();
-		const NetHead* getHead();
+		lw_char8* getBuf() const;
+		lw_int32 getSize() const;
+		const NetHead* getHead() const;
 
+	public:
 		std::string debug();
 
 	private:
@@ -40,12 +41,9 @@ namespace LW
 		~NetMessage();
 
 	private:
-		lw_void setHead(const NetHead* head);
-
-	private:
-		NetHead _msgHead;
-		lw_uint32 _buffsize;
-		lw_char8 *_buff;
+		NetHead _head;
+		lw_char8 *_buf;
+		lw_uint32 _size;
 	};
 
 	class auto_release_net_message
