@@ -13,7 +13,7 @@
 
 #include "platform.pb.h"
 #include "common_type.h"
-#include "lwutil.h"
+#include "lw_util.h"
 #include "command.h"
 
 #include "nanomsg_socket.h"
@@ -103,7 +103,7 @@ static int on_pair_data(int sock, NanomsgSocket *c)
 
 static int server_node(const char *url)
 {
-	int sock = __g_server.create(NN_PAIR);
+	int sock = __g_server.create(AF_SP, NN_PAIR);
 	assert(sock >= 0);
 	assert(__g_server.bind(url) >= 0);
 
@@ -114,7 +114,7 @@ static int server_node(const char *url)
 
 static int client_node(const char *url)
 {
-	int sock = __g_client.create(NN_PAIR);
+	int sock = __g_client.create(AF_SP, NN_PAIR);
 	assert(sock >= 0);
 	assert(__g_client.connect(url) >= 0);
 

@@ -5,7 +5,8 @@ package platform;
 // 心跳消息
 message msg_heartbeat
 {
-	int64     time = 1;  // time
+	int64		time = 1;  // time
+	string		data = 2;	// data
 }
 
 // 链接成功消息
@@ -54,6 +55,7 @@ message msg_chat_reponse
 	int32		from_uid	= 1;  // from_uid
 	int32		to_uid		= 2;  // to_uid
 	int32		result		= 3;  // result
+	string		msg			= 4;  // msg
 }
 
 // 用户信息消息

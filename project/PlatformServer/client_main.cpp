@@ -1,20 +1,16 @@
 #include "client_main.h"
 
-#if defined(WIN32) || defined(_WIN32)
-#include <winsock2.h>
-#endif // WIN32
-
 #include <stdio.h>
 #include <iostream>
 #include <signal.h>
-#include <thread>
-
-#include <event2/event.h>
-#include <event2/event_struct.h>
-#include <event2/event_compat.h>
-#include <event2/bufferevent.h>
-#include <event2/buffer.h>
-#include <event2/util.h>
+// #include <thread>
+// 
+// #include <event2/event.h>
+// #include <event2/event_struct.h>
+// #include <event2/event_compat.h>
+// #include <event2/bufferevent.h>
+// #include <event2/buffer.h>
+// #include <event2/util.h>
 
 #include "command.h"
 #include "platform.pb.h"
@@ -112,24 +108,16 @@ int __connect_center_server(const lw_char8* addr, const lw_char8* sport)
 	if (__g_client.create(&__g_processor, new ClientHandler()))
 	{
 		__g_timer.create(&__g_processor);
-		__g_timer.start(100, 2000, [](int tid, unsigned int tms) -> bool
+		__g_timer.start(100, 15000, [](int tid, unsigned int tms) -> bool
 		{
 			platform::msg_heartbeat msg;
 			msg.set_time(time(NULL));
 			lw_int32 c = (lw_int32)msg.ByteSizeLong();
-			std::unique_ptr<char[]> s(new char[c + 1]()); 
+			std::unique_ptr<char[]> s(new char[c]()); 
 			lw_bool ret = msg.SerializeToArray(s.get(), c);
 			if (ret)
 			{
-				__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c, cmd_heart_beat, [](lw_char8* buf, lw_int32 bufsize) -> bool
-				{
-					platform::msg_heartbeat msg;
-					msg.ParseFromArray(buf, bufsize);
-					printf("heartBeat[%d]\n", msg.time());
-
-					return false;
-				});
-				//__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c);
+				__g_client.getSession()->sendData(cmd_heart_beat, s.get(), c);
 			}
 			return true;
 		});

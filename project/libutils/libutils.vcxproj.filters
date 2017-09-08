@@ -17,7 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmdline.h" />
-    <ClInclude Include="lwutil.h" />
     <ClInclude Include="lw_xxtea.h" />
     <ClInclude Include="ext\base64.h">
       <Filter>ext</Filter>
@@ -38,9 +37,9 @@
     <ClInclude Include="win32helpers\gettimeofday.h">
       <Filter>win32helpers</Filter>
     </ClInclude>
+    <ClInclude Include="lw_util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lwutil.cpp" />
     <ClCompile Include="lw_xxtea.cpp" />
     <ClCompile Include="ext\base64.c">
       <Filter>ext</Filter>
@@ -67,5 +66,6 @@
     <ClCompile Include="win32helpers\gettimeofday.c">
       <Filter>win32helpers</Filter>
     </ClCompile>
+    <ClCompile Include="lw_util.cpp" />
   </ItemGroup>
 </Project>

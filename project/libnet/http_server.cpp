@@ -39,7 +39,7 @@
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 
-#include "lwutil.h"
+#include "lw_util.h"
 
 struct HTTP_METHOD_SIGNATURE
 {

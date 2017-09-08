@@ -79,18 +79,20 @@ For example:
 
 #include "socket_core.h"
 
-#include "platform.pb.h"
-#include "common_type.h"
-#include "lwutil.h"
-#include "command.h"
-
-#include "nanomsg_socket.h"
 #include <thread>
-#include "MessageQueue.h"
 
+#include "common_type.h"
+#include "nanomsg_socket.h"
+#include "message_queue.h"
+#include "lw_util.h"
 #include "FastLog.h"
 
-using namespace LW;
+#include "command.h"
+#include "game.pb.h"
+#include "platform.pb.h"
+
+
+using namespace LW; 
 
 struct pthread_args {
 	int destroy_flag;
@@ -102,7 +104,7 @@ struct push_pthread_args {
 	std::string url;
 };
 
-MessageQueue __g_msg_queue;
+SimpleMessageQueue __g_msg_queue;
 
 class PushServer : public NanomsgSocket
 {
@@ -115,16 +117,7 @@ public:
 
 public:
 	virtual void onRecv(lw_int32 cmd, char* buf, lw_int32 bufsize) override {
-		switch (cmd)
-		{
-		case cmd_heart_beat: {
-			platform::msg_heartbeat msg;
-			msg.ParseFromArray(buf, bufsize);
-			printf("heartBeat[%d]\n", msg.time());
-		}break;
-		default:
-			break;
-		}
+
 	}
 };
 
@@ -133,8 +126,9 @@ public:
 void pub_thread_server(void* args)
 {
 	struct push_pthread_args *pargs = (struct push_pthread_args *)args;
+
 	PushServer serv;
-	int fd = serv.create(NN_PUB);
+	int fd = serv.create(AF_SP, NN_PUB);
 	if (fd < 0) 
 	{
 		return;
@@ -167,7 +161,6 @@ void pub_thread_server(void* args)
 		}
 	}
 
-
 	serv.shutdown();
 
 	return;
@@ -185,20 +178,23 @@ static void *pthread_push_msgdata(void *args)
 
 	while (!pargs->destroy_flag)
 	{
+		char* d = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
 		platform::msg_heartbeat msg;
 		msg.set_time(time(NULL));
-		lw_int32 c = (lw_int32)msg.ByteSize();
-		std::unique_ptr<unsigned char[]> s(new unsigned char[c]);
-		lw_bool ret = msg.SerializeToArray(s.get(), c);
+		msg.set_data(d);
+		int c = msg.ByteSizeLong();
+		std::unique_ptr<unsigned char[]> s(new unsigned char[c]());
+		bool ret = msg.SerializeToArray(s.get(), c);
 		if (ret)
 		{
-			Msgdata dmsg(cmd_heart_beat, s.get(), c, msg.time());
+			Msgdata dmsg(cmd_heart_beat, s.get(), c);
 			{
 				__g_msg_queue.push(dmsg);
 			}
 		}
 
-//   		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+   		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 
 	return nullptr;
@@ -210,7 +206,7 @@ int main(int argc, char **argv)
 
 	hn_start_fastlog();
 
-	__g_msg_queue.createMQ();
+	__g_msg_queue.createChannel();
 
 	struct pthread_args* pargs = new struct pthread_args;
 	pargs->connection_flag = 0;

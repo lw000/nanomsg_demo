@@ -14,10 +14,13 @@ public:
 
 public:
 	void setUserData(void* data);
-	void* getUserData();
+	void* getUserData() const;
 
 	void setTag(int tag);
-	int getTag();
+	int getTag() const;
+
+	void setName(const std::string& name);
+	std::string getName() const;
 
 public:
 	virtual std::string debug() = 0;
@@ -25,6 +28,7 @@ public:
 private:
 	void *_data;
 	int _tag;
+	std::string _name;
 };
 
 

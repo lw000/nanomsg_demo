@@ -37,12 +37,19 @@ public:
 	int parse(const char* data);
 	char* find(const char* key);
 	void each(std::function<void(KV*)> func);
+	void reset();
 
 private:
 	std::list<KV*> _kv;
 };
 
-unsigned long hash_code(const char* c);
+unsigned int lw_make_software_version(unsigned char major, unsigned char minor, unsigned short build);
+void lw_software_version(unsigned int version, unsigned char &major, unsigned char &minor, unsigned short &build);
+unsigned char lw_major_version(unsigned int version);
+unsigned char lw_minor_version(unsigned int version);
+unsigned short lw_build_version(unsigned int version);
+
+unsigned long lw_hash_code(const char* c);
 
 char * lw_strtok_r(char *s, const char *delim, char **state);
 
@@ -74,7 +81,6 @@ std::string UTF8StringToMultiByte(const std::string& strUtf8);
 #define U2G(v)
 #define G2U(v)
 #endif
-
 
 #ifdef _WIN32
 #ifndef __MINGW32__

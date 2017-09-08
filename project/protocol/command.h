@@ -20,6 +20,9 @@ namespace LW
 		cmd_platform_cs_userinfo	= 10100003,
 		cmd_platform_sc_userinfo	= 10130000,
 
+		cmd_platform_cs_chat_request = 10100004,
+		cmd_platform_sc_chat_reponse = 10140000,
+
 		/*
 			平台框架消息
 		*/

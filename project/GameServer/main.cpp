@@ -21,7 +21,7 @@
 #include "platform.pb.h"
 
 #include "cmdline.h"
-#include "lwutil.h"
+#include "lw_util.h"
 
 #include "libproperties.h"
 #include "client_http.h"

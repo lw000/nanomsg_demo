@@ -109,6 +109,11 @@
     <None Include="..\protocol\game.proto" />
     <None Include="..\protocol\platform.proto" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libnet\libnet.vcxproj">
+      <Project>{006686e3-6160-4984-827e-b9200e5b3338}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

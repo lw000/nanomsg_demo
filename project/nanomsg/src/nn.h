@@ -43,7 +43,7 @@ extern "C" {
 #            define NN_EXPORT __declspec(dllimport)
 #        endif
 #    else
-#        define NN_EXPORT extern
+#		define NN_EXPORT extern
 #    endif
 #endif
 

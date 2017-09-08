@@ -1,11 +1,44 @@
-#include "lwutil.h"
+#include "lw_util.h"
 #include <string.h>
 
 #if defined(_WIN32)
 
 #include <windows.h>
 
-unsigned long hash_code(const char* c)
+unsigned int lw_make_software_version(unsigned char major, unsigned char minor, unsigned short build) {
+	unsigned int version = major;
+	version = (version << 8);
+	version = (version) | minor;
+	version = (version << 16);
+	version = (version) | build;
+	return version;
+}
+
+void lw_software_version(unsigned int version, unsigned char &major, unsigned char &minor, unsigned short &build) {
+	build = (version & 0x0000FFFF);
+
+	version = (version >> 16);
+	minor = (version & 0x000000FF);
+
+	version = (version >> 8);
+	major = (version & 0x000000FF);
+}
+
+unsigned char lw_major_version(unsigned int version) {
+	version = (version >> 24);
+	return (version & 0x000000FF);
+}
+
+unsigned char lw_minor_version(unsigned int version) {
+	version = (version >> 16);
+	return (version & 0x000000FF);
+}
+
+unsigned short lw_build_version(unsigned int version) {
+	return (version & 0x0000FFFF);
+}
+
+unsigned long lw_hash_code(const char* c)
 {
 	unsigned long ret = 0;
 	long n;
@@ -199,19 +232,12 @@ KVQueryUrlValue::KVQueryUrlValue()
 
 KVQueryUrlValue::~KVQueryUrlValue()
 {
-	std::list<KV*>::iterator iter = _kv.begin();
-	for (; iter != _kv.end(); ++iter)
-	{
-		KV *_pkv = *iter;
-		free(_pkv->k);
-		free(_pkv->v);
-		free(_pkv);
-	}
+	this->reset();
 }
 
 int KVQueryUrlValue::parse(const char* data)
 {
-	_kv.clear();
+	this->reset();
 
 	char *p = const_cast<char*>(data);
 	char *p0 = NULL;
@@ -268,6 +294,18 @@ void KVQueryUrlValue::each(std::function<void(KV*)> func)
 		KV *_pkv = *iter;
 		func(_pkv);
 	}
+}
+
+void KVQueryUrlValue::reset() {
+	std::list<KV*>::iterator iter = _kv.begin();
+	for (; iter != _kv.end(); ++iter)
+	{
+		KV *_pkv = *iter;
+		free(_pkv->k);
+		free(_pkv->v);
+		free(_pkv);
+	}
+	_kv.clear();
 }
 
 std::vector<std::string> split(const char* str, const char* pattern)

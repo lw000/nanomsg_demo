@@ -5,22 +5,22 @@
 
 const Data Data::Null;
 
-Data::Data() :
-_bytes(nullptr),
-_size(0)
+Data::Data()
+	: _bytes(nullptr)
+	, _size(0)
 {
 }
 
-Data::Data(Data&& other) :
-_bytes(nullptr),
-_size(0)
+Data::Data(Data&& other)
+	: _bytes(nullptr)
+	, _size(0)
 {
 	move(other);
 }
 
-Data::Data(const Data& other) :
-_bytes(nullptr),
-_size(0)
+Data::Data(const Data& other)
+	: _bytes(nullptr)
+	, _size(0)
 {
 	copy(other._bytes, other._size);
 }

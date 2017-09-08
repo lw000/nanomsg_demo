@@ -56,7 +56,7 @@ void SocketClient::destroy()
 std::string SocketClient::debug()
 {
 	char buf[512];
-	sprintf(buf, "%s", _session->debug());
+	sprintf(buf, "%s", _session->debug().c_str());
 	return std::string(buf);
 }
 

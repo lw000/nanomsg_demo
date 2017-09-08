@@ -20,7 +20,7 @@
 
 #include "libproperties.h"
 #include "CenterServer.h"
-#include "lwutil.h"
+#include "lw_util.h"
 #include "lw_xxtea.h"
 #include "lw_base64.h"
 

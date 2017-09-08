@@ -6,7 +6,6 @@
 #include <winsock2.h>
 #endif // WIN32
 
-
 int lw_socket_init()
 {
 #if defined(WIN32) || defined(_WIN32)

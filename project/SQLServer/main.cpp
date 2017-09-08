@@ -18,7 +18,7 @@
 
 #include "libproperties.h"
 #include "FastLog.h"
-#include "lwutil.h"
+#include "lw_util.h"
 #include "net.h"
 
 #include "SQLTable.h"

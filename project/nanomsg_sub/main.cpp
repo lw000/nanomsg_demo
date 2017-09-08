@@ -126,8 +126,8 @@ private:
 		case cmd_heart_beat: {
 			platform::msg_heartbeat msg;
 			msg.ParseFromArray(buf, bufsize);
-			printf("heartBeat[%d]\n", msg.time());
-		}break;
+			printf("msg:%s\n", msg.data().c_str());
+		} break;
 		default:
 			break;
 		}
@@ -142,7 +142,7 @@ int client(const char *url)
 	SubClient client;
 
 	int fd;
-	fd = client.create(NN_SUB);
+	fd = client.create(AF_SP, NN_SUB);
 
 	if (fd < 0) {
 		return (-1);

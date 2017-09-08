@@ -86,7 +86,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobuf.lib;libprotoc.lib;libproperties.lib;libutils.lib;libnet.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;wsock32.lib;event.lib;libprotobuf.lib;libprotoc.lib;libproperties.lib;libutils.lib;libnet.lib;libcrosslog.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Release;..\protobuf\lib;..\libevent\build\vs2013\lib\Release;..\nanomsg\build\vs2013\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -113,6 +113,11 @@
   <ItemGroup>
     <None Include="..\protocol\game.proto" />
     <None Include="..\protocol\platform.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libnet\libnet.vcxproj">
+      <Project>{006686e3-6160-4984-827e-b9200e5b3338}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

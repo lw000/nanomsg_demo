@@ -119,10 +119,22 @@ class msg_heartbeat : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::google::protobuf::int64 time() const;
   void set_time(::google::protobuf::int64 value);
 
+  // optional string data = 2;
+  void clear_data();
+  static const int kDataFieldNumber = 2;
+  const ::std::string& data() const;
+  void set_data(const ::std::string& value);
+  void set_data(const char* value);
+  void set_data(const char* value, size_t size);
+  ::std::string* mutable_data();
+  ::std::string* release_data();
+  void set_allocated_data(::std::string* data);
+
   // @@protoc_insertion_point(class_scope:platform.msg_heartbeat)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr data_;
   ::google::protobuf::int64 time_;
   mutable int _cached_size_;
   friend void  protobuf_InitDefaults_platform_2eproto_impl();
@@ -807,10 +819,22 @@ class msg_chat_reponse : public ::google::protobuf::Message /* @@protoc_insertio
   ::google::protobuf::int32 result() const;
   void set_result(::google::protobuf::int32 value);
 
+  // optional string msg = 4;
+  void clear_msg();
+  static const int kMsgFieldNumber = 4;
+  const ::std::string& msg() const;
+  void set_msg(const ::std::string& value);
+  void set_msg(const char* value);
+  void set_msg(const char* value, size_t size);
+  ::std::string* mutable_msg();
+  ::std::string* release_msg();
+  void set_allocated_msg(::std::string* msg);
+
   // @@protoc_insertion_point(class_scope:platform.msg_chat_reponse)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr msg_;
   ::google::protobuf::int32 from_uid_;
   ::google::protobuf::int32 to_uid_;
   ::google::protobuf::int32 result_;
@@ -1066,6 +1090,50 @@ inline void msg_heartbeat::set_time(::google::protobuf::int64 value) {
   
   time_ = value;
   // @@protoc_insertion_point(field_set:platform.msg_heartbeat.time)
+}
+
+// optional string data = 2;
+inline void msg_heartbeat::clear_data() {
+  data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& msg_heartbeat::data() const {
+  // @@protoc_insertion_point(field_get:platform.msg_heartbeat.data)
+  return data_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void msg_heartbeat::set_data(const ::std::string& value) {
+  
+  data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:platform.msg_heartbeat.data)
+}
+inline void msg_heartbeat::set_data(const char* value) {
+  
+  data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:platform.msg_heartbeat.data)
+}
+inline void msg_heartbeat::set_data(const char* value, size_t size) {
+  
+  data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_heartbeat.data)
+}
+inline ::std::string* msg_heartbeat::mutable_data() {
+  
+  // @@protoc_insertion_point(field_mutable:platform.msg_heartbeat.data)
+  return data_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* msg_heartbeat::release_data() {
+  // @@protoc_insertion_point(field_release:platform.msg_heartbeat.data)
+  
+  return data_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void msg_heartbeat::set_allocated_data(::std::string* data) {
+  if (data != NULL) {
+    
+  } else {
+    
+  }
+  data_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), data);
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_heartbeat.data)
 }
 
 inline const msg_heartbeat* msg_heartbeat::internal_default_instance() {
@@ -1489,6 +1557,50 @@ inline void msg_chat_reponse::set_result(::google::protobuf::int32 value) {
   
   result_ = value;
   // @@protoc_insertion_point(field_set:platform.msg_chat_reponse.result)
+}
+
+// optional string msg = 4;
+inline void msg_chat_reponse::clear_msg() {
+  msg_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& msg_chat_reponse::msg() const {
+  // @@protoc_insertion_point(field_get:platform.msg_chat_reponse.msg)
+  return msg_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void msg_chat_reponse::set_msg(const ::std::string& value) {
+  
+  msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:platform.msg_chat_reponse.msg)
+}
+inline void msg_chat_reponse::set_msg(const char* value) {
+  
+  msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:platform.msg_chat_reponse.msg)
+}
+inline void msg_chat_reponse::set_msg(const char* value, size_t size) {
+  
+  msg_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:platform.msg_chat_reponse.msg)
+}
+inline ::std::string* msg_chat_reponse::mutable_msg() {
+  
+  // @@protoc_insertion_point(field_mutable:platform.msg_chat_reponse.msg)
+  return msg_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* msg_chat_reponse::release_msg() {
+  // @@protoc_insertion_point(field_release:platform.msg_chat_reponse.msg)
+  
+  return msg_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void msg_chat_reponse::set_allocated_msg(::std::string* msg) {
+  if (msg != NULL) {
+    
+  } else {
+    
+  }
+  msg_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), msg);
+  // @@protoc_insertion_point(field_set_allocated:platform.msg_chat_reponse.msg)
 }
 
 inline const msg_chat_reponse* msg_chat_reponse::internal_default_instance() {

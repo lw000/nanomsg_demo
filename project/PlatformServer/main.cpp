@@ -32,12 +32,12 @@
 #include "cmdline.h"
 #include "libproperties.h"
 
-#include "lwutil.h"
+#include "lw_util.h"
 #include "Users.h"
 
 #include "..\libcrossLog\FastLog.h"
 
-#include "NetMessage.h"
+#include "NetPackage.h"
 #include "socket_processor.h"
 #include "net.h"
 

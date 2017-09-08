@@ -2,14 +2,20 @@
 #define __NetHead_H_
 
 #include "common_type.h"
+#include <string>
 
 namespace lwstar 
 {
+	
+
 #pragma  pack(1)
 	typedef struct tagNetHead
 	{		
+		friend std::ostream& operator<<(std::ostream & os, tagNetHead & o);
+
 	public:
 		lw_int32	size;			// 数据包大小
+		lw_ushort16	v;				// 通讯版本
 		lw_int32	cmd;			// 指令
 		lw_uint32	ctime;			// 发送时间
 
@@ -17,10 +23,10 @@ namespace lwstar
 		tagNetHead();
 
 	public:
-		void debug();
+		std::string debug();
 
 	private:
-		lw_int32	v;				// 通讯版本
+		
 
 	}  NetHead;
 

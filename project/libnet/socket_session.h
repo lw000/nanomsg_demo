@@ -32,9 +32,6 @@ public:
 	virtual ~SocketSession();
 
 public:
-	evutil_socket_t getSocket();
-
-public:
 	int create(SESSION_TYPE c, SocketProcessor* processor, evutil_socket_t fd, short ev);
 	void destroy();
 
@@ -45,10 +42,10 @@ public:
 
 public:
 	void setHost(const std::string& host);
-	std::string getHost();
+	std::string getHost() const;
 
 	void setPort(int port);
-	int getPort();
+	int getPort() const;
 
 public:
 	bool connected();
@@ -61,13 +58,13 @@ public:
 	lw_int32 sendData(lw_int32 cmd, void* object, lw_int32 objectSize, lw_int32 recvcmd, SocketCallback cb);
 
 private:
-	void onRead();
-	void onWrite();
-	void onEvent(short ev);
-	void onParse(lw_int32 cmd, char* buf, lw_int32 bufsize);
+	void __onRead();
+	void __onWrite();
+	void __onEvent(short ev);
+	void __onParse(lw_int32 cmd, char* buf, lw_int32 bufsize);
 
 private:
-	void reset();
+	void __reset();
 
 private:
 	std::unordered_map<lw_int32, SocketCallback> _cmd_event_map;

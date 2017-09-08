@@ -3,9 +3,11 @@
 
 #include "common_type.h"
 #include "common_marco.h"
-#include "CacheQueue.h"
+#include "cache_queue.h"
 
 #include <mutex>
+
+#include <functional>
 
 using namespace lwstar;
 
